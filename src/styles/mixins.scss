@@ -1,0 +1,33 @@
+@mixin scroll-style{
+  overflow: overlay;
+  &::-webkit-scrollbar{
+    width: 8px;
+    background-color: #333;
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb{
+    border-radius: 4px;
+    background-color: #0f0f0f;
+  }
+}
+
+@mixin ellipsis{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin background{
+  background-repeat: no-repeat;
+  background-size: 101% 101%;
+  background-position: center;
+  background-color: #fff;
+}
+
+@mixin clearfix{
+  &::after{
+    content: '';
+    display: block;
+    clear: both;
+  }
+}

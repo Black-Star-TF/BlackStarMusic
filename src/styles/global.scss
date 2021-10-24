@@ -1,0 +1,81 @@
+@import url('//at.alicdn.com/t/font_2882306_kp4iqpaqcj.css');
+:root {
+  --min-width: 1010px;
+  // 位置变量
+  --app-header-height: 50px;
+  --app-aside-width: 200px;
+  --app-player-height: 70px;
+  --color-netease-red: #c2473a;
+  --playlist-tag-active-bg-color: rgba(255, 0, 0, 0.13);
+  --panel-box-bg-color: #fff;
+  // 搜索框
+  --search-bg-color: #ececec;
+  --search-text-color: #444;
+  // header
+  --header-bg-color: #f9f9f9;
+  --header-left-bg-color: #f6f6f6;
+  --header-color-level1:#000;
+  --header-color-level2: #4a4a4a;
+  --header-color-level3: #656565;
+  // aside
+  --aside-bg-color: #ededed;
+  --aside-active-link-bg-color: #e1e1e1;
+  // footer
+  --footer-bg-color: #fff;
+  --footer-bd-color: #f0f0f0;
+  // main
+  --main-bg-color: #fff;
+  --main-border-color: #d9d9d9;
+  --main-container-bg-color:#f5f5f5;
+  --color-level1: #000;
+  --color-level2: #444;
+  --color-level3: #666;
+  --color-level4: #999;
+  --color-level5: #ccc;
+  
+  --table-stripe-color:#fafafa;
+  --table-hover-color: #f2f2f2;
+}
+
+
+[data-theme='dark'] {
+  --panel-box-bg-color: #363636;
+  --search-bg-color: #4a4a4a;
+  --search-text-color: #aaa;
+  // header
+  --header-bg-color: #2a2a2a;
+  --header-left-bg-color: #2c2c2c;
+  --header-color-level1:#fff;
+  --header-color-level2: #b5b5b5;
+  --header-color-level3:#888;
+  // aside
+  --aside-bg-color: #202020;
+  --aside-active-link-bg-color: #1b1b1b;
+  // footer
+  --footer-bg-color: #252525;
+  --footer-bd-color: #232323;
+  // main
+  --main-bg-color: #252525;
+  --main-border-color: #202020;
+  --main-container-bg-color:#2d2d2d;
+
+  --color-level1: #fff;
+  --color-level2: #b3b3b3;
+  --color-level3: #888;
+  --color-level4: #555;
+  --color-level5: #494949;
+
+  --table-stripe-color:#292929;
+  --table-hover-color: #2e2e2e;
+}
+
+[data-theme='red'] {
+  --search-bg-color: #d17268;
+  --search-text-color: #ddd;
+
+  --header-bg-color: var(--color-netease-red);
+  --header-left-bg-color: #ca5b4f;
+  --header-color-level1:#fff;
+  --header-color-level2: #ddd;
+  --header-color-level3:#ccc;
+}

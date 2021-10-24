@@ -1,23 +1,63 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-
 Vue.use(VueRouter)
+
+import discoveryRoutes from './discovery'
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: '/discovery',
+    component: ()=> import('@/components/layout'),
+    children: [
+      {
+        // 发现音乐
+        path: '/discovery',
+        component: ()=> import('@/views/discovery'),
+        children: discoveryRoutes
+      },
+      {
+        path: '/privatefm',
+        component: ()=> import('@/views/privatefm')
+      },
+      {
+        path: '/video',
+        component: ()=> import('@/views/video'),
+        children:[
+          {
+            path: '',
+            redirect: 'mv',
+          },
+          {
+            path: 'mv',
+            component: ()=> import('@/views/video/mv'),
+          },
+          {
+            path: 'shipin'
+          }
+        ]
+      },
+      {
+        path:'totalmv',
+        component: ()=> import('@/views/total-mv'),
+      },
+      {
+        path: '/firend',
+        component: ()=> import('@/views/firend')
+      },
+
+
+
+
+      {
+        // 设置
+        path: '/settings',
+        component: ()=> import('@/views/settings')
+      },
+    ]
   },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+  
+  
 ]
 
 const router = new VueRouter({
