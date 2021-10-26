@@ -1,11 +1,14 @@
 <template>
   <div class="app-header">
-    <div class="left-nav"></div>
+    <div class="left-nav">
+      <span class="iconfont icon-changyong_fanhui" title="后退" @click="$router.go(-1)"></span>
+      <span class="iconfont icon-changyong_gengduo" title="前进" @click="$router.go(1)"></span>
+    </div>
     <div class="right-operation">
       <!-- 搜索框 -->
-      <el-input class="input" text="text" prefix-icon="el-icon-search" clearable v-model="queryKeyword" @click="search"></el-input>
+      <el-input class="input" text="text" prefix-icon="el-icon-search" clearable v-model="queryKeyword" @keyup.enter.native="search"></el-input>
       <!-- 设置 -->
-      <span class="iconfont icon-shezhi" @click="toSettings"></span>
+      <span class="settings iconfont icon-shezhi" @click="toSettings" :class="{'router-active': routerActive}"></span>
       <!-- 消息 -->
       <span class="iconfont icon-duanxin"></span>
       <!-- 主题 -->
@@ -13,7 +16,7 @@
         placement="bottom"
         width="150"
         popper-class="pifu-popover"
-        trigger="click">
+        trigger="hover">
         <div class="pifu-selector">
           <div class="pifu-item light" @click="changeTheme('light')">
             <span class="color">
@@ -34,7 +37,7 @@
             <span class="name">深色</span>
           </div>
         </div>
-        <span slot="reference" class="iconfont icon-pifu"></span>
+        <span slot="reference" class="iconfont icon-pifu" ></span>
       </el-popover>
     </div>
   </div>
@@ -53,6 +56,9 @@ export default {
     ...mapState(['settings']),
     theme(){
       return this.$store.state.settings.theme
+    },
+    routerActive(){
+      return this.$route.path == '/settings'
     }
   },
   methods: {
@@ -90,9 +96,30 @@ export default {
   line-height: var(--app-header-height);
   .left-nav{
     height: 100%;
+    line-height: 100%;
     width: var(--app-aside-width);
     line-height: inherit;
     background-color: var(--header-left-bg-color);
+    text-align: right;
+    .iconfont{
+      display: inline-block;
+      margin-right: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--header-nav-color);
+      font-weight: 100;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      border-radius: 50%;
+      &:hover{
+        background-color: var(--color-level5);
+      }
+      &::before{
+        position: relative;
+        left: -2px;
+      }
+    }
   }
   .right-operation{
     height: 100%;
@@ -101,6 +128,11 @@ export default {
     .iconfont{
       margin: 0 10px;
       font-size: 20px;
+    }
+    .settings{
+      &.router-active{
+        color: var(--color-netease-red)
+      }
     }
     .input{
       width: 150px;

@@ -42,3 +42,23 @@ export function getAllNewAlbum(){
 		url: '/album/new'
 	})
 }
+
+// 请求歌曲信息
+export function getSongsDetail(ids){
+	return request({
+		url: '/song/detail',
+		params:{
+			ids
+		}
+	})
+}
+
+// 请求歌曲url
+export function getSongUrl(id){
+	return request({
+		url: '/song/url',
+		params:{
+			id
+		}
+	})
+}

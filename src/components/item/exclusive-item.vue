@@ -13,14 +13,10 @@
 </template>
 
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+  import { playVideo } from '@/utils/methods'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
-		name: 'ExclusiveItem',
-		mixins: [CommonMixin,ItemPropsMixin],
-		data() {
-			return {}
-		},
+		mixins: [ItemPropsMixin],
 		props: {
 			exclusiveItem:{
 				required: true
@@ -33,7 +29,10 @@
 			cover(){
 				return this.exclusiveItem.sPicUrl || this.exclusiveItem.cover
 			}
-		}
+		},
+    methods:{
+      playVideo
+    }
 	}
 </script>
 

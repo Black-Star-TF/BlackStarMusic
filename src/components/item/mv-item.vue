@@ -16,10 +16,11 @@
 </template>
 
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+  import { playVideo,toArtistDetail } from '@/utils/methods'
+  import { formatPlayCount } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
-		mixins: [CommonMixin,ItemPropsMixin],
+		mixins: [ItemPropsMixin],
 		props: {
 			mv: {
 				type: Object,
@@ -30,7 +31,14 @@
 			coverUrl(){
 				return this.mv.picUrl || this.mv.cover
 			}
-		}
+		},
+    methods:{
+      playVideo,
+      toArtistDetail
+    },
+    filters:{
+      formatPlayCount
+    }
 	}
 </script>
 

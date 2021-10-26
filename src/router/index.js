@@ -45,20 +45,73 @@ const routes = [
         path: '/firend',
         component: ()=> import('@/views/firend')
       },
-
-
-
-
+      {
+        path: '/playlistdetail/:id',
+        component: ()=> import('@/views/playlist-detail'),
+        children: [
+          {
+            path: '',
+            redirect: '/playlistdetail/songlist/:id'
+          },
+          {
+            path: '/playlistdetail/songlist/:id',
+            component: ()=> import('@/views/playlist-detail/songlist'),
+          },
+          {
+            path: '/playlistdetail/comment/:id',
+            component: ()=> import('@/views/playlist-detail/comment'),
+          },
+          {
+            path: '/playlistdetail/subscribe/:id',
+            component: ()=> import('@/views/playlist-detail/subscriber'),
+          }
+        ]
+      },
       {
         // 设置
         path: '/settings',
         component: ()=> import('@/views/settings')
       },
+      {
+        path: '/download',
+        component: ()=> import('@/views/download'),
+        children:[
+          {
+            path: '',
+            redirect: 'single'
+          },
+          {
+            path: 'single',
+          },
+          {
+            path: 'program'
+          },
+          {
+            path: 'downloading'
+          },
+
+        ]
+      },
+      {
+        path: '/recent',
+        component: ()=> import('@/views/recent'),
+      },
     ]
   },
-  
-  
+  {
+    path: '/videodetail/:id',
+    component: ()=> import('@/views/video-detail'),
+  },
+  {
+    path: '/mvdetail/:id',
+    component: ()=> import('@/views/mv-detail'),
+  }
 ]
+
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err);
+};
 
 const router = new VueRouter({
   mode: 'history',

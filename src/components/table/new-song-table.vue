@@ -67,36 +67,28 @@
 </template>
 
 <script>
-  import CommonMixin from '@/mixins/common-mixin'
+  import { playMusic,playVideo,toArtistDetail,toAlbumDetail } from '@/utils/methods'
+	import { formatDuration } from '@/utils/filters'
   export default {
-    name: 'NewestSongTable',
-    mixins: [CommonMixin],
-    data () {
-      return {}
-    },
     props:{
       songList: {
         type: Array,
         required: true
       }
     },
-    components: {},
     methods: {
+      playMusic,
+      playVideo,
+      toArtistDetail,
+      toAlbumDetail,
       play(row){
         this.playMusic(row.id)
       }
     },
     filters: {
+      formatDuration,
       formatIndex(index){
         return index > 9 ? index : '0' + index
-      },
-      formatDuration(duration){
-        let seconds = Math.round(duration / 1000)
-        let minutes = Math.floor(seconds / 60)
-        seconds = seconds % 60
-        minutes= minutes > 9 ? minutes : '0' + minutes
-        seconds = seconds > 9 ? seconds : '0' + seconds
-        return `${minutes}:${seconds}`
       }
     }
 }
@@ -142,6 +134,7 @@
                 background-size: cover;
                 background-color: #aaa;
                 cursor: pointer;
+                position: relative;
                 .icon-play{
                   width: 24px;
                   height: 24px;

@@ -23,13 +23,10 @@
 </template>
 
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+  import { playMusic,toArtistDetail } from '@/utils/methods'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
-		mixins: [CommonMixin,ItemPropsMixin],
-		data() {
-			return {}
-		},
+		mixins: [ItemPropsMixin],
 		props: {
 			newestSongItem:{
 				required: true
@@ -40,6 +37,10 @@
 				return typeof this.newestSongItem == 'undefined'
 			},
 		},
+    methods:{
+      playMusic,
+      toArtistDetail
+    },
 		filters:{
 			formatIndex(index){
 				return index < 10 ? '0' + index : index

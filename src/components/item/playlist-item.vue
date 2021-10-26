@@ -20,18 +20,23 @@
 </template>
 
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+	import { playAll,toPlaylistDetail } from '@/utils/methods'
+	import { formatPlayCount } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
-		mixins: [CommonMixin,ItemPropsMixin],
-		data() {
-			return {}
-		},
+		mixins: [ItemPropsMixin],
 		props: {
 			playlistItem:{
 				type: Object,
 				required: true
 			}
+		},
+		methods:{
+			playAll,
+			toPlaylistDetail
+		},
+		filters:{
+			formatPlayCount
 		}
 	}
 </script>
@@ -48,6 +53,7 @@
 		border-radius: 5px;
 		margin-bottom: 10px;
 		position: relative;
+		box-sizing: border-box;
 		border: .5px solid var(--main-border-color);
 		.play-count{
 			position: absolute;
@@ -91,8 +97,8 @@
 	.playlist-name{
 		font-size: 14px;
 		line-height: 20px;
-		//todo 两行文字，超出使用省略号
 		span{
+			@include ellipsis-2-line;
 			color: var(--color-level2);
 			cursor: pointer;
 			&:hover{

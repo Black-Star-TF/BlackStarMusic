@@ -165,11 +165,13 @@
 
 <style lang="scss" scoped>
 @import url('~@/styles/variables.scss');
+.view-playlist{
+	padding-bottom: 25px;
+}
 .current-tag-container {
   height: 70px;
   line-height: 70px;
   position: relative;
-
   .current-tag {
     position: relative;
     display: inline-block;

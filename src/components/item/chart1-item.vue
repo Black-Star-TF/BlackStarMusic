@@ -5,7 +5,6 @@
 		class="chart-cover"
 		@click="toPlaylistDetail(toplist.id)"
 		:style="{'backgroundImage': `url(${toplist.coverImgUrl})`}">
-			<!-- <div class="box" :style="{'backgroundImage': `url(${cover})`}"></div> -->
 			<!-- 播放按钮 -->
 			<div class="icon-play" @click.stop="playAll(toplist.id)">
 				<span class="iconfont icon-bofang"></span>
@@ -58,10 +57,9 @@
 	</div>
 </template>
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+	import { playAll, playMusic, toArtistDetail, toPlaylistDetail } from '@/utils/methods'
 	import { getPlaylistDetail} from '@/api/playlist.js'
 	export default {
-		mixins: [CommonMixin],
 		data() {
 			return {
 				list: [],
@@ -75,6 +73,10 @@
 			}
 		},
 		methods: {
+			playMusic,
+			playAll,
+			toPlaylistDetail,
+			toArtistDetail,
 			play(song){
 				this.playMusic(song.id)
 			},

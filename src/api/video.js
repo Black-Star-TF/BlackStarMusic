@@ -85,12 +85,117 @@ export function getMVUrl(id){
   })
 }
 
-// 获取mv数据
+// 获取mv详情
 export function getMVDetail(mvid){
   return request({
     url: '/mv/detail',
     params:{
       mvid
+    }
+  })
+}
+//获取mv点赞评论数
+export function getMVInfo(mvid){
+  return request({
+    url: '/mv/detail/info',
+    params:{
+      mvid
+    }
+  })
+}
+// 获取mv评论
+export function getMVComment(id,limit=null, offset=null){
+  return request({
+    url: '/comment/mv',
+    params:{
+      id,
+      limit,
+      offset
+    }
+  })
+}
+
+// 获取相关视频
+export function getRelativeVideo(id){
+  return request({
+    url: '/related/allvideo',
+    params:{
+      id
+    }
+  })
+}
+
+// 获取视频标签
+export function getVideoGroup(){
+  return request({
+    url: '/video/group/list'
+  })
+}
+
+// 获取视频分类
+export function getVideoCategory(){
+  return request({
+    url: '/video/category/list',
+  })
+}
+
+// 获取视频列表
+export function getVideoList(id,offset=null){
+  return request({
+    url: '/video/group',
+    params:{
+      id,
+      offset
+    }
+  })
+}
+
+// 获取所有视频
+export function getAllVideo(offset=null){
+  return request({
+    url: '/video/timeline/all',
+    params:{
+      offset
+    }
+  })
+}
+
+// 获取视频播放地址
+export function getVideoUrl(id){
+  return request({
+    url: '/video/url',
+    params:{
+      id
+    }
+  })
+}
+
+export function getVideoDetail(id){
+  return request({
+    url: '/video/detail',
+    params:{
+      id
+    }
+  })
+}
+
+// 获取视频点赞数
+export function getVideoInfo(vid){
+  return request({
+    url: '/video/detail/info',
+    params:{
+      vid
+    }
+  })
+}
+// 获取视频评论
+export function getVideoComment(id,limit=null, offset=null){
+  return request({
+    url: '/comment/video',
+    params:{
+      id,
+      limit,
+      offset
     }
   })
 }

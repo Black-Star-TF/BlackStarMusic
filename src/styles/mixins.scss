@@ -1,19 +1,18 @@
 @mixin scroll-style{
   overflow: overlay;
-  &::-webkit-scrollbar{
-    width: 8px;
-    background-color: #333;
-    border-radius: 4px;
-  }
-  &::-webkit-scrollbar-thumb{
-    border-radius: 4px;
-    background-color: #0f0f0f;
-  }
 }
 
 @mixin ellipsis{
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin ellipsis-2-line{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 

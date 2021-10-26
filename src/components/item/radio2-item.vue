@@ -11,31 +11,28 @@
 				<div class="last-program"><span class="iconfont icon-pause"></span> {{radio.lastProgramName}}</div>
 			</div>
 			<!-- 电台收费 -->
-			<div class="radio-info-item price">¥ {{price}}</div>
+			<div class="radio-info-item price">¥ {{ radio.originalPrice | formatPrice}}</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+	import { toRadioDetail } from '@/utils/methods'
+	import { formatPrice } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
-		mixins: [CommonMixin,ItemPropsMixin],
+		mixins: [ItemPropsMixin],
 		props: {
 			radio: {
 				type: Object,
 				required: true
 			},
 		},
-		computed: {
-			price(){
-				let price = this.radio.originalPrice
-				if(price % 100 != 0){
-					return (price / 100).toFixed(1)
-				}else{
-					return price / 100
-				}
-			}
+		methods:{
+			toRadioDetail
+		},
+		filters:{
+			formatPrice
 		}
 	}
 </script>

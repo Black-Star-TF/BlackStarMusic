@@ -50,4 +50,27 @@
   tr{
     background: none;
   }
+  .el-table__cell{
+    padding: 0;
+    background: none;
+    .cell{
+      padding: 0 0;
+    }
+  }
+  td.el-table__cell{
+    border: none;
+  }
+  th.el-table__cell{
+    border: none;
+    background: none;
+    .cell{
+      padding: 0 0;
+    }
+    &.is-leaf{
+      border: none;
+    }
+  }
+  .el-table__body tr:hover>td.el-table__cell{
+    background: none;
+  }
 }

@@ -9,10 +9,10 @@
 </template>
 
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+	import { toRadioDetail } from '@/utils/methods'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
-		mixins: [CommonMixin,ItemPropsMixin],
+		mixins: [ItemPropsMixin],
 		props: {
 			radio:{
 				required: true
@@ -22,6 +22,9 @@
 			loading(){
 				return typeof this.radio == 'undefined'
 			}
+		},
+		methods:{
+			toRadioDetail
 		}
 	}
 </script>
@@ -58,6 +61,7 @@
 			line-height: 20px;
 			font-size: 14px;
 			color: var(--color-level2);
+			@include ellipsis-2-line;
 			&:hover{
 				color: var(--color-level1);
 			}

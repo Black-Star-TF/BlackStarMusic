@@ -1,6 +1,6 @@
-@import url('//at.alicdn.com/t/font_2882306_kp4iqpaqcj.css');
+@import url('//at.alicdn.com/t/font_2882306_g62mrlnz9zq.css');
 :root {
-  --min-width: 1010px;
+  --min-width: 1030px;
   // 位置变量
   --app-header-height: 50px;
   --app-aside-width: 200px;
@@ -17,6 +17,7 @@
   --header-color-level1:#000;
   --header-color-level2: #4a4a4a;
   --header-color-level3: #656565;
+  --header-nav-color: #707070;
   // aside
   --aside-bg-color: #ededed;
   --aside-active-link-bg-color: #e1e1e1;
@@ -35,8 +36,12 @@
   
   --table-stripe-color:#fafafa;
   --table-hover-color: #f2f2f2;
-}
 
+  --link-color: #5b7cab;
+  --link-hover-color: #2857aa;
+
+  --scroll-bar-bg-color: #e0e0e0;
+}
 
 [data-theme='dark'] {
   --panel-box-bg-color: #363636;
@@ -48,6 +53,7 @@
   --header-color-level1:#fff;
   --header-color-level2: #b5b5b5;
   --header-color-level3:#888;
+  --header-nav-color: #b5b5b5;
   // aside
   --aside-bg-color: #202020;
   --aside-active-link-bg-color: #1b1b1b;
@@ -67,15 +73,29 @@
 
   --table-stripe-color:#292929;
   --table-hover-color: #2e2e2e;
+
+  --link-color: #90b8e2;
+  --link-hover-color: #b8cde2;
+
+  --scroll-bar-bg-color: #404040;
 }
 
 [data-theme='red'] {
   --search-bg-color: #d17268;
   --search-text-color: #ddd;
-
   --header-bg-color: var(--color-netease-red);
   --header-left-bg-color: #ca5b4f;
   --header-color-level1:#fff;
   --header-color-level2: #ddd;
   --header-color-level3:#ccc;
+  --header-nav-color: #e1a39d;
+}
+
+::-webkit-scrollbar{
+  width: 8px;
+  background-color: none;
+}
+::-webkit-scrollbar-thumb{
+  border-radius: 4px;
+  background-color: var(--scroll-bar-bg-color);
 }

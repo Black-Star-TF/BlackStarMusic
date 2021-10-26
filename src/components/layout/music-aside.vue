@@ -16,8 +16,17 @@
       <i class="iconfont icon-friend" icon-friend></i>朋友
     </router-link>
     <!-- 我的音乐 -->
+    <div class="group-name">我的音乐</div>
+    <router-link class="nav-item" to="/download" tag="div" active-class="active">
+      <i class="iconfont icon-xiazai" icon-friend></i>下载管理
+    </router-link>
+    <router-link class="nav-item" to="/recent" tag="div" active-class="active">
+      <i class="iconfont icon-bendi-zuijinbofang" icon-friend></i>最近播放
+    </router-link>
     <!-- 创建的歌单 -->
+    <div class="group-name">创建的歌单</div>
     <!-- 收藏的歌单 -->
+    <div class="group-name">收藏的歌单</div>
   </div>
 </template>
 
@@ -66,6 +75,14 @@ export default {
     .iconfont{
       margin-right: 10px;
     }
+  }
+  .group-name{
+    height: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+    font-size: 13px;
+    padding-left: 20px;
+    color: var(--color-level4);
   }
 }
 </style>

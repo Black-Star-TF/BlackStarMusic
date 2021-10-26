@@ -18,18 +18,23 @@
 </template>
 
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+	import { playAll,toPlaylistDetail } from '@/utils/methods'
+	import { formatPlayCount } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
-		mixins: [CommonMixin,ItemPropsMixin],
-		data() {
-			return {}
-		},
+		mixins: [ItemPropsMixin],
 		props: {
 			toplist:{
 				type: Object,
 				required: true
 			}
+		},
+		methods:{
+			playAll,
+			toPlaylistDetail
+		},
+		filters:{
+			formatPlayCount
 		}
 	}
 </script>

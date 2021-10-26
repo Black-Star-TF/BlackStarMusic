@@ -24,13 +24,13 @@ export default {
   data () {
     return {
       navList: [
-					{ path: '/discovery/rcmd', name: '个性推荐'},
-					{ path: '/discovery/playlist', name: '歌单'},
-					{ path: '/discovery/djradio', name: '主播电台'},
-					{ path: '/discovery/chart', name: '排行榜'},
-					{ path: '/discovery/singer', name: '歌手'},
-					{ path: '/discovery/newest', name: '最新音乐'},
-				]
+        { path: '/discovery/rcmd', name: '个性推荐'},
+        { path: '/discovery/playlist', name: '歌单'},
+        { path: '/discovery/djradio', name: '主播电台'},
+        { path: '/discovery/chart', name: '排行榜'},
+        { path: '/discovery/singer', name: '歌手'},
+        { path: '/discovery/newest', name: '最新音乐'},
+      ]
     }
   }
 }
@@ -43,7 +43,7 @@ export default {
   .discovery-content{
     height: 100%;
     padding: 0 7%;
-    overflow: auto;
+    overflow: overlay;
   }
 }
 </style>

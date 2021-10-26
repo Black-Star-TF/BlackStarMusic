@@ -26,6 +26,7 @@ export default {
   left: 0;
   right: 0;
   position: absolute;
+  box-sizing: border-box;
   background-color: var(--footer-bg-color);
   z-index: 102;
   border-top: 2px solid var(--footer-bd-color);

@@ -10,16 +10,20 @@
 </template>
 
 <script>
-	import CommonMixin from '@/mixins/common-mixin'
+  import { toUserDetail,toArtistDetail } from '@/utils/methods'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
-		mixins: [CommonMixin,ItemPropsMixin],
+		mixins: [ItemPropsMixin],
 		props: {
 			singer: {
 				type: Object,
 				required: true
 			}
-		}
+		},
+    methods:{
+      toUserDetail,
+      toArtistDetail
+    }
 	}
 </script>
 
@@ -40,6 +44,7 @@
   .singer-name{
     line-height: 20px;
     font-size: 12px;
+    @include ellipsis;
     span{
       color: var(--color-level2);
       cursor: pointer;
