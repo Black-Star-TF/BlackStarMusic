@@ -17,7 +17,11 @@ export default {
   },
   methods:{
     getKey(){
-      return this.$route.fullPath + new Date()
+      if(this.$route.meta.hasKey){
+        return this.$route.fullPath + new Date()
+      }else{
+        return ''
+      }
     }
   }
 }

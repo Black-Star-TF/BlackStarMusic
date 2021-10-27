@@ -100,10 +100,12 @@ const routes = [
   },
   {
     path: '/videodetail/:id',
+    meta:{ hasKey: true },
     component: ()=> import('@/views/video-detail'),
   },
   {
     path: '/mvdetail/:id',
+    meta:{ hasKey: true },
     component: ()=> import('@/views/mv-detail'),
   }
 ]
@@ -114,7 +116,7 @@ VueRouter.prototype.push = function push(location) {
 };
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
