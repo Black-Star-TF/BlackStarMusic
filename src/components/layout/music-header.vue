@@ -70,7 +70,15 @@ export default {
       return theme == this.theme ? 'icon-wancheng' : ''
     },
     search(){
-      console.log('搜索');
+      if(this.queryKeyword !== ''){
+        this.$router.push({
+          path: '/search',
+          query: {
+            keyword: this.queryKeyword,
+            type: this.$route.query.type || 1
+          }
+        })
+      }
     },
     toSettings(){
       this.$router.push('/settings')

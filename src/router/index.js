@@ -14,6 +14,9 @@ const routes = [
         // 发现音乐
         path: '/discovery',
         component: ()=> import('@/views/discovery'),
+        meta:{
+          keepAlive: true,
+        },
         children: discoveryRoutes
       },
       {
@@ -47,6 +50,9 @@ const routes = [
       },
       {
         path: '/playlistdetail/:id',
+        meta:{
+          hasKey: true,
+        },
         component: ()=> import('@/views/playlist-detail'),
         children: [
           {
@@ -96,6 +102,11 @@ const routes = [
         path: '/recent',
         component: ()=> import('@/views/recent'),
       },
+      {
+        path: '/search',
+        meta:{ hasKey: true },
+        component: ()=> import('@/views/search'),
+      }
     ]
   },
   {
@@ -116,7 +127,7 @@ VueRouter.prototype.push = function push(location) {
 };
 
 const router = new VueRouter({
-  // mode: 'history',
+  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

@@ -1,87 +1,55 @@
 <template>
-  <el-table
-  class="song-list-table"
-  :data="songList"
-  @row-dblclick="play"
-  :default-sort = "{prop: 'name', order: 'descending'}">
-    <!-- 排序 -->
-    <el-table-column width="65" align="center">
-      <template slot-scope="scope">
-        <div class="song-index table-col">
-          <span class="song-index-text">{{formatIndex(scope.$index+1)}}</span>
+  <div class="song-list-table">
+    <div class="table-header">
+      <div class="header column index"></div>
+      <div class="header column song-operation"></div>
+      <div class="header column song-name">音乐标题</div>
+      <div class="header column song-artists">歌手</div>
+      <div class="header column song-album">专辑</div>
+      <div class="header column song-duration">时长</div>
+    </div>
+    <div class="table-row"
+      v-for="(song,index) in songList"
+      :key="song.id"
+      @dblclick="playMusic(song.id)"
+    >
+      <div class="row column index">{{formatIndex(index+1)}}</div>
+      <div class="row column song-operation">
+        <span class="song-operation-item" v-if="true"><span class="iconfont icon-xihuan"></span></span>
+        <span class="song-operation-item" v-else><span class="iconfont liked icon-home_ico_like-"></span></span>
+        <span class="song-operation-item"><span class="iconfont icon-xiazai"></span></span>
+      </div>
+      <div class="row column song-name">
+        <div class="song-name-content">
+          <span class="main-name" v-if="keyword" v-html="markKeyword(song.name)"></span>
+          <span class="main-name" v-else>{{song.name}}</span>
+          <span class="alias-name" v-if="song.alia.length > 0"> ({{song.alia[0]}})</span>
         </div>
-      </template>
-    </el-table-column>
-
-    <!-- 操作 -->
-    <el-table-column width="48">
-      <template slot-scope="scope">
-        <div class="song-operation table-col">
-          <span class="song-operation-item" v-if="true"><span class="iconfont icon-xihuan"></span></span>
-          <span class="song-operation-item" v-else><span class="iconfont liked icon-home_ico_like-"></span></span>
-          <span class="song-operation-item"><span class="iconfont icon-xiazai"></span></span>
-        </div>
-        </template>
-    </el-table-column>
-
-    <!-- 歌名 -->
-    <el-table-column label="音乐标题" min-width="2" sortable>
-      <template slot-scope="scope">
-        <div class="song-name table-col">
-          <span v-if="keyword" v-html="markKeyword(scope.row.name)"></span>
-          <span v-else>{{scope.row.name}}</span>
-          <span class="song-name-alias" v-if="scope.row.alia.length > 0">({{scope.row.alia[0]}})</span>
-        </div>
-        <div class="song-lyric" v-if="scope.row.lyrics">
-          <div v-if="keyword" v-html="markKeyword(scope.row.lyrics[0])"></div>
-          <div v-for="(lyricRow,index) in lyric(scope.row)" :key="index">{{lyricRow}}</div>
-        </div>
-      </template>
-    </el-table-column>
-
-    <!-- 歌手 -->
-    <el-table-column label="歌手" min-width="1">
-      <template slot-scope="scope">
-        <div class="table-col">
-          <span class="song-artists">
-            <span class="artist" v-for="(artist,index) in scope.row.ar" :key="artist.id">
+        <span class="song-tag-sq iconfont icon-sq" v-if="false"></span>
+        <span class="song-tag-mv iconfont icon-shipin" v-if="song.mv !== 0" @click="playVideo(song.mv)"></span>
+      </div>
+      <div class="row column song-artists">
+        <span class="song-artists-content">
+            <span class="artist" v-for="(artist,index) in song.ar" :key="artist.id">
               <span class="artist-name" v-if="keyword" @click="toArtistDetail(artist.id)" v-html="markKeyword(artist.name)"></span>
               <span class="artist-name" v-else @click="toArtistDetail(artist.id)">{{artist.name}}</span>
-              <span class="separator" v-if="index < scope.row.ar.length -1"> / </span>
+              <span class="separator" v-if="index < song.ar.length -1"> / </span>
             </span>
           </span>
-        </div>
-        
-      </template>
-    </el-table-column>
-
-    <!-- 专辑 -->
-    <el-table-column label="专辑" min-width="1">
-      <template slot-scope="scope">
-        <div class="song-album table-col">
-          <span class="song-album-name" v-if="keyword" @click="toAlbumDetail(scope.row.al.id)" v-html="markKeyword(scope.row.al.name)"></span>
-          <span class="song-album-name" v-else @click="toAlbumDetail(scope.row.al.id)">{{scope.row.al.name}}</span>
-        </div>
-        <div class="lyric-operation" v-if="scope.row.lyrics">
-          <span class="operation-item copy">复制歌词</span>
-          <span class="operation-item unfold" v-if="scope.row.lyrics.length > 4" @click="showLyric(scope.row)">{{title(scope.row)}}</span>
-        </div>
-        <div class="lyric-operation bottom" v-if="scope.row.lyrics && scope.row.showAllLyric">
-          <span class="operation-item copy">复制歌词</span>
-          <span class="operation-item unfold" @click="showLyric(scope.row)">{{title(scope.row)}}</span>
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column label="时长" width="100">
-      <template slot-scope="scope">
-        <span class="song-duration">{{scope.row.dt | formatDuration}}</span>
-      </template>
-    </el-table-column>
-  </el-table>
+      </div>
+      <div class="row column song-album">
+        <span class="song-album-name" v-if="keyword" @click="toAlbumDetail(song.al.id)" v-html="markKeyword(song.al.name)"></span>
+        <span class="song-album-name" v-else @click="toAlbumDetail(song.al.id)">{{song.al.name}}</span>
+      </div>
+      <div class="row column song-duration">
+        <span>{{song.dt | formatDuration}}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-  import { playMusic,toAlbumDetail,toArtistDetail,markKeyword } from '@/utils/methods'
+  import { playMusic,toAlbumDetail,toArtistDetail,markKeyword, playVideo } from '@/utils/methods'
   import { formatDuration } from '@/utils/filters'
   export default {
     props:{
@@ -100,30 +68,11 @@
       }
     },
     methods: {
+      playVideo,
       playMusic,
       toAlbumDetail,
       toArtistDetail,
       markKeyword,
-      title(song){
-        if(!song.showAllLyric){
-          return '展开歌词'
-        }else{
-          return '收起歌词'
-        }
-      },
-      showLyric(song){
-        song.showAllLyric = !song.showAllLyric
-      },
-      lyric(song){
-        if(song.showAllLyric){
-          return song.lyrics.slice(1)
-        }else{
-          return song.lyrics.slice(1,4)
-        }
-      },
-      play(row){
-        this.playMusic(row.id)
-      },
       formatIndex(index){
         if(this.pageNum && this.limit){
           let num = (this.pageNum - 1) * this.limit + index
@@ -135,135 +84,132 @@
     },
     filters:{
       formatDuration
-    },
-    created () {
-      this.songList.forEach(song => {
-        this.$set(song,'showAllLyric',false)
-      })
     }
   }
 </script>
 
 <style lang="scss">
-
-.song-list-table.el-table{
-  background-color: var(--main-bg-color);
-  .el-table__row{
+@import "~@/styles/mixins.scss";
+.song-list-table{
+  .table-header{
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    font-size: 13px;
+    color: var(--color-level4);
+    padding: 0 30px;
+  }
+  .table-row{
+    height: 40px;
+    line-height: 40px;
+    padding: 0 30px;
+    display: flex;
+    font-size: 13px;
     &:nth-of-type(2n+1){
       background-color: var(--table-stripe-color);
     }
     &:hover{
       background-color: var(--table-hover-color);
     }
-  }
-  th.el-table__cell{
-    color: var(--color-level4);
-    font-weight: normal;
-  }
-}
-</style>
+    .song-operation{
+      display: flex;
+      justify-content: space-between;
+      .song-operation-item{
+        color: var(--color-level3);
+        cursor: pointer;
+        &:hover{
+          color: var(--color-level2);
+        }
+        &.liked{
+          color: var(--color-netease-red);
+        }
+      }
+    }
+    .index{
+      color: var(--color-level5);
+    }
+    .song-name{
+      display: flex;
+      .song-name-content{
+        @include ellipsis;
+        color: var(--color-level2);
+        .main-name{
+          &:hover{
+            color: var(--color-level1);
+          }
+        }
+        .alias-name{
+          color: var(--color-level4);
+        }
+      }
+      .iconfont{
+        color: var(--color-netease-red);
+        display: inline-block;
+        margin-left: 5px;
+        &.song-tag-sq{
+          font-size: 22px;
+        }
+        &.song-tag-mv{
+          cursor: pointer;
+          font-size: 16px;
+        }
+      }
+    }
 
-<style lang="scss" scoped>
-@import "~@/styles/mixins.scss";
-.song-list-table{
-  font-size: 13px;
-  margin-bottom: 30px;
-}
-.keyword{
-  color: #91b7e2;
-}
-.table-col{
-  height: 35px;
-  line-height: 35px;
-  padding-right: 10px;
-  @include ellipsis;
-}
-.song-index{
-  text-align: left;
-  color: var(--color-level5);
-  margin-left: 30px;
-}
-.song-duration{
-  color: var(--color-level5);
-}
-
-.song-operation{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.song-operation-item{
-  display: inline-block;
-  .iconfont{
-    line-height: 25px;
-    font-size: 16px;
-    color: var(--color-level4);
-    cursor: pointer;
-    &:hover{
+    .song-artists{
+      @include ellipsis;
       color: var(--color-level3);
+      .artist-name{
+        cursor: pointer;
+        &:hover{
+          color: var(--color-level2);
+        }
+      }
+      .separator{
+        color: var(--color-level4);
+      }
     }
-    &.liked{
-      color: var(--color-netease-red);
-    }
-  }
-}
 
-.song-name{
-  color: var(--color-level2);
-  @include ellipsis;
-  cursor: default;
-  .song-name-alias{
-    color: var(--color-level4);
+    .song-album{
+      @include ellipsis;
+      color: var(--color-level3);
+      .song-album-name{
+        cursor: pointer;
+        &:hover{
+          color: var(--color-level2);
+        }
+      }
+    }
+    .song-duration{
+      color: var(--color-level4);
+    }
   }
-}
-.song-lyric{
-  margin-top: 10px;
-  margin-bottom: 10px
-}
 
-.song-artists{
-  @include ellipsis;
-  .artist-name{
-    cursor: pointer;
-    color: var(--color-level3);
-    &:hover{
-      color: var(--color-level2);
+  .column{
+    overflow: hidden;
+    margin-right: 15px;
+    &:nth-last-of-type(1){
+      margin-right: 0;
     }
   }
-}
-.song-album{
-  @include ellipsis;
-  .song-album-name{
-    cursor: pointer; 
-    color: var(--color-level3);
-    &:hover{
-      color: var(--color-level2);
-    }
-  }
-}
 
-.lyric-operation{
-  height: 24px;
-  width: 100%;
-  line-height: 24px;
-  margin-top: 20px;
-  
-  &.bottom{
-    position: absolute;
-    bottom: 10px;
+  .index{
+    width: 30px;
   }
-  .operation-item{
-    float: left;
-    margin: 0 10px;
-    padding: 0 10px;
-    height: 24px;
-    line-height: 22px;
-    border-radius: 12px;
-    box-sizing: border-box;
-    border: 1px solid #666;
-    &:hover{
-      background-color: rgba($color: #fff, $alpha: .1);
-    }
+  .song-operation{
+    width: 40px;
+  }
+  .song-name{
+    flex: 5;
+  }
+  .song-artists{
+    flex: 2;
+  }
+  .song-album{
+    flex: 3;
+  }
+  .song-duration{
+    width: 50px;
   }
 }
 </style>

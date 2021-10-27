@@ -1,16 +1,33 @@
 <template>
   <div class="app-footer">
-
+    <vue-slider 
+      v-model="value"
+      :min="0"
+      :max="360"
+      :dotSize="5"
+      :height="2"
+      :interval="1"
+      :duration="0"
+      tooltip="none"
+      :lazy="true"
+      :drag-on-click="true"
+    ></vue-slider>
   </div>
 </template>
 
 <script>
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/default.css'
 export default {
-  name: '',
   mixins: [],
-  components: {},
+  components: {
+    VueSlider
+  },
   data () {
-    return {}
+    return {
+      value: 1,
+      
+    }
   },
   computed: {},
   methods: {},

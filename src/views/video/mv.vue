@@ -82,13 +82,13 @@
         </div>
       </template>
       <template v-slot:content>
-        <!-- <MVToplistItem
+        <mv-chart-item
         v-for="(mv,index) in mvToplist"
         :key="mv.id || index"
         :num="2"
         :index="index"
         :mvItem="mv">
-        </MVToplistItem> -->
+        </mv-chart-item>
       </template>
     </container>
   </div>
@@ -98,7 +98,7 @@
 	import Container from '@/components/common/container'
 	import MvItem from '@/components/item/mv-item'
   import ExclusiveItem from '@/components/item/exclusive-item'
-  // import MVToplistItem from '@/components/item/MVToplistItem'
+  import MvChartItem from '@/components/item/mv-chart-item'
    
   import {getNewestMV, getAllMV, getExclusiveVideo,getMVToplist } from '@/api/video.js'
   export default { 
@@ -106,7 +106,7 @@
       Container,
       MvItem,
       ExclusiveItem,
-      // MVToplistItem
+      MvChartItem
     },
     data () {
       return {

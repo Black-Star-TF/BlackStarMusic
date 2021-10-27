@@ -1,15 +1,15 @@
 <template>
   <div class="detail-song-list">
-    <song-list-table  v-if="loading"
+    <song-list-table
+    v-if="loading"
     :songList="songList">
     </song-list-table>
-
     <!-- <Loading :loading="loading"></Loading> -->
   </div>
 </template>
 
 <script>
-  import SongListTable from '@/components/table//song-list-table'
+  import SongListTable from '@/components/table/song-list-table'
   import {getSongsDetail} from '@/api/music.js'
   // import Loading from '@/components/common/Loading'
   export default {

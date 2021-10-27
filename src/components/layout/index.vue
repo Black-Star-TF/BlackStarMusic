@@ -6,9 +6,14 @@
     <music-player></music-player>
     <!-- main -->
     <div class="app-main">
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
+      <template v-if="!$route.meta.keepAlive">
+        <router-view :key="getKey()"></router-view>
+      </template>
+      <template v-else>
+        <keep-alive>
+          <router-view :key="getKey()"></router-view>
+        </keep-alive>
+      </template>
     </div>
   </div>
 </template>
@@ -20,6 +25,15 @@ export default {
   components: {
     MusicPlayer,
     MusicAside
+  },
+  methods:{
+    getKey(){
+      if(this.$route.meta.hasKey){
+        return this.$route.fullPath + new Date()
+      }else{
+        return ''
+      }
+    }
   }
 }
 </script>
@@ -41,7 +55,6 @@ export default {
   overflow: auto;
   z-index: 100;
   box-sizing: border-box;
-  // min-width: calc(var(--min-width) - var(--app-aside-width));
   background-color: var(--main-bg-color);
 }
 </style>

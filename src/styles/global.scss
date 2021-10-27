@@ -1,6 +1,7 @@
 @import url('//at.alicdn.com/t/font_2882306_g62mrlnz9zq.css');
 :root {
   --min-width: 1030px;
+  --color-keyword: #91b7e2;
   // 位置变量
   --app-header-height: 50px;
   --app-aside-width: 200px;
@@ -98,4 +99,8 @@
 ::-webkit-scrollbar-thumb{
   border-radius: 4px;
   background-color: var(--scroll-bar-bg-color);
+}
+
+.keyword{
+  color: var(--color-keyword);
 }
