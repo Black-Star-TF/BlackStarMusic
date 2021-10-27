@@ -6,7 +6,9 @@
     <music-player></music-player>
     <!-- main -->
     <div class="app-main">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>

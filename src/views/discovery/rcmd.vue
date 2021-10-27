@@ -126,7 +126,6 @@
 			ExclusiveItem,
 			NewestSongItem,
 			MvItem,
-			// RadioItem2,
 			// Loading
 		},
 		computed:{
