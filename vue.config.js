@@ -3,7 +3,7 @@ module.exports = {
     port: process.env.DEV_SERVER_PORT || 8080,  // 配置应用端口
     proxy:{
 			'': {
-				target: 'http://127.0.0.1:3000',
+				target: 'https://music-api-virid.vercel.app',
         changeOrigin: true,
 			}
 		}
