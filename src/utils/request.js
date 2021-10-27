@@ -1,6 +1,6 @@
 import axios from 'axios'
 const instance = axios.create({
-	baseURL: '',
+	baseURL: 'https://music-api-virid.vercel.app',
 	timeout: 30000,
 	withCredentials: true
 })

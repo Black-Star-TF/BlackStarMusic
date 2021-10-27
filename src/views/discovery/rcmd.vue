@@ -131,8 +131,8 @@
 		},
 		computed:{
 			loading () {
-				return true
-				// return this.banners.length != 0 && this.playlists.length != 0 && this.exclusives.length != 0 && this.newestSongs.length != 0 && this.mvs.length != 0 && this.radios.length != 0
+				// return true
+				return this.banners.length != 0 && this.playlists.length != 0 && this.exclusives.length != 0 && this.newestSongs.length != 0 && this.mvs.length != 0
 			}
 		},
 		created() {
