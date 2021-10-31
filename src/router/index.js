@@ -50,28 +50,9 @@ const routes = [
       },
       {
         path: '/playlistdetail/:id',
-        meta:{
-          hasKey: true,
-        },
+        meta:{ hasKey: true },
         component: ()=> import('@/views/playlist-detail'),
-        children: [
-          {
-            path: '',
-            redirect: '/playlistdetail/songlist/:id'
-          },
-          {
-            path: '/playlistdetail/songlist/:id',
-            component: ()=> import('@/views/playlist-detail/songlist'),
-          },
-          {
-            path: '/playlistdetail/comment/:id',
-            component: ()=> import('@/views/playlist-detail/comment'),
-          },
-          {
-            path: '/playlistdetail/subscribe/:id',
-            component: ()=> import('@/views/playlist-detail/subscriber'),
-          }
-        ]
+        // children: [
       },
       {
         // 设置
@@ -111,12 +92,10 @@ const routes = [
   },
   {
     path: '/videodetail/:id',
-    meta:{ hasKey: true },
     component: ()=> import('@/views/video-detail'),
   },
   {
     path: '/mvdetail/:id',
-    meta:{ hasKey: true },
     component: ()=> import('@/views/mv-detail'),
   }
 ]

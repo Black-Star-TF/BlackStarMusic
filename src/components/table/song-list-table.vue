@@ -10,19 +10,24 @@
     </div>
     <div class="table-row"
       v-for="(song,index) in songList"
-      :key="song.id"
-      @dblclick="playMusic(song.id)"
+      :key="`${index}-${song.id}`"
+      @dblclick="playSong(song.id)"
     >
-      <div class="row column index">{{formatIndex(index+1)}}</div>
+      <div class="row column index">
+        <span v-if="song.id == currentTrackId" class="iconfont icon-yinliang"></span>
+        <span v-else>{{formatIndex(index+1)}}</span>
+        </div>
       <div class="row column song-operation">
-        <span class="song-operation-item" v-if="true"><span class="iconfont icon-xihuan"></span></span>
-        <span class="song-operation-item" v-else><span class="iconfont liked icon-home_ico_like-"></span></span>
-        <span class="song-operation-item"><span class="iconfont icon-xiazai"></span></span>
+        <span class="song-operation-item iconfont liked icon-xihuan-shi" v-if="isLiked(song.id)">
+        </span>
+        <span class="song-operation-item iconfont icon-xihuan-kon" v-else>
+        </span>
+        <span class="song-operation-item iconfont icon-xiazai"></span>
       </div>
       <div class="row column song-name">
         <div class="song-name-content">
           <span class="main-name" v-if="keyword" v-html="markKeyword(song.name)"></span>
-          <span class="main-name" v-else>{{song.name}}</span>
+          <span class="main-name" :class="{'active': song.id == currentTrackId}" v-else>{{song.name}}</span>
           <span class="alias-name" v-if="song.alia.length > 0"> ({{song.alia[0]}})</span>
         </div>
         <span class="song-tag-sq iconfont icon-sq" v-if="false"></span>
@@ -30,7 +35,7 @@
       </div>
       <div class="row column song-artists">
         <span class="song-artists-content">
-            <span class="artist" v-for="(artist,index) in song.ar" :key="artist.id">
+            <span class="artist" v-for="(artist,index) in song.ar" :key="`${index}-${artist.id}`">
               <span class="artist-name" v-if="keyword" @click="toArtistDetail(artist.id)" v-html="markKeyword(artist.name)"></span>
               <span class="artist-name" v-else @click="toArtistDetail(artist.id)">{{artist.name}}</span>
               <span class="separator" v-if="index < song.ar.length -1"> / </span>
@@ -67,9 +72,17 @@
         type: Number
       }
     },
+    computed:{
+      likedSongList(){
+        return this.$store.state.data.likedSongList
+      },
+      currentTrackId(){
+        return this.$store.state.player.currentTrack.id
+      }
+    },
     methods: {
       playVideo,
-      playMusic,
+      // playMusic,
       toAlbumDetail,
       toArtistDetail,
       markKeyword,
@@ -81,9 +94,19 @@
           return index > 9 ? index : '0' + index
         }
       },
+      isLiked(id){
+        return this.likedSongList.includes(id)
+      },
+      playSong(id){
+        this.$emit('play-song',id)
+      }
     },
     filters:{
       formatDuration
+    },
+    created(){
+      
+      console.log(this.currentTrackId);
     }
   }
 </script>
@@ -127,6 +150,9 @@
     }
     .index{
       color: var(--color-level5);
+      .iconfont{
+        color: var(--color-netease-red);
+      }
     }
     .song-name{
       display: flex;
@@ -136,6 +162,9 @@
         .main-name{
           &:hover{
             color: var(--color-level1);
+          }
+          &.active{
+            color: var(--color-netease-red);
           }
         }
         .alias-name{

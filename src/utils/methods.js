@@ -1,6 +1,7 @@
 // 播放音乐
 export function playMusic(id){
   console.log('播放音乐', id);
+  this.$store.state.player.playTrack(id)
   // this.$store.dispatch('app/playSong',id)
 }
 // 播放全部

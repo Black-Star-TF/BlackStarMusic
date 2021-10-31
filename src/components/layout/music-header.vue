@@ -1,6 +1,8 @@
 <template>
   <div class="app-header">
     <div class="left-nav">
+      <button @click="logout">退出登录</button>
+      <button @click="test">获取数据</button>
       <span class="iconfont icon-changyong_fanhui" title="后退" @click="$router.go(-1)"></span>
       <span class="iconfont icon-changyong_gengduo" title="前进" @click="$router.go(1)"></span>
     </div>
@@ -44,7 +46,8 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState,mapActions} from 'vuex'
+import {logoutInLocal} from '@/utils/auth'
 import {changeTheme} from '@/utils/common'
 export default {
   data(){
@@ -62,6 +65,14 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['getLikedSongList']),
+    test(){
+      console.log(111);
+      this.getLikedSongList()
+    },
+    logout(){
+      logoutInLocal()
+    },
     changeTheme(value){
       this.$store.commit('updateSettings',{key: 'theme', value })
       changeTheme(value)

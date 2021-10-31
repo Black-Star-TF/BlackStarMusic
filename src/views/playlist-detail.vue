@@ -35,17 +35,24 @@
     <div class="playlist-detail-nav">
       <tab-nav>
         <template v-slot:left>
-          <router-link :to="`/playlistdetail/songlist/${$route.params.id}`" tag="div" active-class="active">歌曲列表</router-link>
-          <router-link :to="`/playlistdetail/comment/${$route.params.id}`" tag="div" active-class="active">评论<span class="comment-count">({{playlist.commentCount}})</span></router-link>
-          <router-link :to="`/playlistdetail/subscribe/${$route.params.id}`" tag="div" active-class="active">收藏者</router-link>
+          <div 
+            v-for="item in modeList"
+            :key="item.name"
+            :class="{'active': mode == item.name}" 
+            @click="mode = item.name"
+          >
+            {{item.label}}
+            <span class="comment-count" v-if="item.name == 'comment'">({{playlist.commentCount}})</span>
+          </div>
+
         </template>
       </tab-nav>
     </div>
 
     <div class="playlist-detail-content">
-      <keep-alive>
-        <router-view :trackIds="playlist.trackIds"></router-view>
-      </keep-alive>
+      <songlist v-if="mode == 'songlist'" :trackIds="ids"></songlist>
+      <comment v-if="mode == 'comment'"></comment>
+      <subscriber v-if="mode == 'subscriber'"></subscriber>
     </div>
   </div>
 </template>
@@ -55,16 +62,28 @@
   import { formatPlayCount,formatDate } from '@/utils/filters'
   import TabNav from '@/components/common/tab-nav'
   import {getPlaylistDetail} from '@/api/playlist'
+  import Songlist from './playlist-detail/songlist.vue'
+  import Comment from './playlist-detail/comment.vue'
+  import Subscriber from './playlist-detail/subscriber.vue'
   export default {
     components: {
-      TabNav
+      TabNav,
+      Songlist,
+      Comment,
+      Subscriber
     },
     data () {
       return {
         id: null,
         playlist: null,
         showDesc: false,
-        ids: []
+        ids: [],
+        mode: 'songlist',
+        modeList:[
+          { name: 'songlist', label: '歌曲列表' },
+          { name: 'comment', label: '评论'},
+          { name: 'subscriber', label: '收藏者'}
+        ]
       }
     },
     methods: {
@@ -82,6 +101,15 @@
             }
           }
         })
+      },
+      init(){
+        this.id = this.$route.params.id
+        getPlaylistDetail(this.id).then(res => {
+          this.playlist = res.playlist
+          this.playlist.trackIds.forEach(item => {
+            this.ids.push(item.id)
+          })
+        })
       }
     },
     filters:{
@@ -89,13 +117,7 @@
       formatPlayCount
     },
     created () {
-      this.id = this.$route.params.id
-      getPlaylistDetail(this.id).then(res => {
-        this.playlist = res.playlist
-        this.playlist.trackIds.forEach(item => {
-          this.ids.push(item.id)
-        })
-      })
+      this.init()
     }
   }
 </script>

@@ -62,3 +62,13 @@ export function getSongUrl(id){
 		}
 	})
 }
+
+// 获取喜欢的歌曲列表
+export function getLikedSongList(uid){
+	return request({
+		url: '/likelist',
+		params: {
+			uid
+		}
+	})
+}

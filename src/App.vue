@@ -2,7 +2,7 @@
   <div id="app">
     <!-- header -->
     <music-header></music-header>
-    <router-view :key="getKey()"/>
+    <router-view/>
   </div>
 </template>
 

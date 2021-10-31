@@ -29,7 +29,7 @@ export default {
   methods:{
     getKey(){
       if(this.$route.meta.hasKey){
-        return this.$route.fullPath + new Date()
+        return this.$route.fullPath
       }else{
         return ''
       }
@@ -45,6 +45,7 @@ export default {
   right: 0;
   top: var(--app-header-height);
   bottom: 0;
+  z-index: 150;
 }
 .app-main{
   position: absolute;
@@ -52,8 +53,7 @@ export default {
   bottom: var(--app-player-height);
   left: var(--app-aside-width);
   right: 0;
-  overflow: auto;
-  z-index: 100;
+  // z-index: 150;
   box-sizing: border-box;
   background-color: var(--main-bg-color);
 }

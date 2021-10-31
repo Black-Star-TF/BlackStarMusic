@@ -104,12 +104,6 @@ export default {
     changeCurrentPage(){
       this.videoComments = null
       this.getVideoComments()
-      // this.getVideoComments().then(()=>{
-      //   this.$nextTick(()=>{
-      //     this.$refs.anchor.scrollIntoView(true)
-      //     // console.log();
-      //   })
-      // })
     },
     getVideoComments(){
       // 获取 mv评论
@@ -117,7 +111,19 @@ export default {
         this.videoComments = res
       })
     },
+    initData(){
+      this.id = null,
+      this.videoUrl = '',
+      this.videoDetail = null,
+      this.videoInfo = null,
+      this.relativeVideoList = [],
+      this.videoComments = null,
+      this.pageNo = 1,
+      this.pageSize = 20,
+      this.showDesc = false
+    },
     init(){
+      this.initData()
       this.id = this.$route.params.id
       // 获取相关视频
       getRelativeVideo(this.id).then(res=>{
@@ -139,11 +145,21 @@ export default {
       this.getVideoComments()
     }
   },
+  beforeRouteEnter(to,from,next){
+    next(vm => {
+      vm.$store.state.player.pause()
+    })
+  },
   filters: {
     formatPlayCount
   },
   created () {
     this.init()
+  },
+  watch:{
+    $route(){
+      this.init()
+    }
   }
 }
 </script>

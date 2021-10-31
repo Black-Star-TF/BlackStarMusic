@@ -6,13 +6,12 @@
 
 <style lang="scss" scoped>
 .page-header{
-  position: fixed;
-  left: var(--app-aside-width);
+  position: absolute;
+  left: 0;
   right: 300px;
+  background-color: var(--header-bg-color);
   height: var(--app-header-height);
   line-height: var(--app-header-height);
-  min-width: calc(var(--min-width) - var(--app-aside-width) - 300px);
-  top: 0;
-  z-index: 150;
+  top: calc(-1 * var(--app-header-height));
 }
 </style>

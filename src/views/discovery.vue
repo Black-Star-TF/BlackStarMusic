@@ -32,14 +32,14 @@ export default {
         { path: '/discovery/newest', name: '最新音乐'},
       ]
     }
-  }
+  },
+  methods: {}
 }
 </script>
 
 <style lang="scss" scoped>
 .discovery{
   height: 100%;
-  overflow: hidden;
   .discovery-content{
     height: 100%;
     padding: 0 7%;

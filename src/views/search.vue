@@ -21,7 +21,7 @@
     <div class="container">
       <!-- 单曲 -->
       <template v-if="results&&type==1">
-        <song-list-table :songList="results" :keyword="keyword"></song-list-table>
+        <song-list-table :songList="results" :keyword="keyword" @play-song="handlePlay"></song-list-table>
       </template>
       <!-- 歌手 -->
       <template v-if="results&&type==100">
@@ -75,6 +75,7 @@ import UserItem from '@/components/search/user-item'
 import RadioItem from '@/components/search/radio-item'
 import VideoItem from '@/components/search/video-item'
 import {getSearchResult} from '@/api/search.js'
+import {mapState} from 'vuex'
 export default {
   components: {
     TabNav,
@@ -108,11 +109,15 @@ export default {
     }
   },
   computed: {
+    ...mapState(['player']),
     offset(){
       return (this.pageNo - 1) * this.pageSize
     }
   },
   methods: {
+    handlePlay(trackId){
+      this.player.addToPlaylist(trackId)
+    },
     changeCurrentPage(){
       this.getSearchResultData()
     },

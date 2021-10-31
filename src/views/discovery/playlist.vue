@@ -41,7 +41,7 @@
 					:num="5" 
 					:index="index" 
 					:playlistItem="playlist" 
-					:key="playlist.id">
+					:key="`${index}-${playlist.id}`">
 					</playlist-item>
 				</template>
 			</container>
