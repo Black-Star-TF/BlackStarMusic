@@ -10,6 +10,5 @@ export default {
     likedSongList: [],  // 喜欢的歌曲列表
     likedPlaylistId: 0,  // 我喜欢的歌单 id
   },
-  player: {},
 }
 

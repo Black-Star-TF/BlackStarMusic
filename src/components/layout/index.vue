@@ -45,7 +45,7 @@ export default {
   right: 0;
   top: var(--app-header-height);
   bottom: 0;
-  z-index: 150;
+  z-index: 100;
 }
 .app-main{
   position: absolute;

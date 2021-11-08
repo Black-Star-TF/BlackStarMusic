@@ -14,7 +14,14 @@
           <span class="create-time">{{playlist.createTime | formatDate}}创建</span>
         </div>
         <div class="playlist-operation">
-          <span class="play-all operation-item"><span class="play" @click="playAll(playlist.id)"><span class="iconfont icon-bofang"></span>播放全部</span><span class="add"> <span class="iconfont icon-jia"></span></span></span>
+          <span class="play-all operation-item">
+            <span class="play" @click="playAll()">
+              <span class="iconfont icon-bofang"></span>播放全部
+            </span>
+            <span class="add" @click="addToPlaylist()">
+              <span class="iconfont icon-jia"></span>
+            </span>
+          </span>
           <span class="subscribe operation-item"><span class="iconfont icon-shoucang"></span>  收藏({{playlist.subscribedCount | formatPlayCount}})</span>
           <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{playlist.shareCount | formatPlayCount}})</span>
           <span class="download-all operation-item"><span class="iconfont icon-xiazai"></span> 下载全部</span>
@@ -44,13 +51,12 @@
             {{item.label}}
             <span class="comment-count" v-if="item.name == 'comment'">({{playlist.commentCount}})</span>
           </div>
-
         </template>
       </tab-nav>
     </div>
 
     <div class="playlist-detail-content">
-      <songlist v-if="mode == 'songlist'" :trackIds="ids"></songlist>
+      <songlist v-if="mode == 'songlist'" :trackIds="trackIds"></songlist>
       <comment v-if="mode == 'comment'"></comment>
       <subscriber v-if="mode == 'subscriber'"></subscriber>
     </div>
@@ -58,7 +64,7 @@
 </template>
  
 <script>
-  import { playAll,toUserDetail } from '@/utils/methods'
+  import { toUserDetail } from '@/utils/methods'
   import { formatPlayCount,formatDate } from '@/utils/filters'
   import TabNav from '@/components/common/tab-nav'
   import {getPlaylistDetail} from '@/api/playlist'
@@ -77,7 +83,7 @@
         id: null,
         playlist: null,
         showDesc: false,
-        ids: [],
+        trackIds: [],
         mode: 'songlist',
         modeList:[
           { name: 'songlist', label: '歌曲列表' },
@@ -87,8 +93,17 @@
       }
     },
     methods: {
-      playAll,
       toUserDetail,
+      addToPlaylist(){
+        this.$store.state.player.addTracksToPlaylist(this.trackIds)
+        this.$message.success('添加成功')
+      },
+      playAll(){
+        // 播放当前歌单
+        if(this.trackIds.length > 0){
+          this.$store.state.player.playTrack(this.trackIds[0],this.trackIds)
+        }
+      },
       changeDesc(){
         this.showDesc = !this.showDesc
       },
@@ -106,9 +121,7 @@
         this.id = this.$route.params.id
         getPlaylistDetail(this.id).then(res => {
           this.playlist = res.playlist
-          this.playlist.trackIds.forEach(item => {
-            this.ids.push(item.id)
-          })
+          this.trackIds = this.playlist.trackIds.map(track => track.id)
         })
       }
     },

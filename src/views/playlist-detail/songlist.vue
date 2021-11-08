@@ -23,7 +23,7 @@
     },
     data () {
       return {
-        songList: null
+        songList: []
       }
     },
     props:{
@@ -40,11 +40,10 @@
     },
     methods:{
       hanldlePlaySong(trackId){
-        this.player.playSongOfPlaylist(this.trackIds,trackId)
+        this.player.playTrack(trackId, this.trackIds)
       },
       init(){
-        let ids = this.trackIds.join(',')
-        getSongsDetail(ids).then(res => {
+        getSongsDetail(this.trackIds.join(',')).then(res => {
           this.songList = res.songs
         })
       }

@@ -1,4 +1,4 @@
-@import url('//at.alicdn.com/t/font_2882306_25m5q62g9ib.css');
+@import url('//at.alicdn.com/t/font_2882306_sn0jl49wghf.css');
 :root {
   --min-width: 1030px;
   --color-keyword: #91b7e2;
@@ -9,6 +9,8 @@
   --color-netease-red: #c2473a;
   --playlist-tag-active-bg-color: rgba(255, 0, 0, 0.13);
   --panel-box-bg-color: #fff;
+
+  --disc-outer-bg-color: #eaeaea;
   // 搜索框
   --search-bg-color: #ececec;
   --search-text-color: #444;
@@ -58,6 +60,8 @@
   --header-color-level2: #b5b5b5;
   --header-color-level3:#888;
   --header-nav-color: #b5b5b5;
+
+  --disc-outer-bg-color: #292929;
   // aside
   --aside-bg-color: #202020;
   --aside-active-link-bg-color: #1b1b1b;

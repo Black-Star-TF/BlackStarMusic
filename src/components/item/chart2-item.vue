@@ -7,7 +7,7 @@
 			<!-- 播放数量 -->
 			<span class="play-count"><span class="iconfont icon-pause"></span> {{toplist.playCount | formatPlayCount}}</span>
 			<!-- 播放按钮 -->
-			<div class="icon-play" @click.stop="playAll(toplist.id)">
+			<div class="icon-play" @click.stop="playPlaylist(toplist.id)">
 				<span class="iconfont icon-bofang"></span>
 			</div>
 		</div>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-	import { playAll,toPlaylistDetail } from '@/utils/methods'
+	import { playPlaylist,toPlaylistDetail } from '@/utils/methods'
 	import { formatPlayCount } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	export default {
@@ -30,7 +30,7 @@
 			}
 		},
 		methods:{
-			playAll,
+			playPlaylist,
 			toPlaylistDetail
 		},
 		filters:{

@@ -1,5 +1,5 @@
 <template>
-  <div class="album-item" @click="toPlaylistDetail(album.id)">
+  <div class="album-item" @click="toAlbumDetail(album.id)">
     <!-- 专辑封面 -->
     <div class="album-cover" :style="{'backgroundImage': `url(${album.picUrl})`}"></div>
     <!-- 专辑名 -->
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-	import { toPlaylistDetail, toArtistDetail, markKeyword } from '@/utils/methods'
+	import { toAlbumDetail, toArtistDetail, markKeyword } from '@/utils/methods'
   export default {
     props: {
       album: {
@@ -34,7 +34,7 @@
     },
     methods:{
       markKeyword,
-      toPlaylistDetail,
+      toAlbumDetail,
       toArtistDetail
     }
   }

@@ -52,7 +52,10 @@ const routes = [
         path: '/playlistdetail/:id',
         meta:{ hasKey: true },
         component: ()=> import('@/views/playlist-detail'),
-        // children: [
+      },
+      {
+        path: '/albumdetail/:id',
+        component: ()=> import('@/views/album-detail'),
       },
       {
         // 设置

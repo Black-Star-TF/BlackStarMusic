@@ -6,7 +6,7 @@
 		@click="toPlaylistDetail(toplist.id)"
 		:style="{'backgroundImage': `url(${toplist.coverImgUrl})`}">
 			<!-- 播放按钮 -->
-			<div class="icon-play" @click.stop="playAll(toplist.id)">
+			<div class="icon-play" @click.stop="playPlaylist(toplist.id)">
 				<span class="iconfont icon-bofang"></span>
 			</div>
 			<span class="update-time">{{date}}更新</span>
@@ -57,7 +57,7 @@
 	</div>
 </template>
 <script>
-	import { playAll, playMusic, toArtistDetail, toPlaylistDetail } from '@/utils/methods'
+	import { playPlaylist, playMusic, toArtistDetail, toPlaylistDetail } from '@/utils/methods'
 	import { getPlaylistDetail} from '@/api/playlist.js'
 	export default {
 		data() {
@@ -74,7 +74,7 @@
 		},
 		methods: {
 			playMusic,
-			playAll,
+			playPlaylist,
 			toPlaylistDetail,
 			toArtistDetail,
 			play(song){

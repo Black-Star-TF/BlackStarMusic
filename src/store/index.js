@@ -26,8 +26,7 @@ player = new Proxy(player, {
   set(target, prop, val) {
     target[prop] = val;
     if (prop === '_howler') return true;
-    target.saveSelfToLocalStorage();
-    // target.sendSelfToIpcMain();
+    target._saveSelfToLocalStorage();
     return true;
   },
 });

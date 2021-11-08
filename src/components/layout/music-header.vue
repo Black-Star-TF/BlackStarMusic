@@ -1,10 +1,10 @@
 <template>
   <div class="app-header">
     <div class="left-nav">
-      <button @click="logout">退出登录</button>
-      <button @click="test">获取数据</button>
-      <span class="iconfont icon-changyong_fanhui" title="后退" @click="$router.go(-1)"></span>
-      <span class="iconfont icon-changyong_gengduo" title="前进" @click="$router.go(1)"></span>
+      <!-- <button @click="logout">退出登录</button> -->
+      <!-- <button @click="test">歌曲详情</button> -->
+      <span v-show="!app.songDetailVisible" class="iconfont icon-changyong_fanhui" title="后退" @click="$router.go(-1)"></span>
+      <span v-show="!app.songDetailVisible" class="iconfont icon-changyong_gengduo" title="前进" @click="$router.go(1)"></span>
     </div>
     <div class="right-operation">
       <!-- 搜索框 -->
@@ -56,7 +56,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['settings']),
+    ...mapState(['settings', 'app']),
     theme(){
       return this.$store.state.settings.theme
     },
@@ -67,8 +67,7 @@ export default {
   methods: {
     ...mapActions(['getLikedSongList']),
     test(){
-      console.log(111);
-      this.getLikedSongList()
+      // this.getLikedSongList()
     },
     logout(){
       logoutInLocal()
@@ -144,6 +143,8 @@ export default {
     height: 100%;
     width: 300px;
     line-height: inherit;
+    position: relative;
+    z-index: 150;
     .iconfont{
       margin: 0 10px;
       font-size: 20px;

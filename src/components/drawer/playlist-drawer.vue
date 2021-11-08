@@ -1,0 +1,274 @@
+<template>
+  <el-drawer
+    :visible="visible"
+    @update:visible="handleClose"
+    :modal="false"
+    size="400px"
+    custom-class="playlist-drawer"
+    :with-header="false"
+  >
+    <div class="playlist-drawer-header">
+      <div class="title">当前播放</div>
+      <div class="info">
+        <span class="total">共{{songList.length}}首</span>
+        <span class="clear" @click="clearList()">清空列表</span>
+        <span class="subscribe-all">
+          <i class="iconfont icon-shoucang"></i> 
+          收藏全部
+        </span>
+      </div>
+    </div>
+
+    <div class="playlist-drawer-content" v-if="songList.length > 0">
+      <div class="song-item"
+        v-for="(song,index) in songList"
+        :key="`${index}-${song.id}`"
+        @dblclick="playSong(song.id)" 
+        :class="{'active': song.id == currentTrackId}"
+      >
+        <div class="song-name">
+          <div class="song-name-container">
+            <span class="main-name">{{song.name}}</span>
+            <span class="alias-name" v-if="song.alia.length > 0"> ({{song.alia[0]}})</span>
+          </div>
+          <span class="song-tag-mv iconfont icon-shipin" v-if="song.mv !== 0" @click="playVideo(song.mv)"></span>
+        </div>
+        
+        <div class="song-artists">
+          <span v-for="(artist,index) in song.ar" :key="`${index}-${artist.id}`">
+            <span class="artist-name" @click="toArtistDetail(artist.id)">{{artist.name}}</span>
+            <span class="separator" v-if="index < song.ar.length -1"> / </span>
+          </span>
+        </div>
+        <div class="song-duration">{{song.dt | formatDuration}}</div>
+      </div>
+    </div>
+  </el-drawer>
+</template>
+
+<script>
+import { playMusic,toAlbumDetail,toArtistDetail, playVideo } from '@/utils/methods'
+import { formatDuration } from '@/utils/filters'
+import {getSongsDetail} from '@/api/music.js'
+import {mapState} from 'vuex'
+export default {
+  name: '',
+  mixins: [],
+  components: {},
+  props:{
+    visible:{
+      type: Boolean,
+      required: true
+    }
+  },
+  data () {
+    return {
+      songList: []
+    }
+  },
+  computed: {
+    ...mapState(['player']),
+    currentTrackId(){
+      return this.player.currentTrack.id
+    }
+  },
+  methods: {
+    toArtistDetail,
+    playVideo,
+    clearList(){
+      this.player.clear()
+      this.songList = []
+    },
+    playSong(id){
+      this.player.playTrackOfCurrentList(id)
+    },
+    handleClose(value){
+      this.$emit('update:visible',value)
+    },
+    getSongList(){
+      this.songList = []
+      let list = this.player.list
+      if(list.length > 0){
+        getSongsDetail(list.join(',')).then(res=>{
+          outer:for(let trackId of list){
+            for(let song of res.songs){
+              if(trackId == song.id){
+                this.songList.push(song)
+                continue outer
+              }
+            }
+          }
+        })
+      }
+    }
+  },
+  filters: {
+    formatDuration
+  },
+  watch:{
+    visible(val){
+      if(val){
+        this.getSongList()
+      }
+    }
+  },
+  created () {
+    // console.log(this.player);
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import "~@/styles/mixins.scss";
+::v-deep.el-drawer__wrapper{
+  top: var(--app-header-height);
+  bottom: var(--app-player-height);
+  .playlist-drawer{
+    background-color: var(--panel-box-bg-color);
+  }
+  .el-drawer__body{
+    overflow: hidden;
+  }
+}
+
+.playlist-drawer-header{
+  width: 360px;
+  height: 70px;
+  margin: 0 auto;
+  margin-top: 20px;
+  border-bottom: 1px solid var(--color-level5);
+  box-sizing: border-box;
+  .title{
+    font-size: 20px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    color: var(--color-level2);
+  }
+  .info{
+    height: 30px;
+    margin-top: 10px;
+    .total{
+      font-size: 13px;
+      color: var(--color-level4);
+      
+    }
+    .subscribe-all{
+      float: right;
+      font-size: 14px;
+      color: var(--color-level2);
+      margin-right: 20px;
+      cursor: pointer;
+      &:hover{
+        color: var(--color-level1);
+      }
+    }
+    .clear{
+      float: right;
+      font-size: 14px;
+      color: var(--link-color);
+      cursor: pointer;
+      &:hover{
+        color: var(--link-hover-color);
+      }
+    }
+  }
+}
+
+.playlist-drawer-content{
+  height: calc(100% - 90px);
+  overflow: overlay;
+  .song-item{
+    display: flex;
+    height: 30px;
+    line-height: 30px;
+    font-size: 13px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    &:nth-of-type(2n){
+      background-color: var(--table-stripe-color);
+    }
+    &:hover{
+      background-color: var(--table-hover-color);
+    }
+    &:hover{
+      .song-name{
+        .song-name-container{
+          color: var(--color-level1);
+        }
+      }
+      .song-artists{
+        color: var(--color-level1);
+        .artist-name{
+          &:hover{
+            color: var(--color-level1);
+          }
+        }
+      }
+      .song-duration{
+        color: var(--color-level1);
+      }
+    }
+    &.active{
+      .song-name{
+        .song-name-container{
+          color: var(--color-netease-red);
+        }
+      }
+      .song-artists{
+        color: var(--color-netease-red);
+      }
+    }
+    .song-name{
+      overflow: hidden;
+      flex: 2;
+      display: flex;
+      box-sizing: border-box;
+      margin-right: 10px;
+      .song-name-container{
+        @include ellipsis;
+        color: var(--color-level2);
+        .alias-name{
+          color: var(--color-level4);
+        }
+      }
+      .iconfont{
+        color: var(--color-netease-red);
+        display: inline-block;
+        margin-left: 5px;
+        &.song-tag-sq{
+          font-size: 22px;
+        }
+        &.song-tag-mv{
+          cursor: pointer;
+          font-size: 16px;
+        }
+      }
+    }
+    .song-artists{
+      overflow: hidden;
+      flex: 1;
+      height: 100%;
+      box-sizing: border-box;
+      margin-right: 10px;
+      @include ellipsis;
+      color: var(--color-level3);
+      .artist-name{
+        cursor: pointer;
+        &:hover{
+          color: var(--color-level2);
+        }
+      }
+      .separator{
+        color: var(--color-level4);
+      }
+    }
+    .song-duration{
+      overflow: hidden;
+      width: 50px;
+      height: 100%;
+      color: var(--color-level4);
+    }
+  }
+}
+</style>

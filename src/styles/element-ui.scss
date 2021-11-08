@@ -74,3 +74,11 @@
     background: none;
   }
 }
+
+.el-tooltip__popper{
+  padding: 0;
+  background: transparent;
+  &.is-dark{
+    background: transparent;
+  }
+}

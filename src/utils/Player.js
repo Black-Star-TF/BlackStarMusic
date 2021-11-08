@@ -1,157 +1,289 @@
-import { Howler, Howl } from 'howler';
+import { Howler, Howl } from 'howler'
 import { getSongsDetail, getSongUrl } from '@/api/music'
-
-export default class Player {
+import axios from 'axios'
+export default class Player{
   constructor(){
-    // 播放器状态
-    this._playing = false  // 是否正在播放
-    this._progress = 0     // 当前播放歌曲的进度
-    this._volume = 1;      // 音量 0 to 1
-    this._repeatMode = 'off'; // off | on | one  循环播放模式
-    // this._shuffle = false; // true | false  是否随机播放
-
+    this._playing = false         // 当前播放状态
+    this._progress = 0            // 当前播放进度
+    this._volume = 1              // 当前播放音量
+    this._volumeBeforeMuted = 1   // 保存静音前的音量
+    this._list = []               // 当前播放列表
+    this._currentIndex = 0        // 当前播放歌曲在播放列表中的索引
+    this._currentTrack = {}       // 当前播放的歌曲信息
+    this._history = []            // 播放历史
     
-
-    // 播放信息
-    this._list = [] // 播放列表
-    this._current = 0; // 当前播放歌曲在播放列表中的索引
-    // this._shuffledList = [] // 随机的播放放列表
-    // this._shuffleList = 0 // 当前播放歌曲在随机播放列表中的索引
-    this._playlist = {}  // 当前播放列表的信息
-    this._currentTrack = {}  //当前播放歌曲的详细信息
-    this._playNextList = []; // 当这个list不为空时，会优先播放这个list的歌
-
-    this._howler = null;
-    Object.defineProperty(this, '_howler', {
+    this._howler = null           // 播放器实例
+    Object.defineProperty(this, '_howler',{
       enumerable: false,
-    });
+    })
 
-    this._init()
-  }
-
-  get volume() {
-    return this._volume;
-  }
-  set volume(volume) {
-    this._volume = volume;
-    Howler.volume(volume);
-  }
-  get list() {
-    return this._list;
-  }
-  set list(list) {
-    this._list = list;
-  }
-  get current() {
-    return this._current;
-  }
-  set current(current) {
-    this._current = current;
+    this.__init__()
   }
 
-  get playing() {
-    return this._playing;
-  }
-  get currentTrack() {
-    return this._currentTrack;
-  }
-  get playlistSource() {
-    return this._playlistSource;
-  }
-  get playNextList() {
-    return this._playNextList;
+  // 获取当前播放状态
+  get playing(){
+    return this._playing
   }
 
-  get currentTrackDuration() {
-    const trackDuration = this._currentTrack.dt || 1000;
-    let duration = ~~(trackDuration / 1000);
-    return duration
-    // return duration > 1 ? duration - 1 : duration;
+  // 获取当前播放进度
+  get progress(){
+    return this._progress
   }
-  get progress() {
-    return this._progress;
+
+  // 获取播放历史
+  get history(){
+    return this._history
   }
+  // 修改播放历史
+  set history(val){
+    this._history = val
+  }
+
+  // 设置当前播放进度
   set progress(value) {
     if (this._howler) {
       this._howler.seek(value);
     }
   }
-  // 当前播放的歌曲是否为我喜欢的歌曲
-  get isCurrentTrackLiked() {
-    return this.$store.state.data.likedSongList.includes(this.currentTrack.id);
+
+  // 获取播放音量
+  get volume(){
+    return this._volume
   }
 
-  _init() {
-    this._loadSelfFromLocalStorage();
-    Howler.autoUnlock = false;
-    Howler.usingWebAudio = true;
-    Howler.volume(this.volume);
-
-    // 恢复当前播放歌曲
-    this.playTrack(this._currentTrack.id, false).then(() => {
-      this._howler?.seek(localStorage.getItem('playerCurrentTrackTime') ?? 0);
-    }); 
-
-    this._setIntervals();
+  // 设置播放音量
+  set volume(val){
+    this._volume = val
+    Howler.volume(val);
   }
 
-  _setIntervals() {
-    // 同步播放进度
-    // TODO: 如果 _progress 在别的地方被改变了，这个定时器会覆盖之前改变的值，是bug
-    setInterval(() => {
-      if (this._howler === null) return;
-      this._progress = this._howler.seek();
-      localStorage.setItem('playerCurrentTrackTime', this._progress);
-    }, 1000);
+  // 获取当前播放列表
+  get list(){
+    return this._list
   }
 
-  _getNextTrack() {
-    if (this._playNextList.length > 0) {
-      let trackID = this._playNextList.shift();
-      return [trackID, this.current];
+  // 设置当前播放列表
+  set list(val){
+    this._list = val
+  }
+
+  // 获取当前歌曲索引
+  get currentIndex(){
+    return this._currentIndex
+  }
+
+  
+
+  // 设置当前播放的歌曲索引
+  set currentIndex(val){
+    this._currentIndex = val
+  }
+
+  // 获取当前播放的歌曲
+  get currentTrack(){
+    return this._currentTrack
+  }
+
+  // 设置当前播放歌曲信息
+  set currentTrack(val){
+    this._currentTrack = val
+  }
+
+  // 获取当前播放歌曲的时长
+  get currentTrackDuration() {
+    const trackDuration = this._currentTrack.dt || 1000;
+    let duration = ~~(trackDuration / 1000);
+    return duration > 1 ? duration - 1 : duration;
+  }
+
+  // 初始化操作
+  __init__(){
+    this._loadSelfFromLocalStorage()
+    Howler.autoUnlock = false
+    Howler.volume(this._volume)
+
+    // 恢复歌曲播放
+    if(this.list.length > 0){
+      this.readyToPlay(false).then(()=>{
+        this._howler?.seek(localStorage.getItem('playerCurrentTrackTime') ?? 0)
+      })
     }
+    
 
-    // 当歌曲是列表最后一首 && 循环模式开启
-    if (this.list.length === this.current + 1 && this.repeatMode === 'on') {
-      return [this.list[0], 0];
-    }
-
-    // 返回 [trackID, index]
-    return [this.list[this.current + 1], this.current + 1];
+    // TODO: 开启一个循环定时器每秒钟获取播放器的播放时间
+    setInterval(()=>{
+      if(this._howler){
+        this._progress = this._howler.seek()
+        localStorage.setItem('playerCurrentTrackTime', this._progress);
+      }
+    },200)
   }
 
-  _getPrevTrack() {
-    // 当歌曲是列表第一首 && 循环模式开启
-    if (this.current === 0 && this.repeatMode === 'on') {
-      return [this.list[this.list.length - 1], this.list.length - 1];
+  // 静音
+  mute(){
+    if(this.volume == 0){
+      this.volume = this._volumeBeforeMuted
+    }else{
+      this._volumeBeforeMuted = this.volume;
+      this.volume = 0
     }
-
-    // 返回 [trackID, index]
-    return [this.list[this.current - 1], this.current - 1];
   }
 
-  _playAudioSource(source, autoplay = true) {
-    Howler.unload();
+  // 播放
+  play(){
+    if(this._howler?.playing()) return
+    this._howler?.play()
+    this._playing = true
+  }
+
+  // 暂停
+  pause(){
+    this._howler?.pause();
+    this._playing = false;
+  }
+
+  togglePlayStatus(){
+    if(this._howler?.playing()){
+      this.pause()
+    }else{
+      this.play()
+    }
+  }
+ 
+  playTrackOfSource(source, autoPlay = true){
+    Howler.unload() // 销毁所有Howl对象
     this._howler = new Howl({
-      src: [source],
-      html5: true,
-      format: ['mp3', 'flac'],
-    });
-    if (autoplay) {
-      this.play();
+      src: source,
+    })
+    if(autoPlay){
+      this._howler.play()
+      this._playing = true
     }
     this._howler.once('end', () => {
       this.playNextTrack();
     });
   }
-  _loadSelfFromLocalStorage() {
+
+  // 播放歌曲并切换播放列表
+  playTrack(trackId, tracks){
+    tracks = JSON.parse(JSON.stringify(tracks))
+    this.list = tracks
+    this.playTrackOfCurrentList(trackId)
+  }
+
+
+  // 获取歌曲详情和歌曲url
+  readyToPlay(autoPlay = true){
+    this.progress = 0
+    let id = this._list[this.currentIndex]
+    return axios.all([getSongsDetail(id),getSongUrl(id)])
+    .then(axios.spread((res1,res2)=>{
+      if(res2.data[0] && res2.data[0].url && !res2.data[0].freeTrialInfo){
+        this.progress = 0
+        this.currentTrack = res1.songs[0]
+        this.playTrackOfSource(res2.data[0].url, autoPlay)
+
+        // 添加到播放历史
+        let index = this.history.findIndex(item=>{
+          return this.currentTrack.id == item.id
+        })
+        if(index >= 0){
+          this.history.splice(index,1)
+        }
+        this.history.unshift({
+          id: this.currentTrack.id,
+          playDate: new Date().getTime()
+        })
+        if(this.history.length > 50){
+          this.history.pop()
+        }
+        this.history = this.history
+        return true
+      }else{
+        // 歌曲收费时 跳过播放下一首
+        this.playNextTrack()
+      }
+    }))
+  }
+
+  // 播放下一首
+  playNextTrack(){
+    if(this.currentIndex >= this._list.length  - 1){
+      // 当前是最后一首时，下一首播放第一首
+      this.currentIndex = 0
+    }else{
+      this.currentIndex++
+    }
+    this.readyToPlay()
+  }
+
+  // 播放上一首
+  playPrevTrack(){
+    if(this.currentIndex <= 0){
+      // 当前为第一首时，上一首播放最后一首
+      this.currentIndex = this.list.length - 1
+    }else{
+      this.currentIndex--
+    }
+    this.readyToPlay()
+  }
+
+  // 将一首歌添加到当前播放列表
+  addTrackToPlayList(trackId, immediately = false){
+    if(immediately){
+      // 如果要立即播放，则添加到当前播放歌曲后并进行播放
+      if(this.list.length <= 0){
+        this.currentIndex = 0
+        this.list.push(trackId)
+      }else{
+        this.currentIndex++
+        this.list.splice(this.currentIndex,0,trackId)
+      }
+      this.readyToPlay()
+    }else{
+      // 如果不需要立即播放，则添加到当前播放列表最后
+      tthis.list.push(trackId)
+    }
+    this.list = this.list
+  }
+
+  // 将多首歌添加到当前播放列表
+  addTracksToPlaylist(tracks){
+    tracks = JSON.parse(JSON.stringify(tracks))
+    this.list.push(...tracks)
+    this.list = this.list
+  }
+
+  // 播放当前播放列表中的歌
+  playTrackOfCurrentList(trackId){
+    this.currentIndex = this.list.indexOf(trackId)
+    this.readyToPlay()
+  }
+
+  // 清空播放列表并停止播放
+  clear(){
+    this.list = []
+    this.currentIndex = 0
+    this.currentTrack = {}
+    Howler.unload()
+    this._howler = null
+  }
+
+  clearHistory(){
+    this.history = []
+  }
+
+  // 从localStorage获取数据
+  _loadSelfFromLocalStorage(){
     const player = JSON.parse(localStorage.getItem('player'));
     if (!player) return;
     for (const [key, value] of Object.entries(player)) {
       this[key] = value;
     }
   }
-  saveSelfToLocalStorage() {
+
+  // 将数据保存到localStorage
+  _saveSelfToLocalStorage(){
     let player = {};
     for (let [key, value] of Object.entries(this)) {
       if (key === '_playing') continue;
@@ -159,85 +291,4 @@ export default class Player {
     }
     localStorage.setItem('player', JSON.stringify(player));
   }
-
-  pause() {
-    this._howler?.pause();
-    this._playing = false;
-  }
-  play() {
-    if (this._howler?.playing()) return;
-    this._howler?.play();
-    this._playing = true;
-  }
-  playOrPause() {
-    if (this._howler?.playing()) {
-      this.pause();
-    } else {
-      this.play();
-    }
-  }
-
-  _getAudioSource(track, autoPlay) {
-    return getSongUrl(track.id).then(result => {
-      if (!result.data[0]) return null;
-      if (!result.data[0].url) return null;
-      if (result.data[0].freeTrialInfo !== null) return null; // 跳过只能试听的歌曲
-      const source = result.data[0].url.replace(/^http:/, 'https:');
-      this._playAudioSource(source, autoPlay)
-      return true
-    });
-  }
-  playTrack(id, autoPlay = true){
-    return getSongsDetail(id).then(data => {
-      let track = data.songs[0];
-      // this._currentTrack = track;
-      return this._getAudioSource(track, autoPlay).then(res=>{
-        if(res){
-          this._currentTrack = track;
-        }else{
-          console.log(111);
-        }
-        return true
-      })
-    });
-  }
-
-  playSongOfPlaylist(trackIds, trackId = null){
-    console.log(trackId);
-    this.list = trackIds
-    if(!trackId){
-      // 从第一首开始播放
-      this.current = 0
-    }else{
-      this.current = trackIds.indexOf(trackId)
-    }
-    console.log(this.current);
-    this.playTrack(this.list[this.current])    
-  }
-   playNextTrack(){
-    if(!this.list.length > 0) return 
-    if(this.current == this.list.length - 1){
-      this.current = 0
-    }else{
-      this.current = this.current + 1
-    }
-    this.playTrack(this.list[this.current])
-   }
-
-   playPrevTrack(){
-    if(!this.list.length > 0) return 
-    if(this.current == 0){
-      this.current = this.list.length - 1
-    }else{
-      this.current = this.current - 1
-    }
-    this.playTrack(this.list[this.current])    
-  }
-
-  addToPlaylist(trackId){
-    this.current++
-    this.list.splice(this.current,0,trackId)
-    this.playTrack(this.list[this.current])
-  }
-  
 }

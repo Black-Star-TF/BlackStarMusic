@@ -1,20 +1,24 @@
-// 播放音乐
+import {getPlaylistDetail} from '@/api/playlist'
+import store from '@/store'
+
+
+// 播放歌曲有关方法
+
+// 播放音乐并替换播放列表
 export function playMusic(id){
   console.log('播放音乐', id);
-  this.$store.state.player.playTrack(id)
-  // this.$store.dispatch('app/playSong',id)
+
 }
 // 播放全部
-export function playAll(id){
-  console.log('播放歌单全部歌曲', id);
-  let list = []
-  // getPlaylistDetail(id).then(res => {
-  //   res.playlist.trackIds.forEach(item => {
-  //     list.push(item.id)
-  //   })
-  //   this.$store.dispatch('app/playAll',list)
-  // })
+export function playPlaylist(id){
+  getPlaylistDetail(id).then(res => {
+    let tracks = res.playlist.trackIds.map(track => {
+      return track.id
+    })
+    this.$store.state.player.playTrack(tracks[0],tracks)
+  })
 }
+
 export function playRadio(id){
   console.log('播放电台',id);
 }
@@ -33,7 +37,7 @@ export function toPlaylistDetail(id){
 }
 // 跳转到专辑详情页
 export function toAlbumDetail(id){
-  console.log('跳转到专辑详情页', id);
+  this.$router.push(`/albumdetail/${id}`)
 }
 // 跳转到歌手详情页
 export function toArtistDetail(id){

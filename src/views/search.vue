@@ -116,7 +116,7 @@ export default {
   },
   methods: {
     handlePlay(trackId){
-      this.player.addToPlaylist(trackId)
+      this.player.addTrackToPlayList(trackId,true)
     },
     changeCurrentPage(){
       this.getSearchResultData()

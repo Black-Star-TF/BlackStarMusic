@@ -47,8 +47,20 @@ export function getAllNewAlbum(){
 export function getSongsDetail(ids){
 	return request({
 		url: '/song/detail',
-		params:{
+		params: {
 			ids
+		}
+	})
+}
+
+// 获取歌曲评论
+export function getSongComments(id,limit,offset){
+	return request({
+		url: '/comment/music',
+		params:{
+			id,
+			limit,
+			offset
 		}
 	})
 }
@@ -63,12 +75,54 @@ export function getSongUrl(id){
 	})
 }
 
+// 获取歌曲歌词
+export function getSongLyric(id){
+	return request({
+		url: '/lyric',
+		params:{
+			id
+		}
+	})
+}
+
+
+// 获取歌曲相似歌单
+export function getSimiPlaylists(id){
+	return request({
+		url: '/simi/playlist',
+		params:{
+			id
+		}
+	})
+}
+
+// 获取相似歌曲
+export function getSimiSongs(id){
+	return request({
+		url: '/simi/song',
+		params:{
+			id
+		}
+	})
+}
+
 // 获取喜欢的歌曲列表
 export function getLikedSongList(uid){
 	return request({
 		url: '/likelist',
 		params: {
 			uid
+		}
+	})
+}
+
+// 获取专辑信息
+
+export function getAlbumDetail(id){
+	return request({
+		url: '/album',
+		params:{
+			id
 		}
 	})
 }

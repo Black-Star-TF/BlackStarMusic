@@ -9,7 +9,6 @@ export function getKey(params){
   })
 }
 
-
 // 获取能够生成二维码的数据
 export function getQR(params){
   return request({

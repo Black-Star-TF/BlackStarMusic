@@ -16,7 +16,7 @@
       <div class="row column index">
         <span v-if="song.id == currentTrackId" class="iconfont icon-yinliang"></span>
         <span v-else>{{formatIndex(index+1)}}</span>
-        </div>
+      </div>
       <div class="row column song-operation">
         <span class="song-operation-item iconfont liked icon-xihuan-shi" v-if="isLiked(song.id)">
         </span>
@@ -35,12 +35,12 @@
       </div>
       <div class="row column song-artists">
         <span class="song-artists-content">
-            <span class="artist" v-for="(artist,index) in song.ar" :key="`${index}-${artist.id}`">
-              <span class="artist-name" v-if="keyword" @click="toArtistDetail(artist.id)" v-html="markKeyword(artist.name)"></span>
-              <span class="artist-name" v-else @click="toArtistDetail(artist.id)">{{artist.name}}</span>
-              <span class="separator" v-if="index < song.ar.length -1"> / </span>
-            </span>
+          <span class="artist" v-for="(artist,index) in song.ar" :key="`${index}-${artist.id}`">
+            <span class="artist-name" v-if="keyword" @click="toArtistDetail(artist.id)" v-html="markKeyword(artist.name)"></span>
+            <span class="artist-name" v-else @click="toArtistDetail(artist.id)">{{artist.name}}</span>
+            <span class="separator" v-if="index < song.ar.length -1"> / </span>
           </span>
+        </span>
       </div>
       <div class="row column song-album">
         <span class="song-album-name" v-if="keyword" @click="toAlbumDetail(song.al.id)" v-html="markKeyword(song.al.name)"></span>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-  import { playMusic,toAlbumDetail,toArtistDetail,markKeyword, playVideo } from '@/utils/methods'
+  import { toAlbumDetail,toArtistDetail,markKeyword, playVideo } from '@/utils/methods'
   import { formatDuration } from '@/utils/filters'
   export default {
     props:{
@@ -82,7 +82,6 @@
     },
     methods: {
       playVideo,
-      // playMusic,
       toAlbumDetail,
       toArtistDetail,
       markKeyword,
@@ -104,10 +103,7 @@
     filters:{
       formatDuration
     },
-    created(){
-      
-      console.log(this.currentTrackId);
-    }
+    created(){}
   }
 </script>
 

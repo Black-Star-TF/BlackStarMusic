@@ -12,6 +12,9 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@better-scroll/core": "^2.4.2",
+    "@better-scroll/mouse-wheel": "^2.4.2",
+    "@better-scroll/scroll-bar": "^2.4.2",
     "axios": "^0.23.0",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.6",

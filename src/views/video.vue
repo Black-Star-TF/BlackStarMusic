@@ -34,6 +34,7 @@
 <style lang="scss" scoped>
   .view-video{
 		height: 100%;
+    overflow: overlay;
 		.video-content{
 			height: calc(100% - 50px);
 			box-sizing: border-box;

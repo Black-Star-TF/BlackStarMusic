@@ -122,7 +122,8 @@ export default {
   left: 0;
   width: var(--app-aside-width);
   background-color: var(--aside-bg-color);
-  z-index: 101;
+  z-index: 100;
+  overflow: overlay;
   .user{
     height: 60px;
     line-height: 60px;

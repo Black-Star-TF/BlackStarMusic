@@ -1,8 +1,9 @@
 <template>
   <div class="app-footer">
     <!-- 播放进度条 -->
-    <div class="slider-container">
-      <vue-slider 
+    <div class="progress-slider-container">
+      <vue-slider
+        class="progress-slider" 
         v-model="value"
         :min="0"
         :max="player.currentTrackDuration"
@@ -23,7 +24,12 @@
     <div class="controls">
       <div class="song-info">
         <template v-if="currentSong.id">
-          <div class="song-avatar" :style="{'backgroundImage': `url(${currentSong.al&&currentSong.al.picUrl})`}"></div>
+          <div class="song-avatar" :style="{'backgroundImage': `url(${currentSong.al&&currentSong.al.picUrl})`}">
+            <div class="mask"  @click="showSongDetail">
+              <span class="iconfont icon-zhankai" v-if="!app.songDetailVisible"></span>
+              <span class="iconfont icon-shouqi" v-else></span>
+            </div>
+          </div>
           <div class="info">
             <div class="song-name">
               <span class="name">{{currentSong.name}}<span class="alias" v-if="currentSong.alia.length > 0">({{currentSong.alia[0]}})</span></span>
@@ -50,63 +56,102 @@
         <span class="control-item prev" @click="player.playPrevTrack()">
           <span class="iconfont icon-prev"></span>
         </span>
-        <span class="control-item play" @click="player.playOrPause()" >
+        <span class="control-item play" @click="togglePlayStatus">
           <span class="iconfont icon-zanting" v-if="player.playing"></span>
           <span class="iconfont icon-bofang" v-else></span>
         </span>
-        <span class="control-item next" @click="player.playNextTrack()">
-          <span class="iconfont icon-next"></span>
+        <span class="control-item next">
+          <span class="iconfont icon-next" @click="player.playNextTrack()"></span>
         </span>
         <span class="control-item share">
           <span class="iconfont icon-fenxiang1"></span>
         </span>
       </div>
       <div class="play-settings">
-        <!-- <span class="setting-item play-mode">
-          <i class="iconfont"></i>
+        <el-tooltip class="item" effect="dark" content="顺序播放" placement="top">
+          <span class="setting-item play-mode iconfont icon-shunxubofang"></span>
+        </el-tooltip>
+        <span class="setting-item current-playlist iconfont icon-bofangliebiao" title="播放列表" @click="showPlaylist"></span>
+
+        <span class="setting-item sound iconfont" @click="handleMute" :class="volumeIcon">
+          <div class="volume-control" @click.stop>
+            <vue-slider
+              class="volume-slider"
+              v-model="player.volume"
+              :min="0"
+              :max="1"
+              :width="6"
+              :dotSize="10"
+              :height="80"
+              :interval="0.01"
+              :duration="0"
+              :drag-on-click="true"
+              :silent="true"
+              tooltip="none"
+              direction="btt"
+            >
+            </vue-slider>
+          </div>
         </span>
-        <span class="setting-item current-playlist">
-          <i class="iconfont icon-bofangliebiao"></i>
-        </span>
-        <span class="setting-item sound">
-          <i class="iconfont"></i>
-        </span> -->
       </div>
+
+      <!-- 播放列表 -->
+      <playlist-drawer :visible.sync="isShowPlaylist"></playlist-drawer>
     </div>
-
-
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
-import { formatDuration } from '@/utils/filters'
+import {toArtistDetail} from '@/utils/methods'
+import {mapState, mapMutations} from 'vuex'
 import VueSlider from 'vue-slider-component'
+import PlaylistDrawer from '@/components/drawer/playlist-drawer'
 export default {
   mixins: [],
   components: {
-    VueSlider
+    VueSlider,
+    PlaylistDrawer
   },
   data () {
     return {
       value: 0.00001,
       onDrag: false,
       playing: false,
-      liked: false
+      liked: false,
+      volume: 1,
+      isShowPlaylist: false
     }
   },
   computed: {
-    ...mapState(['player']),
+    ...mapState(['player', 'app']),
     currentSong(){
       return this.player.currentTrack
     },
+    isLiked(){
+      return this.$store.state.data.likedSongList.includes(this.currentSong.id)
+    },
+    volumeIcon(){
+      let icon = this.player.volume > 0 ? 'icon-yinliang': 'icon-jingyin'
+      return [icon]
+    }
   },
   methods: {
+    ...mapMutations(['updateApp']),
+    showSongDetail(){
+      this.updateApp({
+        key: 'songDetailVisible',
+        value: !this.app.songDetailVisible
+      })
+    },
+    toArtistDetail,
+    showPlaylist(){
+      this.isShowPlaylist = !this.isShowPlaylist
+    },
     like(){
       this.liked = !this.liked
     },
-    play(){
-      this.playing = !this.playing
+    togglePlayStatus(){
+      this.player.togglePlayStatus()
     },
     handleDragStart(){
       this.onDrag = true
@@ -115,14 +160,20 @@ export default {
       this.onDrag = false
       this.player.progress = this.value
     },
-    isLiked(id){
-      return this.$store.state.data.likedSongList.includes(id)
-    },
+    handleMute(){
+      this.player.mute()
+    }
   },
   filters: {
     formatTrackTime(value) {
+      if(value == 0){
+        return `0:00`
+      }
       if (!value) return '';
       let min = ~~((value / 60) % 60);
+      if(min < 10){
+        min = '0'+ min
+      }
       let sec = (~~(value % 60)).toString().padStart(2, '0');
       return `${min}:${sec}`;
     },
@@ -154,7 +205,7 @@ export default {
   background-color: var(--footer-bg-color);
   z-index: 102;
   border-top: 2px solid var(--footer-bd-color);
-  .slider-container{
+  .progress-slider-container{
     position: absolute;
     width: 100%;
     height: 2px;
@@ -178,6 +229,23 @@ export default {
         float: left;
         margin-right: 10px;
         cursor: pointer;
+        overflow: hidden;
+        &:hover{
+          .mask{
+            display: block;
+          }
+        }
+        .mask{
+          display: none;
+          width: 100%;
+          height: 100%;
+          line-height: 40px;
+          background-color: rgba($color: #000000, $alpha: 0.6);
+          text-align: center;
+          span{
+            color: #fff;
+          }
+        }
       }
       .info{
         float: left;
@@ -241,9 +309,6 @@ export default {
             left: 1px;
           }
         }
-        // &.liked{
-
-        // }
         &.share, &.like{
           color: var(--color-level2);
         }
@@ -254,13 +319,73 @@ export default {
       margin-right: 10px;
       width: 340px;
       height: 40px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      position: relative;
+      .setting-item{
+        margin-right: 20px;
+        font-size: 20px;
+        color: var(--color-level2);
+        position: relative;
+        display: inline-block;
+        &:hover{
+          .volume-control{
+            display: flex;
+          }
+        }
+        .volume-control{
+          position: absolute;
+          display: none;
+          z-index: 10000;
+          bottom: 32px;
+          left: calc(50% - 15px);
+          width: 30px;
+          height: 100px;
+          justify-content: center;
+          align-items: center;
+          background-color: var(--panel-box-bg-color);
+          box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+          border-radius: 3px;
+          &:before{
+            display: block;
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 6px solid transparent;
+            border-top-color: var(--panel-box-bg-color);
+            bottom: -12px;
+            left: calc(50% - 6px);
+          }
+          ::v-deep .volume-slider{
+            padding: 0;
+            .vue-slider-rail{
+              background-color: var(--search-bg-color);
+              border-radius: 2.5px;
+              .vue-slider-process{
+                border-radius: 2.5px;
+                background-color: var(--color-netease-red);
+              }
+              .vue-slider-dot{
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: var(--color-netease-red);
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
 
-::v-deep .vue-slider {
+::v-deep .progress-slider {
   margin-top: -5px;
   margin-bottom: -5px;
+  // overflow: hidden;
+  // box-sizing: border-box;
   .vue-slider-rail{
     .vue-slider-process{
       background-color: var(--color-netease-red);
@@ -279,3 +404,4 @@ export default {
   }
 }
 </style>
+
