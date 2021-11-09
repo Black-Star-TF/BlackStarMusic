@@ -15,11 +15,13 @@
 									<span class="name">{{value}}</span>
 								</div>
 								<div class="group-tags">
-									<div class="tag-container" v-for="tag in playlistCate" v-if="tag.category == key" :key="tag.name">
-										<span :class="{'active': tag.name == currentTag.name}" @click="changeTag(tag)">
-										{{tag.name}}
-										</span>
-									</div>
+									<template v-for="tag in playlistCate" >
+										<div class="tag-container" :key="tag.name" v-if="tag.category == key">
+											<span :class="{'active': tag.name == currentTag.name}" @click="changeTag(tag)">
+												{{tag.name}}
+											</span>
+										</div>
+									</template>
 								</div>
 							</div>
 						</div>

@@ -36,7 +36,8 @@ const routes = [
             component: ()=> import('@/views/video/mv'),
           },
           {
-            path: 'shipin'
+            path: 'shipin',
+            component: ()=> import('@/views/video/shipin'),
           }
         ]
       },
