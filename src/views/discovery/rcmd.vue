@@ -1,10 +1,10 @@
 <template>
 	<div class="view-recommend">
-		<template v-if="loading">
+		<template v-if="loaded">
 			<!-- 轮播图 -->
 			<el-carousel :interval="4000" type="card" height="15vw">
 				<el-carousel-item v-for="(item,index) in banners" :key="item.targetId || index+1" width="50%">
-				<div class="banner-item" :style="{backgroundImage: `url(${item.imageUrl})`}"></div>
+				<div class="banner-item" :style="{backgroundImage: `url(${getBannerCover(item.imageUrl)})`}"></div>
 				</el-carousel-item>
 			</el-carousel>
 
@@ -91,7 +91,7 @@
 	import NewestSongItem from '@/components/item/newest-song-item'
 	import MvItem from '@/components/item/mv-item'
 	// import Loading from '@/components/common/Loading'
-
+	import axios from 'axios'
 	import {
 		getRecommendBanner,
 		getrecommendNewestSong
@@ -107,6 +107,7 @@
 
 	
 	import { getRecommendRadio } from '@/api/djradio.js'
+	import {size_banner} from '@/utils/img-size.js'
 	
 	export default {
 		name: 'Recommend',
@@ -117,7 +118,8 @@
 				exclusives: [],
 				newestSongs: [],
 				mvs: [],
-				radios: []
+				radios: [],
+				loaded: false
 			}
 		},
 		components: {
@@ -128,49 +130,44 @@
 			MvItem,
 			// Loading
 		},
-		computed:{
-			loading () {
-				// return true
-				return this.banners.length != 0 && this.playlists.length != 0 && this.exclusives.length != 0 && this.newestSongs.length != 0 && this.mvs.length != 0
+		methods:{
+			getBannerCover(url){
+				return `${url}?param=${size_banner}`
+			},
+			async getData(){
+				this.loaded = false
+				let res =  await axios.all([
+					getRecommendBanner(),
+					getRecommendPlaylist(10),
+					getRecommendExclusive(),
+					getrecommendNewestSong(),
+					getRecommendMV(),
+				])
+				// 获取轮播图数据
+				this.banners = res[0].banners
+				// 获取推荐歌单数据
+				this.playlists = res[1].result
+				// 获取独家放送数据
+				this.exclusives = res[2].result
+				// 获取推荐最新歌曲
+				this.newestSongs = res[3].result
+				// 获取推荐mv
+				this.mvs = res[4].result
+				this.loaded = true
 			}
 		},
 		created() {
-			// 获取轮播图数据
-			getRecommendBanner().then(res => {
-				this.banners = res.banners
-			})
-
-			// 获取推荐歌单数据
-			getRecommendPlaylist(10).then(res => {
-				this.playlists = res.result
-			})
-
-			// 获取独家放送数据
-			getRecommendExclusive().then(res => {
-				this.exclusives = res.result
-			})
-
-			// 获取推荐最新歌曲
-			getrecommendNewestSong().then(res => {
-				this.newestSongs = res.result
-			})
-
-			// 获取推荐mv
-			getRecommendMV().then(res => {
-				this.mvs = res.result
-			})
-			
-			// 获取推荐电台
-			// getRecommendRadio().then(res => {
-			// 	this.radios = res.data
-			// })
+			this.getData()
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.view-recommend{
-		padding-top: 30px;
+		height: 100%;
+		padding: 30px 7%;
+		box-sizing: border-box;
+    overflow: overlay;
 		.container-title {
 			height: 50px;
 			line-height: 50px;

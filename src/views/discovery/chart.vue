@@ -1,6 +1,6 @@
 <template>
-	<div class="toplist">
-		<template v-if="loading">
+	<div class="view-chart">
+		<template v-if="loaded">
 			<!-- 官方榜 -->
 			<container>
 				<template v-slot:left>
@@ -47,7 +47,8 @@
 		data() {
 			return {
 				ofToplists: [],
-				glToplists: []
+				glToplists: [],
+				loaded: false
 			}
 		},
 		components: {
@@ -56,23 +57,27 @@
 			Chart2Item,
 			// Loading
 		},
-		methods: {},
-		computed: {
-			loading(){
-				return this.ofToplists.length != 0 && this.glToplists.length != 0
+		methods:{
+			async getData(){
+				// 获取榜单数据
+				let res = await getToplist()
+				this.ofToplists = res.list.slice(0,4)
+				this.glToplists = res.list.slice(4)
+				this.loaded = true
 			}
 		},
 		created () {
-			// 获取榜单数据
-			getToplist().then(res => {
-				this.ofToplists = res.list.slice(0,4)
-				this.glToplists = res.list.slice(4)
-			})
+			this.getData()
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+.view-chart{
+	height: 100%;
+	padding: 0 7% 30px;
+	box-sizing: border-box;
+	overflow: overlay;
 	.container-title{
 		height: 50px;
 		line-height: 50px;
@@ -81,4 +86,5 @@
 			cursor: default;
 		}
 	}
+}
 </style>

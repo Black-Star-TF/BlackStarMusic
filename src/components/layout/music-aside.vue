@@ -37,7 +37,11 @@
       <i class="iconfont icon-bendi-zuijinbofang" icon-friend></i>最近播放
     </router-link>
     <!-- 创建的歌单 -->
-    <div class="group-name" @click="showCreated = !showCreated">创建的歌单</div>
+    <div class="group-name" @click="showCreated = !showCreated">
+      <span class="iconfont icon-shouqi1" v-if="!showCreated"></span>
+      <span class="iconfont icon-sanjiao1" v-else></span>
+      创建的歌单
+    </div>
     <div v-show="showCreated">
       <router-link 
         v-for="(playlist,index) in playlistsCreatedByMe"
@@ -53,7 +57,11 @@
       </router-link>
     </div>
     <!-- 收藏的歌单 -->
-    <div class="group-name" @click="showSubscribed = !showSubscribed">收藏的歌单</div>
+    <div class="group-name" @click="showSubscribed = !showSubscribed">
+      <span class="iconfont icon-shouqi1" v-if="!showSubscribed"></span>
+      <span class="iconfont icon-sanjiao1" v-else></span>
+      收藏的歌单
+    </div>
     <div v-show="showSubscribed">
       <router-link 
         v-for="playlist in playlistsSubscribedByMe"
@@ -124,6 +132,13 @@ export default {
   background-color: var(--aside-bg-color);
   z-index: 100;
   overflow: overlay;
+  // 鼠标移入时，显示滚动条，鼠标移出时隐藏滚动条
+  &::-webkit-scrollbar{
+    display: none;
+  }
+  &:hover::-webkit-scrollbar{
+    display: block;
+  }
   .user{
     height: 60px;
     line-height: 60px;
@@ -180,6 +195,14 @@ export default {
     font-size: 13px;
     padding-left: 20px;
     color: var(--color-level4);
+    &:hover{
+      .iconfont{
+        color: var(--color-level3);
+      }
+    }
+    .iconfont{
+      font-size: 12px;
+    }
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<div class="radio2-item" :style="style" @click="toRadioDetail(radio.id)">
 		<!-- 封面 -->
-		<div class="radio-cover" :style="{'backgroundImage': `url(${radio.picUrl})`}"></div>
+		<div class="radio-cover" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
 		<div class="radio-info">
 			<!-- 电台名 -->
 			<div class="radio-info-item name"><span>{{radio.name}}</span></div>
@@ -20,12 +20,18 @@
 	import { toRadioDetail } from '@/utils/methods'
 	import { formatPrice } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
+	import {size_1v1_std} from '@/utils/img-size.js'
 	export default {
 		mixins: [ItemPropsMixin],
 		props: {
 			radio: {
 				type: Object,
 				required: true
+			},
+		},
+		computed:{
+			coverUrl(){
+				return `${this.radio.picUrl}?param=${size_1v1_std}`
 			},
 		},
 		methods:{

@@ -1,6 +1,6 @@
 <template>
   <div :style="style" class="subscriber-item">
-    <div class="user-avatar" :style="{'backgroundImage': `url(${subscriber.avatarUrl})`}" @click="toUserDetail(subscriber.userId)"></div>
+    <div class="user-avatar" :style="{'backgroundImage': `url(${coverUrl})`}" @click="toUserDetail(subscriber.userId)"></div>
     <div class="user-info">
       <div class="user-name">
         <span class="name" @click="toUserDetail(subscriber.userId)">{{subscriber.nickname}}</span>
@@ -15,12 +15,18 @@
 <script>
 import { toUserDetail } from '@/utils/methods'
 import ItemPropsMixin from '@/mixins/item-props-mixin'
+import {size_1v1_std} from '@/utils/img-size.js'
 export default {
   mixins: [ItemPropsMixin],
   props:{
     subscriber:{
       type: Object,
       required: true
+    }
+  },
+  computed:{
+    coverUrl(){
+      return `${this.subscriber.avatarUrl}?param=${size_1v1_std}`
     }
   },
   methods:{

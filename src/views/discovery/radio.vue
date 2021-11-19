@@ -1,15 +1,15 @@
 <template>
 	<div class="radio-page">
-		<template v-if="loading">
+		<template v-if="loaded">
 			<!-- 轮播图 -->
 			<el-carousel :interval="4000" type="card" height="15vw">
 				<el-carousel-item v-for="item in banner" width="50%" :key="item.id">
-					<div class="banner-item" :style="{backgroundImage: `url(${item.pic})`}"></div>
+					<div class="banner-item" :style="{backgroundImage: `url(${getBannerCover(item.pic)})`}"></div>
 				</el-carousel-item>
 			</el-carousel>
 
-			<!-- TODO 电台分类列表 -->
-
+			<!-- TODO 电台分类 -->
+			
 			<!-- 付费精品 -->
 			<container>
 				<template v-slot:left>
@@ -66,17 +66,18 @@
 			
 		</template>
 
-		<!-- <Loading :loading="loading" /> -->
+		<!-- <Loading :loading="loaded" /> -->
 	</div>
 </template>
 
 <script>
 	import Vue from 'vue'
+	import axios from 'axios'
 	import Container from '@/components/common/container'
 	import RadioItem1 from '@/components/item/radio1-item'
 	import RadioItem2 from '@/components/item/radio2-item'
 	// import Loading from '@/components/common/Loading'
-	
+	import {size_banner} from '@/utils/img-size.js'
 	import {
 		getRadioBanner,
 		getPaidRadio,
@@ -92,7 +93,8 @@
 				recommendRadio: [],
 				recommendRadioCate: [],
 				radioNum: 0,
-				paidRadios: []
+				paidRadios: [],
+				loaded: false
 			}
 		},
 		components: {
@@ -101,57 +103,48 @@
 			RadioItem2,
 			// Loading
 		},
-		computed: {
-			loading(){
-				return true
-				// return this.banner.length > 0 && this.recommendRadio.length > 0 && this.recommendRadioCate.length === this.radioNum && this.paidRadios.length > 0
+		methods:{
+			getBannerCover(url){
+				return `${url}?param=${size_banner}`
+			},
+			async getData(){
+				this.loaded = false
+				let res = await axios.all([
+					getRadioBanner(),
+					getPaidRadio(4),
+					getRecommendRadio(),
+					getRecommendRadioCate()
+				])
+				// 获取轮播图数据
+				this.banner = res[0].data
+				// 获取付费精选电台
+				this.paidRadios = res[1].data.list
+				// 获取电台个性推荐
+				this.recommendRadio = res[2].data
+				// 获取电台推荐分类
+				this.recommendRadioCate = res[3].data.slice(0,6).map(item =>({
+					categoryId: item.categoryId,
+					categoryName: item.categoryName
+				}))
+				let rList = await axios.all(this.recommendRadioCate.map(item => getRadioList(item.categoryId)))
+				for(let i = 0; i < this.recommendRadioCate.length; i++){
+					Vue.set(this.recommendRadioCate[i],'radios',rList[i].djRadios.slice(0,6))
+				}
+				this.loaded = true
 			}
 		},
-		methods:{
-			
-		},
 		created() {
-
-			// 获取轮播图数据
-			getRadioBanner().then(res => {
-				this.banner = res.data
-			})
-
-			// 获取付费精选电台
-			getPaidRadio(4).then(res => {
-				this.paidRadios = res.data.list
-			})
-
-			// 获取电台个性推荐
-			getRecommendRadio().then(res => {
-				this.recommendRadio = res.data
-			})
-
-			// 获取电台推荐分类
-			getRecommendRadioCate().then(res => {
-				let list = res.data.slice(0,6)
-				for (const item of list) {
-					// 只保存结果中的id和name字段
-					this.recommendRadioCate.push({
-						categoryId: item.categoryId,
-						categoryName: item.categoryName
-					})
-				}
-				// 获取电台分类的推荐电台
-				for (const item of this.recommendRadioCate) {
-					getRadioList(item.categoryId).then(res => {
-						Vue.set(item,'radios',res.djRadios.slice(0,6))
-						this.radioNum++
-					})
-				}
-			})
+			this.getData()
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 .radio-page{
-  padding-top: 25px;
+	height: 100%;
+	padding: 30px 7%;
+	box-sizing: border-box;
+	overflow: overlay;
   .container-title {
 		height: 50px;
 		line-height: 50px;

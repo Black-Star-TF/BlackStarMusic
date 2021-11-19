@@ -1,7 +1,7 @@
 <template>
 	 <div class="exclusive-item" :style="style">
 		 <!-- 独家放送封面 -->
-			<div class="exclusive-cover" @click="playVideo(exclusiveItem.id)" :style="{'backgroundImage':`url(${cover})`}" v-if="!loading">
+			<div class="exclusive-cover" @click="playVideo(exclusiveItem.id)" :style="{'backgroundImage':`url(${coverUrl})`}" v-if="!loading">
 				<!-- 播放图标 -->
 				<div class="icon-play">
 					<span class="iconfont icon-pause"></span>
@@ -15,6 +15,7 @@
 <script>
   import { playVideo } from '@/utils/methods'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
+  import {size_video_std} from '@/utils/img-size.js'
 	export default {
 		mixins: [ItemPropsMixin],
 		props: {
@@ -26,8 +27,8 @@
 			loading(){
 				return typeof this.exclusiveItem == 'undefined'
 			},
-			cover(){
-				return this.exclusiveItem.sPicUrl || this.exclusiveItem.cover
+			coverUrl(){
+				return `${this.exclusiveItem.sPicUrl || this.exclusiveItem.cover}?param=${size_video_std}`
 			}
 		},
     methods:{

@@ -5,7 +5,7 @@
       <span>{{index+1}}</span>
     </div>
     <!-- 封面 -->
-    <div class="mv-item-cover" :style="cover" @click="playVideo(mvItem.id)">
+    <div class="mv-item-cover" :style="{'backgroundImage': `url(${coverUrl})`}" @click="playVideo(mvItem.id)">
       <!-- 热度 -->
       <!-- 播放按钮 -->
 				<div class="icon-play">
@@ -28,6 +28,7 @@
 <script>
   import { toArtistDetail,playVideo } from '@/utils/methods'
   import ItemPropsMixin from '@/mixins/item-props-mixin'
+  import {size_video_small} from '@/utils/img-size.js'
   export default {
     mixins: [ItemPropsMixin],
     props:{
@@ -44,10 +45,8 @@
           'borderRightStyle': (this.index + 1) % this.num == 0 ? 'none' : 'solid'
         }
       },
-      cover(){
-        return {
-          'backgroundImage': `url(${this.mvItem.cover})`
-        }
+      coverUrl(){
+        return `${this.mvItem.cover}?param=${size_video_small}`
       }
     },
     methods: {

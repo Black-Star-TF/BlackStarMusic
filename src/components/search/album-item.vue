@@ -1,7 +1,7 @@
 <template>
   <div class="album-item" @click="toAlbumDetail(album.id)">
     <!-- 专辑封面 -->
-    <div class="album-cover" :style="{'backgroundImage': `url(${album.picUrl})`}"></div>
+    <div class="album-cover" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
     <!-- 专辑名 -->
     <div class="album-name">
       <span class="name">
@@ -22,6 +22,7 @@
 
 <script>
 	import { toAlbumDetail, toArtistDetail, markKeyword } from '@/utils/methods'
+  import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props: {
       album: {
@@ -30,6 +31,11 @@
       },
       keyword:{
         type: String
+      }
+    },
+    computed:{
+      coverUrl(){
+        return `${this.album.picUrl}?param=${size_1v1_small}`
       }
     },
     methods:{

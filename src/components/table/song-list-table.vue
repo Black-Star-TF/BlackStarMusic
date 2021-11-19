@@ -12,6 +12,9 @@
       v-for="(song,index) in songList"
       :key="`${index}-${song.id}`"
       @dblclick="playSong(song.id)"
+      @contextmenu.prevent="showContextMenu(index,song,$event)"
+      :class="getActiveClass(index)"
+      @click="setActive(index)"
     >
       <div class="row column index">
         <span v-if="song.id == currentTrackId" class="iconfont icon-yinliang"></span>
@@ -50,13 +53,37 @@
         <span>{{song.dt | formatDuration}}</span>
       </div>
     </div>
+
+    <context-menu :visible.sync="contextMenuVisible" :top="contextMenuTop" :left="contextMenuLeft" :offsetBottom="70">
+      <div class="song-menu" @click="contextMenuVisible = false">
+        <div class="menu-item" @click="playSong(currentSong.id)">播放</div>
+        <div class="menu-item">查看评论</div>
+        <div class="menu-item">下一首播放</div>
+        <div class="menu-item">收藏</div>
+        <div class="menu-item">分享</div>
+        <div class="menu-item">下载</div>
+      </div>
+    </context-menu>
   </div>
 </template>
 
 <script>
+  import ContextMenu from '@/components/common/context-menu'
   import { toAlbumDetail,toArtistDetail,markKeyword, playVideo } from '@/utils/methods'
   import { formatDuration } from '@/utils/filters'
   export default {
+    components:{
+      ContextMenu
+    },
+    data(){
+      return {
+        contextMenuTop: 0,
+        contextMenuLeft: 0,
+        contextMenuVisible: false,
+        activeIndex: -1,
+        currentSong: null
+      }
+    },
     props:{
       songList: {
         type: Array,
@@ -85,6 +112,12 @@
       toAlbumDetail,
       toArtistDetail,
       markKeyword,
+      setActive(index){
+        this.activeIndex = index
+      },
+      getActiveClass(index){
+        return this.activeIndex == index ? 'active'  : ''
+      },
       formatIndex(index){
         if(this.pageNum && this.limit){
           let num = (this.pageNum - 1) * this.limit + index
@@ -98,12 +131,18 @@
       },
       playSong(id){
         this.$emit('play-song',id)
+      },
+      showContextMenu(index,song, e){
+        this.activeIndex = index
+        this.currentSong = song
+        this.contextMenuTop = e.clientY
+        this.contextMenuLeft = e.clientX
+        this.contextMenuVisible = true
       }
     },
     filters:{
       formatDuration
     },
-    created(){}
   }
 </script>
 
@@ -128,6 +167,9 @@
       background-color: var(--table-stripe-color);
     }
     &:hover{
+      background-color: var(--table-hover-color);
+    }
+    &.active{
       background-color: var(--table-hover-color);
     }
     .song-operation{
@@ -235,6 +277,27 @@
   }
   .song-duration{
     width: 50px;
+  }
+}
+
+.song-menu{
+  width: 175px;
+  padding: 5px;
+  background-color: var(--context-menu-bg-color);
+  border: 1px solid #666;
+  border-radius: 10px;
+  .menu-item{
+    height: 30px;
+    line-height: 30px;
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+    color: var(--color-level1);
+    border-radius: 5px;
+    &:hover{
+      background-color: var(--context-menu-item-hover-bg-color);
+    }
   }
 }
 </style>

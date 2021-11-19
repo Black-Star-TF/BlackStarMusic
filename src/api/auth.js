@@ -32,6 +32,13 @@ export function logout(){
   })
 }
 
+// 检查登录状态
+export function checkLoginStatus(){
+  return request({
+    url: '/login/status'
+  })
+}
+
 
 // 使用手机号登录
 export function loginWithPhone(data){

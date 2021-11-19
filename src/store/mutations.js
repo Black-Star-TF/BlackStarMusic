@@ -7,7 +7,7 @@ export default {
   updateData(state,{key,value}){
     state.data[key] = value
   },
-  // 更新运行变量
+  // 更新运行时状态
   updateApp(state, {key,value}){
     state.app[key] = value
   }

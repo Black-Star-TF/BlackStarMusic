@@ -19,6 +19,7 @@
   import { playVideo,toArtistDetail } from '@/utils/methods'
   import { formatPlayCount } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
+  import {size_video_std} from '@/utils/img-size.js'
 	export default {
 		mixins: [ItemPropsMixin],
 		props: {
@@ -29,7 +30,7 @@
 		},
 		computed: {
 			coverUrl(){
-				return this.mv.picUrl || this.mv.cover
+				return `${this.mv.picUrl || this.mv.cover}?param=${size_video_std}` 
 			}
 		},
     methods:{
@@ -61,7 +62,7 @@
     cursor: pointer;
     margin-bottom: 5px;
     position: relative;
-    border-radius: 10px;
+    border-radius: 5px;
     .video-playcount{
       position: absolute;
       line-height: 10px;

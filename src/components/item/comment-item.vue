@@ -1,6 +1,6 @@
 <template>
   <div class="comment-item">
-    <div class="user-cover" :style="{'backgroundImage':  `url(${comment.user.avatarUrl})`}"></div>
+    <div class="user-cover" :style="{'backgroundImage':  `url(${coverUrl})`}"></div>
     <div class="comment-content">
       <div class="comment">
         <span class="user" @click="toUserDetail(comment.user.userId)">{{comment.user.nickname}}：</span>
@@ -26,6 +26,7 @@
 
 <script>
 import { toUserDetail } from '@/utils/methods'
+import {size_1v1_small} from '@/utils/img-size.js'
 export default {
   props:{
     comment: {
@@ -34,6 +35,9 @@ export default {
     }
   },
   computed:{
+    coverUrl(){
+      return `${this.comment.user.avatarUrl}?param=${size_1v1_small}`
+    },
     createTime(){
       let date = new Date(this.comment.time)
       let year = date.getFullYear()

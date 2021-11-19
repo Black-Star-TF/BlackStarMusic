@@ -18,9 +18,11 @@
 					<div class="opration-item collect-all" @click="likeAll">收藏全部</div>
 				</div>
 			</template>
-			<template v-slot:content v-if="loading">
+			<template v-slot:content v-if="loaded">
 				<!-- 新歌列表 -->
-				<new-song-table :songList="songList"></new-song-table>
+				<div style="width: 100%;margin-top:10px;">
+					<newest-song2-item v-for="(song, index) in songList" :index="index+1" :key="song.id" :song="song"></newest-song2-item>
+				</div>
 			</template>
 		</container>
 		<!-- <Loading :loading="loading"/> -->
@@ -29,8 +31,9 @@
 
 <script>
 	import Container from '@/components/common/container'
-	import NewSongTable from '@/components/table/new-song-table'
-	import {getTopNewSong} from '@/api/music.js'
+	// import NewSongTable from '@/components/table/new-song-table'
+	import { getTopNewSong } from '@/api/music.js'
+	import NewestSong2Item from '@/components/item/newest-song2-item.vue'
 	// import Loading from '@/components/common/Loading'
 	export default {
 		name: 'NewestSong',
@@ -49,19 +52,19 @@
 		},
 		components: {
 			Container,
-			NewSongTable,
+			// NewSongTable,
+			NewestSong2Item
 			// Loading
 		},
 		methods: {
 			handleChange(type) {
 				this.currentType = type
-				this.getNewestSongData()
+				this.getData()
 			},
-			getNewestSongData(){
+			async getData(){
 				this.songList = []
-				getTopNewSong(this.currentType).then(res => {
-					this.songList = res.data.slice(0,5)
-				})
+				let res = await getTopNewSong(this.currentType)
+				this.songList = res.data
 			},
 			playAll(){
 				console.log('播放全部');
@@ -71,12 +74,12 @@
 			}
 		},
 		computed: {
-			loading(){
+			loaded(){
 				return this.songList.length > 0
 			}
 		},
 		created() {
-			this.getNewestSongData()
+			this.getData()
 		}
 	}
 </script>

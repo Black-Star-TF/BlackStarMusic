@@ -1,16 +1,17 @@
 <template>
-	<div class="view-singer">
+	<div class="view-singer" ref="singerPage">
 		<!-- 导航 -->
 		<group-nav :group="singerCate" :currentCate="currentCate" @cate-change="changeCate"></group-nav>
 		<!-- 歌手列表 -->
-		<container v-if="loading">
+		<container v-if="loaded">
 			<template v-slot:content>
 				<singer-item
-				v-for="(singer,index) in singerList"
-				:singer="singer"
-				:num="6"
-				:index="index"
-				:key="singer.id">
+					v-for="(singer,index) in singerList"
+					:singer="singer"
+					:num="6"
+					:index="index"
+					:key="singer.id"
+				>
 				</singer-item>
 			</template>
 		</container>
@@ -33,7 +34,7 @@
 		data() {
 			return {
 				singerList: [],
-				limit: 6,
+				limit: 24,
 				pageNum: 1,
 				hasMore: true,
 				getMore: false,
@@ -110,42 +111,36 @@
 				this.currentCate[key] = id
 				this.singerList = []
 				this.pageNum = 1
-				this.getSingerListData()
+				this.getData()
 			},
 			// 请求歌手列表
-			getSingerListData(){
+			async getData(){
 				let {type,area,initial} = this.currentCate
-				getSingerList(type,area,initial,this.limit,this.offset).then(res => {
-					this.singerList = this.singerList.concat(res.artists)
-					this.hasMore = res.more
+				let res = await getSingerList(type,area,initial,this.limit,this.offset)
+				this.singerList = this.singerList.concat(res.artists)
+				this.hasMore = res.more
+				this.$nextTick((()=>{
 					this.getMore = false
-				})
+				}))
+				
 			},
 			getMoreData(){
-				let mainEle = document.getElementsByClassName('discovery-content')[0]
+				let mainEle = this.$refs.singerPage
 				let scrollTop = mainEle.scrollTop;
 				let offsetHeight = mainEle.offsetHeight;
 				let scrollHeight = mainEle.scrollHeight;
 				// 判断是否滚动到底部
-				if (scrollHeight - offsetHeight - scrollTop <= 1) {
+				if (scrollHeight - offsetHeight - scrollTop <= 1 && !this.getMore) {
 					if(this.hasMore){
 						this.pageNum ++;
 						this.getMore = true
-						this.getSingerListData();
+						this.getData();
 					}
 				}
 			},
-			throttle(){
-				if (this.timer == null) {
-					this.timer = setTimeout(()=>{
-						this.getMoreData()
-						this.timer = null;
-					}, 2000);
-				}
-			}
 		},
 		computed: {
-			loading(){
+			loaded(){
 				return this.singerList.length > 0
 			},
 			offset(){
@@ -153,24 +148,25 @@
 			}
 		},
 		created() {
-			this.getSingerListData()
+			this.getData()
 		},
 		mounted(){
 			// 鼠标滚动到底部，获取更多数据
-			// 获取具有滚动条的元素
-			// let mainEle = document.getElementsByClassName('discovery-content')[0]
-			// 获取滚动条属性
-			// mainEle.addEventListener('scroll', this.throttle)
+			this.$refs.singerPage.addEventListener('scroll', this.getMoreData)
 		},
 		beforeDestroy(){
-			// let mainEle = document.getElementsByClassName('discovery-content')[0]
 			// 移除事件
-			// mainEle.removeEventListener('scroll', this.throttle)
+			this.$refs.singerPage.removeEventListener('scroll', this.getMoreData)
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	
+	.view-singer{
+		height: 100%;
+		padding: 30px 7%;
+		box-sizing: border-box;
+		overflow: overlay;
+	}
 	
 </style>

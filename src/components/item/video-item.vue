@@ -1,6 +1,6 @@
 <template>
 	 <div class="video-item" :style="style">
-		 <div class="video-cover" @click="playVideo(video.vid)" :style="{'backgroundImage':`url(${video.coverUrl})`}">
+		 <div class="video-cover" @click="playVideo(video.vid)" :style="{'backgroundImage':`url(${coverUrl}?param=500y280)`}">
 				<!-- 播放量 -->
 				<span class="video-playcount"><span class="iconfont icon-pause"></span> {{playCount | formatPlayCount}}</span>
 				<!-- 时长 -->
@@ -26,6 +26,7 @@
 import { playVideo, toArtistDetail, toUserDetail} from '@/utils/methods'
   import { formatPlayCount, formatDuration } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
+	import {size_video_std} from '@/utils/img-size.js'
 	export default {
 		mixins: [ItemPropsMixin],
 		props: {
@@ -35,6 +36,9 @@ import { playVideo, toArtistDetail, toUserDetail} from '@/utils/methods'
 			}
 		},
 		computed: {
+			coverUrl(){
+				return `${this.video.coverUrl}?param=${size_video_std}`
+			},
 			isMV(){
         let reg = /^[0-9]+$/
 				return reg.test(this.video.id)
@@ -92,7 +96,7 @@ import { playVideo, toArtistDetail, toUserDetail} from '@/utils/methods'
 			cursor: pointer;
 			margin-bottom: 5px;
 			position: relative;
-			border-radius: 10px;
+			border-radius: 5px;
 			.video-playcount{
         position: absolute;
 				line-height: 10px;

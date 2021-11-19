@@ -1,6 +1,6 @@
 <template>
   <div class="simi-song-item" @click="playSong">
-    <img :src="song.album.blurPicUrl" class="song-cover">
+    <img :src="coverUrl" class="song-cover">
     <div class="song-info">
       <div class="song-name">{{song.name}}</div>
       <div class="song-artist">
@@ -11,11 +11,17 @@
 </template>
 
 <script>
+import {size_1v1_small} from '@/utils/img-size.js'
 export default {
   props:{
     song:{
       required: true,
       type: Object
+    }
+  },
+  computed:{
+    coverUrl(){
+      return `${this.song.album.blurPicUrl}?param=${size_1v1_small}`
     }
   },
   methods: {

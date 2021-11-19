@@ -1,7 +1,7 @@
 <template>
   <div class="page-album-detail" v-if="album">
     <div class="album-detail-header" >
-      <div class="album-cover" :style="{'backgroundImage': `url(${album.blurPicUrl})`}"></div>
+      <div class="album-cover" :style="{'backgroundImage': `url(${albumCoverUrl})`}"></div>
       <div class="album-info">
         <div class="album-name">
           <div class="type">专辑</div>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="album-detail-content">
-      <songlist v-if="mode == 'songlist'" :trackIds="trackIds"></songlist>
+      <songlist v-if="mode == 'songlist'" :songList="songList"></songlist>
       <comment v-if="mode == 'comment'"></comment>
       <description v-if="mode == 'description'" :description="album.description"></description>
     </div>
@@ -60,10 +60,12 @@
 <script>
 import TabNav from '@/components/common/tab-nav'
 import {getAlbumDetail} from '@/api/album'
+import {getSongsDetail} from '@/api/music.js'
 import {formatDate, formatPlayCount} from '@/utils/filters'
 import Songlist from './playlist-detail/songlist.vue'
 import Comment from './album-detail/comment.vue'
 import Description from './album-detail/description.vue'
+import {size_1v1_std} from '@/utils/img-size.js'
 export default {
   components: {
     TabNav,
@@ -74,7 +76,7 @@ export default {
   data () {
     return {
       id: null,
-      trackIds: [],
+      songList: [],
       album: null,
       mode: 'songlist',
       modeList:[
@@ -84,7 +86,11 @@ export default {
       ]
     }
   },
-  computed: {},
+  computed: {
+    albumCoverUrl(){
+      return `${this.album.blurPicUrl}?param=${size_1v1_std}`
+    }
+  },
   methods: {
     addToPlaylist(){
       this.$store.state.player.addTracksToPlaylist(this.trackIds)
@@ -96,17 +102,30 @@ export default {
         this.$store.state.player.playTrack(this.trackIds[0],this.trackIds)
       }
     },
+    async getData(){
+      this.id = this.$route.params.id
+      this.songList = []
+      this.album = null
+      let res = await getAlbumDetail(this.id)
+      this.album = res.album
+      let trackIds = res.songs.map(track => track.id)
+      console.log(res);
+      let {songs} = await getSongsDetail(trackIds.join(','))
+      this.songList = songs
+    }
   },
   filters: {
     formatDate,
     formatPlayCount
   },
   created () {
-    this.id = this.$route.params.id
-    getAlbumDetail(this.id).then(res=>{
-      this.album = res.album
-      this.trackIds = res.songs.map(song => song.id)
-    })
+    this.getData()
+  },
+  watch:{
+    $route(){
+      this.getData()
+      this.mode = 'songlist'
+    }
   }
 }
 </script>
@@ -116,6 +135,8 @@ export default {
 .page-album-detail{
   width: 100%;
   height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
   @include scroll-style;
   .album-detail-header{
     width: 100%;

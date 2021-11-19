@@ -51,7 +51,6 @@ const routes = [
       },
       {
         path: '/playlistdetail/:id',
-        meta:{ hasKey: true },
         component: ()=> import('@/views/playlist-detail'),
       },
       {
@@ -96,10 +95,12 @@ const routes = [
   },
   {
     path: '/videodetail/:id',
+    meta:{ hasKey: true },
     component: ()=> import('@/views/video-detail'),
   },
   {
     path: '/mvdetail/:id',
+    meta:{ hasKey: true },
     component: ()=> import('@/views/mv-detail'),
   }
 ]

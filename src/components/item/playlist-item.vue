@@ -4,7 +4,7 @@
 			<div
 			class="playlist-cover"
 			@click="toPlaylistDetail(playlistItem.id)"
-			:style="{'backgroundImage':`url(${playlistItem.picUrl || playlistItem.coverImgUrl})`}">
+			:style="{'backgroundImage':`url(${coverUrl})`}">
 				<!-- 播放数量 -->
 				<span class="play-count"><span class="iconfont icon-pause"></span> {{playlistItem.playCount | formatPlayCount}}</span>
 				<!-- 播放按钮 -->
@@ -23,12 +23,18 @@
 	import { playPlaylist,toPlaylistDetail } from '@/utils/methods'
 	import { formatPlayCount } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
+	import {size_1v1_std} from '@/utils/img-size.js'
 	export default {
 		mixins: [ItemPropsMixin],
 		props: {
 			playlistItem:{
 				type: Object,
 				required: true
+			}
+		},
+		computed:{
+			coverUrl(){
+				return `${this.playlistItem.picUrl || this.playlistItem.coverImgUrl}?param=${size_1v1_std}`
 			}
 		},
 		methods:{

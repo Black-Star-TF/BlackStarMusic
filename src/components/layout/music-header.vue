@@ -1,8 +1,8 @@
 <template>
-  <div class="app-header">
+  <div class="app-header" id="header">
     <div class="left-nav">
-      <!-- <button @click="logout">退出登录</button> -->
-      <!-- <button @click="test">歌曲详情</button> -->
+      <button @click="logout" v-show="!app.songDetailVisible">退出登录</button>
+      <button @click="test">歌曲详情</button>
       <span v-show="!app.songDetailVisible" class="iconfont icon-changyong_fanhui" title="后退" @click="$router.go(-1)"></span>
       <span v-show="!app.songDetailVisible" class="iconfont icon-changyong_gengduo" title="前进" @click="$router.go(1)"></span>
     </div>
@@ -12,7 +12,7 @@
       <!-- 设置 -->
       <span class="settings iconfont icon-shezhi" @click="toSettings" :class="{'router-active': routerActive}"></span>
       <!-- 消息 -->
-      <span class="iconfont icon-duanxin"></span>
+      <span class="message iconfont icon-duanxin" :class="{'active': app.messgeDrawerVisible}" @click.stop="showMessage"></span>
       <!-- 主题 -->
       <el-popover
         placement="bottom"
@@ -46,8 +46,9 @@
 </template>
 
 <script>
-import {mapState,mapActions} from 'vuex'
+import {mapState,mapActions, mapMutations} from 'vuex'
 import {logoutInLocal} from '@/utils/auth'
+import {checkLoginStatus} from '@/api/auth'
 import {changeTheme} from '@/utils/common'
 export default {
   data(){
@@ -66,11 +67,19 @@ export default {
   },
   methods: {
     ...mapActions(['getLikedSongList']),
+    ...mapMutations(['updateApp']),
     test(){
       // this.getLikedSongList()
+      checkLoginStatus().then(res=>{
+        console.log(res);
+      })
     },
     logout(){
       logoutInLocal()
+    },
+    showMessage(){
+      this.updateApp({key: 'messgeDrawerVisible', value: !this.app.messgeDrawerVisible})
+      this.updateApp({key: 'playlistDrawerVisible', value: false})
     },
     changeTheme(value){
       this.$store.commit('updateSettings',{key: 'theme', value })
@@ -152,6 +161,11 @@ export default {
     .settings{
       &.router-active{
         color: var(--color-netease-red)
+      }
+    }
+    .message{
+      &.active{
+        color: var(--color-netease-red);
       }
     }
     .input{

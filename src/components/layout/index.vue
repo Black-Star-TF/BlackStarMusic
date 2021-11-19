@@ -5,7 +5,7 @@
     <!-- player -->
     <music-player></music-player>
     <!-- main -->
-    <div class="app-main">
+    <div class="app-main" id="main">
       <template v-if="!$route.meta.keepAlive">
         <router-view :key="getKey()"></router-view>
       </template>

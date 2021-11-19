@@ -13,7 +13,6 @@ export function setCookie(str){
   });
 }
 
-
 // 从Cookies或localStorage中获取cookie
 export function getCookie(key){
   return Cookies.get(key) ?? localStorage.getItem(`cookie-${key}`)
@@ -30,11 +29,12 @@ export function isLoggedIn() {
 }
 
 // 退出登录时清除本地保存的cookie
-export function logoutInLocal(){
-  logout()
+export async function logoutInLocal(){
+  await logout()
   removeCookie('MUSIC_U')
   removeCookie('_csrf')
   removeCookie('__remember_me')
+  removeCookie('token')
   // vuex状态更新
   // 更新用户信息
   store.commit('updateData', {key: 'userProfile', value: {}})

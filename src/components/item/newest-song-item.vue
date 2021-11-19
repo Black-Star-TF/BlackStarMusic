@@ -1,7 +1,7 @@
 <template>
 	 <div class="newest-song-item" @dblclick="playSong" :style="style">
 		 <!-- 歌曲封面 -->
-			<div class="newest-song-cover" @click.stop="playSong" :style="{'backgroundImage':`url(${newestSongItem.picUrl})`}">
+			<div class="newest-song-cover" @click.stop="playSong" :style="{'backgroundImage':`url(${coverUrl})`}">
 				<!-- 播放图标 -->
 				<div class="icon-play">
 					<span class="iconfont icon-bofang"></span>
@@ -25,6 +25,7 @@
 <script>
   import { toArtistDetail } from '@/utils/methods'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
+  import {size_1v1_small} from '@/utils/img-size.js'
 	export default {
 		mixins: [ItemPropsMixin],
 		props: {
@@ -33,6 +34,9 @@
 			}
 		},
 		computed: {
+      coverUrl(){
+        return `${this.newestSongItem.picUrl}?param=${size_1v1_small}`
+      },
 			loading(){
 				return typeof this.newestSongItem == 'undefined'
 			},
@@ -40,8 +44,8 @@
     methods:{
       toArtistDetail,
       playSong(){
-      this.$store.state.player.addTrackToPlayList(this.newestSongItem.id,true)
-    }
+        this.$store.state.player.addTrackToPlayList(this.newestSongItem.id,true)
+      }
     },
 		filters:{
 			formatIndex(index){

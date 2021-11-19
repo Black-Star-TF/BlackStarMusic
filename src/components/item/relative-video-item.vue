@@ -1,6 +1,6 @@
 <template>
   <div class="relative-video-item">
-    <div class="video-cover" @click="playVideo(video.vid)" :style="{'backgroundImage': `url(${video.coverUrl})`}">
+    <div class="video-cover" @click="playVideo(video.vid)" :style="{'backgroundImage': `url(${coverUrl})`}">
       <!-- 播放量 -->
 				<span class="video-playcount"><span class="iconfont icon-pause"></span> {{video.playTime | formatPlayCount}}</span>
 				<!-- 时长 -->
@@ -27,6 +27,7 @@
 <script>
 import {playVideo,toArtistDetail,toUserDetail} from '@/utils/methods'
 import {formatDuration,formatPlayCount} from '@/utils/filters'
+import {size_video_small} from '@/utils/img-size.js'
 export default {
   data () {
     return {}
@@ -38,6 +39,9 @@ export default {
     }
   },
   computed: {
+    coverUrl(){
+      return `${this.video.coverUrl}?param=${size_video_small}`
+    },
     isMV(){
       let reg = /^[0-9]+$/
       return reg.test(this.video.vid)

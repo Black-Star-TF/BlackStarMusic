@@ -42,8 +42,8 @@ export default {
   height: 100%;
   .discovery-content{
     height: 100%;
-    padding: 0 7%;
-    overflow: overlay;
+    // padding: 0 7%;
+    // overflow: overlay;
   }
 }
 </style>

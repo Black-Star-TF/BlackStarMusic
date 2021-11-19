@@ -1,5 +1,5 @@
 <template>
-	<div class="view-playlist">
+	<div class="view-playlist" ref="page">
 		<template >
 			<container v-if="currentTag">
 				<template v-slot:left>
@@ -37,7 +37,7 @@
 						:key="tag.name">{{tag.name}}</span>
 					</div>
 				</template>
-				<template v-slot:content v-if="loading">
+				<template v-slot:content v-if="loaded">
 					<playlist-item
 					v-for="(playlist,index) in playlists" 
 					:num="5" 
@@ -49,8 +49,17 @@
 			</container>
 
 			<!-- 分页 -->
-			<el-pagination v-if="loading" background layout="prev, pager, next" :total="totalPage * 10"
-				:current-page="currentPage" @current-change="changeCurrentPage" @prev-click="skip(-1)" @next-click="skip(1)">
+			<el-pagination 
+				v-if="loaded" 
+				background 
+				layout="prev, pager, next"
+				:total="total"
+				:page-size="limit"
+				:current-page.sync="currentPage" 
+				@current-change="changeCurrentPage" 
+				@prev-click="skip(-1)"
+				@next-click="skip(1)"
+			>
 			</el-pagination>
 		</template>
 
@@ -61,10 +70,10 @@
 </template>
 
 <script>
+	import axios from 'axios'
 	import Container from '@/components/common/container'
 	import PlaylistItem from '@/components/item/playlist-item'
 	// import Loading from '@/components/common/Loading'
-
 	import {
 		getHotPlaylistCate,
 		getPlaylistCate,
@@ -81,8 +90,9 @@
 				playlists: [],
 				showCate: false,
 				limit: 50,
-				totalPage: 0,
-				currentPage: 1
+				total: 0,
+				currentPage: 1,
+				scrollTop: 0,
 			}
 		},
 		components: {
@@ -94,17 +104,18 @@
 			offset() {
 				return (this.currentPage - 1) * this.limit
 			},
-			loading() {
+			loaded() {
 				return this.playlists.length > 0
 			}
 		},
 		methods: {
 			// 翻页
-			changeCurrentPage(pageNum) {
-				this.currentPage = pageNum
+			changeCurrentPage() {
 				this.getPlaylistsData()
 			},
-
+			closePanel(){
+				this.showCate = false
+			},
 			// 切换歌单分类
 			changeTag(tag) {
 				this.currentTag = tag
@@ -119,34 +130,47 @@
 				}
 			},
 			// 获取歌单列表
-			getPlaylistsData() {
+			async getPlaylistsData() {
 				this.playlists = []
-				getPlaylists(this.currentTag.name, this.limit, this.offset).then(res => {
-					this.playlists = res.playlists
-					this.totalPage = Math.floor(res.total / this.limit)
-				})
+				let res = await getPlaylists(this.currentTag.name, this.limit, this.offset)
+				this.playlists = res.playlists
+				this.total = res.total
+			},
+			getScrollTop(e){
+				this.scrollTop = e.target.scrollTop
+			},
+			async getData(){
+				let res = await axios.all([
+					getHotPlaylistCate(),
+					getPlaylistCate()
+				])
+				// 获取热门歌单分类
+				this.hotTags = res[0].tags
+				// 获取歌单分类
+				this.playlistCate = res[1].sub
+				this.all = res[1].all
+				this.categories = res[1].categories
+				this.currentTag = this.$route.params.tag || this.all
+				this.getPlaylistsData()
 			}
 		},
 		created() {
-			let tag = this.$route.params.tag
-			// 获取热门歌单分类
-			getHotPlaylistCate().then(res => {
-				this.hotTags = res.tags
-			})
-			// 获取歌单分类
-			getPlaylistCate().then(res => {
-				this.playlistCate = res.sub
-				this.all = res.all
-				this.categories = res.categories
-				this.currentTag = tag || this.all
-				this.getPlaylistsData()
-			})
-
+			this.getData()
+		},
+		mounted(){
+			this.$refs.page.addEventListener('scroll', this.getScrollTop)
 			// 添加关闭歌单分类窗口的事件
 			const app = document.getElementById('app')
-			app.addEventListener('click', () => {
-				this.showCate = false
-			})
+			app.addEventListener('click', this.closePanel)
+		},
+		activated(){
+			this.$refs.page.scrollTo(0,this.scrollTop);
+		},
+		beforeDestroy(){
+			this.$refs.page.removeEventListener('scroll', this.getScrollTop)
+			// 移除关闭歌单分类窗口的事件
+			const app = document.getElementById('app')
+			app.removeEventListener('click', this.closePanel)
 		},
 		watch: {
 			currentTag() {
@@ -154,13 +178,6 @@
 				this.currentPage = 1
 				this.getPlaylistsData()
 			}
-		},
-		beforeDestroy(){
-			// 移除关闭歌单分类窗口的事件
-			const app = document.getElementById('app')
-			app.removeEventListener('click', () => {
-				this.showCate = false
-			})
 		}
 	}
 </script>
@@ -168,7 +185,10 @@
 <style lang="scss" scoped>
 @import url('~@/styles/variables.scss');
 .view-playlist{
-	padding-bottom: 25px;
+	height: 100%;
+	padding: 0 7% 30px;
+	box-sizing: border-box;
+	overflow: overlay;
 }
 .current-tag-container {
   height: 70px;
@@ -203,7 +223,6 @@
     position: absolute;
     top: 65px;
     cursor: default;
-
     &::before {
       content: "";
       display: block;

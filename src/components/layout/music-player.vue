@@ -1,5 +1,5 @@
 <template>
-  <div class="app-footer">
+  <div class="app-footer" id="player">
     <!-- 播放进度条 -->
     <div class="progress-slider-container">
       <vue-slider
@@ -24,7 +24,7 @@
     <div class="controls">
       <div class="song-info">
         <template v-if="currentSong.id">
-          <div class="song-avatar" :style="{'backgroundImage': `url(${currentSong.al&&currentSong.al.picUrl})`}">
+          <div class="song-avatar" :style="{'backgroundImage': `url(${coverUrl})`}">
             <div class="mask"  @click="showSongDetail">
               <span class="iconfont icon-zhankai" v-if="!app.songDetailVisible"></span>
               <span class="iconfont icon-shouqi" v-else></span>
@@ -71,7 +71,12 @@
         <el-tooltip class="item" effect="dark" content="顺序播放" placement="top">
           <span class="setting-item play-mode iconfont icon-shunxubofang"></span>
         </el-tooltip>
-        <span class="setting-item current-playlist iconfont icon-bofangliebiao" title="播放列表" @click="showPlaylist"></span>
+        <span 
+          class="setting-item current-playlist iconfont icon-bofangliebiao" 
+          title="播放列表" 
+          @click="showPlaylist" 
+          :class="{'active': app.playlistDrawerVisible}"
+        ></span>
 
         <span class="setting-item sound iconfont" @click="handleMute" :class="volumeIcon">
           <div class="volume-control" @click.stop>
@@ -94,9 +99,6 @@
           </div>
         </span>
       </div>
-
-      <!-- 播放列表 -->
-      <playlist-drawer :visible.sync="isShowPlaylist"></playlist-drawer>
     </div>
   </div>
 </template>
@@ -105,12 +107,11 @@
 import {toArtistDetail} from '@/utils/methods'
 import {mapState, mapMutations} from 'vuex'
 import VueSlider from 'vue-slider-component'
-import PlaylistDrawer from '@/components/drawer/playlist-drawer'
+import {size_1v1_small} from '@/utils/img-size.js'
 export default {
   mixins: [],
   components: {
     VueSlider,
-    PlaylistDrawer
   },
   data () {
     return {
@@ -124,6 +125,9 @@ export default {
   },
   computed: {
     ...mapState(['player', 'app']),
+    coverUrl(){
+      return `${this.currentSong.al&&this.currentSong.al.picUrl}?param=${size_1v1_small}`
+    },
     currentSong(){
       return this.player.currentTrack
     },
@@ -145,7 +149,7 @@ export default {
     },
     toArtistDetail,
     showPlaylist(){
-      this.isShowPlaylist = !this.isShowPlaylist
+      this.updateApp({key: 'playlistDrawerVisible', value: !this.app.playlistDrawerVisible})
     },
     like(){
       this.liked = !this.liked
@@ -332,6 +336,11 @@ export default {
         &:hover{
           .volume-control{
             display: flex;
+          }
+        }
+        &.current-playlist{
+          &.active{
+            color: var(--color-netease-red);
           }
         }
         .volume-control{

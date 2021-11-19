@@ -12,7 +12,6 @@
 
 <script>
   import SongListTable from '@/components/table/song-list-table'
-  import {getSongsDetail} from '@/api/music.js'
   import {mapState} from 'vuex'
   // import Loading from '@/components/common/Loading'
   export default {
@@ -21,13 +20,8 @@
       SongListTable,
       // Loading
     },
-    data () {
-      return {
-        songList: []
-      }
-    },
     props:{
-      trackIds: {
+      songList: {
         type: Array,
         required: true
       }
@@ -40,16 +34,8 @@
     },
     methods:{
       hanldlePlaySong(trackId){
-        this.player.playTrack(trackId, this.trackIds)
+        this.player.playTrack(trackId, this.songList.map(song=>song.id))
       },
-      init(){
-        getSongsDetail(this.trackIds.join(',')).then(res => {
-          this.songList = res.songs
-        })
-      }
-    },
-    created () {
-      this.init()
     }
   }
 </script>

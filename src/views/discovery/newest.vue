@@ -2,20 +2,50 @@
 	<div class="newest-music">
 		<!-- 路由导航 -->
 		<div class="nav-container">
-			<router-link to="/discovery/newest/newsong" tag="div" class="nav-item">新歌速递</router-link>
-			<router-link to="/discovery/newest/newalbum" tag="div" class="nav-item">新碟上架</router-link>
+			<div 
+				class="nav-item"
+				v-for="group in groups" 
+				:key="group.id" 
+				@click="changeGroup(group)"
+				:class="{'active': group.id == current.id}"
+			>{{group.name}}</div>
 		</div>
-		<router-view></router-view>
+
+		<div class="newest-music-container">
+			<newest-song v-if="current.id == 1"></newest-song>
+		</div>
 	</div>
 </template>
 
 <script>
+	import NewestSong from './newest/newest-song.vue'
 	export default {
 		data() {
-			return {}
+			return {
+				current: {
+					id: 1,
+					name: '新歌速递'
+				},
+				groups: [
+					{
+						id: 1,
+						name: '新歌速递'
+					},
+					{
+						id: 2,
+						name: '新碟上架'
+					}
+				]
+			}
 		},
-		components: {},
-		methods: {},
+		components: {
+			NewestSong
+		},
+		methods: {
+			changeGroup(group){
+				this.current = group
+			}
+		},
 		computed: {},
 		created() {}
 	}
@@ -23,7 +53,10 @@
 
 <style lang="scss" scoped>
 	.newest-music{
-    padding-top: 25px;
+		height: 100%;
+		padding: 30px 7%;
+		box-sizing: border-box;
+		overflow: overlay;
 		.nav-container{
 			width: 230px;
 			height: 30px;
@@ -45,7 +78,7 @@
 				&:hover{
 					background-color: var(--color-level5);
 				}
-				&.router-link-active{
+				&.active{
 					background-color: var(--color-level4);
 					color: var(--color-level2);
 				}

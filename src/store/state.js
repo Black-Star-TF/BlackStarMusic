@@ -15,6 +15,7 @@ export default {
   player: null,
   app: {
     songDetailVisible: false,
-    showPlaylist: false
+    playlistDrawerVisible: false,
+    messgeDrawerVisible: false
   }
 }

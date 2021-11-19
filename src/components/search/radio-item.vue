@@ -1,7 +1,7 @@
 <template>
   <div class="radio-item" @click="toRadioDetail(radio.id)">
     <!-- 电台封面 -->
-    <div class="radio-cover" :style="{'backgroundImage': `url(${radio.picUrl})`}"></div>
+    <div class="radio-cover" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
     <!-- 电台名 -->
     <div class="radio-name">
       <span class="name" v-html="markKeyword(radio.name)"></span>
@@ -16,6 +16,7 @@
 
 <script>
 	import { toRadioDetail, toUserDetail, markKeyword} from '@/utils/methods'
+  import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props: {
       radio: {
@@ -25,6 +26,11 @@
       keyword: {
         type: String,
         required: true
+      }
+    },
+    computed:{
+      coverUrl(){
+        return `${this.radio.picUrl}?param=${size_1v1_small}`
       }
     },
     methods:{

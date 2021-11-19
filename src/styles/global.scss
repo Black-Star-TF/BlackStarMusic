@@ -1,4 +1,4 @@
-@import url('//at.alicdn.com/t/font_2882306_sn0jl49wghf.css');
+@import url('//at.alicdn.com/t/font_2882306_ixro8pku9md.css');
 :root {
   --min-width: 1030px;
   --color-keyword: #91b7e2;
@@ -6,6 +6,7 @@
   --app-header-height: 50px;
   --app-aside-width: 200px;
   --app-player-height: 70px;
+  --app-drawer-width: 400px;
   --color-netease-red: #c2473a;
   --playlist-tag-active-bg-color: rgba(255, 0, 0, 0.13);
   --panel-box-bg-color: #fff;
@@ -47,6 +48,9 @@
   --link-hover-color: #2857aa;
 
   --scroll-bar-bg-color: #e0e0e0;
+  --context-menu-bg-color: #e4e8e4;
+  // 6b9ff9
+  --context-menu-item-hover-bg-color: #6b9ff9;
 }
 
 [data-theme='dark'] {
@@ -88,6 +92,8 @@
   --link-hover-color: #b8cde2;
 
   --scroll-bar-bg-color: #404040;
+  --context-menu-bg-color: #292c2c;
+  --context-menu-item-hover-bg-color: #2c57b7;
 }
 
 [data-theme='red'] {
@@ -105,6 +111,7 @@
   width: 8px;
   background-color: none;
 }
+
 ::-webkit-scrollbar-thumb{
   border-radius: 4px;
   background-color: var(--scroll-bar-bg-color);

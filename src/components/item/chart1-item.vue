@@ -4,7 +4,7 @@
 		<div
 		class="chart-cover"
 		@click="toPlaylistDetail(toplist.id)"
-		:style="{'backgroundImage': `url(${toplist.coverImgUrl})`}">
+		:style="{'backgroundImage': `url(${coverUrl})`}">
 			<!-- 播放按钮 -->
 			<div class="icon-play" @click.stop="playPlaylist(toplist.id)">
 				<span class="iconfont icon-bofang"></span>
@@ -59,6 +59,7 @@
 <script>
 	import { playPlaylist, playMusic, toArtistDetail, toPlaylistDetail } from '@/utils/methods'
 	import { getPlaylistDetail} from '@/api/playlist.js'
+	import {size_1v1_std} from '@/utils/img-size.js'
 	export default {
 		data() {
 			return {
@@ -88,19 +89,8 @@
 			loading(){
 				return this.list.length <= 0
 			},
-			cover(){
-				return this.toplist.coverImgUrl
-			},
-			bgurl(){
-				if(this.list.length > 0){
-					if(this.isArtTl){
-						return this.list[0].img1v1Url
-					}else{
-						return this.list[0].al.picUrl
-					}
-				}else{
-					return ''
-				}
+			coverUrl(){
+				return `${this.toplist.coverImgUrl}?param=${size_1v1_std}`
 			},
 			date(){
 				let date = new Date(this.time)

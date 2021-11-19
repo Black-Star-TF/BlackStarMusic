@@ -2,7 +2,7 @@
   <div class="search-playlist-item" @click="toPlaylistDetail(playlist.id)">
     <!-- 歌单分娩
      -->
-    <div class="search-playlist-cover" :style="{'backgroundImage': `url(${playlist.coverImgUrl})`}"></div>
+    <div class="search-playlist-cover" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
     <!-- 歌单名 -->
     <div class="search-playlist-name"><span class="name" v-html="markKeyword(playlist.name)"></span></div>
     <!-- 歌单中歌曲数量 -->
@@ -14,6 +14,7 @@
 
 <script>
 	import { markKeyword, toPlaylistDetail, toUserDetail } from '@/utils/methods'
+  import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props: {
       playlist: {
@@ -23,6 +24,11 @@
       keyword: {
         type: String,
         required: true
+      }
+    },
+    computed:{
+      coverUrl(){
+        return `${this.playlist.coverImgUrl}?param=${size_1v1_small}`
       }
     },
     methods:{

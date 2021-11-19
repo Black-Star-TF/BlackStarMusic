@@ -1,7 +1,7 @@
 <template>
 	 <div class="singer-item" :style="style">
 		 <!-- cover -->
-		 <div class="singer-cover" @click="toArtistDetail(singer.id)" :style="{'backgroundImage': `url(${singer.img1v1Url})`}"></div>
+		 <div class="singer-cover" @click="toArtistDetail(singer.id)" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
 		 <!-- name -->
 		 <div class="singer-name">
 			<span @click="toArtistDetail(singer.id)">{{singer.name}}</span>
@@ -12,6 +12,7 @@
 <script>
   import { toUserDetail,toArtistDetail } from '@/utils/methods'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
+  import {size_1v1_std} from '@/utils/img-size.js'
 	export default {
 		mixins: [ItemPropsMixin],
 		props: {
@@ -20,6 +21,11 @@
 				required: true
 			}
 		},
+    computed:{
+      coverUrl(){
+        return `${this.singer.img1v1Url}?param=${size_1v1_std}`
+      }
+    },
     methods:{
       toUserDetail,
       toArtistDetail

@@ -1,7 +1,7 @@
 <template>
   <div class="singer-item" @click="toArtistDetail(singer.id)">
     <!-- cover -->
-    <div class="singer-cover" :style="{'backgroundImage': `url(${singer.img1v1Url})`}"></div>
+    <div class="singer-cover" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
     <!-- name -->
     <div class="singer-name"><span class="name" v-html="markKeyword(singer.name)"></span><span class="alias" v-if="singer.alias.length > 0">({{singer.alias[0]}})</span></div>
     <!-- user-icon -->
@@ -13,6 +13,7 @@
 
 <script>
   import { toUserDetail,toArtistDetail,markKeyword } from '@/utils/methods'
+  import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props:{
       singer: {
@@ -21,6 +22,11 @@
       },
       keyword:{
         type: String
+      }
+    },
+    computed:{
+      coverUrl(){
+        return `${this.singer.img1v1Url}?param=${size_1v1_small}`
       }
     },
     methods:{

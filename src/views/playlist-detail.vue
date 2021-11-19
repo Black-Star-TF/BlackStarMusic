@@ -2,14 +2,14 @@
   <div class="page-playlist-detail" v-if="playlist">
     <!-- playlist info -->
     <div class="playlist-detail-header">
-      <div class="playlist-cover" :style="{'backgroundImage': `url(${playlist.coverImgUrl})`}"></div>
+      <div class="playlist-cover" :style="{'backgroundImage': `url(${playlistCoverUrl})`}"></div>
       <div class="playlist-info">
         <div class="playlist-name">
           <div class="type">歌单</div>
           <div class="name">{{playlist.name}}</div>
         </div>
         <div class="playlist-creator">
-          <span class="creator-cover" @click="toUserDetail(playlist.creator.userId)" :style="{'backgroundImage': `url(${playlist.creator.avatarUrl})`}"></span>
+          <span class="creator-cover" @click="toUserDetail(playlist.creator.userId)" :style="{'backgroundImage': `url(${userCoverUrl})`}"></span>
           <span class="creator-name" @click="toUserDetail(playlist.creator.userId)">{{playlist.creator.nickname}}</span>
           <span class="create-time">{{playlist.createTime | formatDate}}创建</span>
         </div>
@@ -56,7 +56,7 @@
     </div>
 
     <div class="playlist-detail-content">
-      <songlist v-if="mode == 'songlist'" :trackIds="trackIds"></songlist>
+      <songlist v-if="mode == 'songlist'" :songList="songList"></songlist>
       <comment v-if="mode == 'comment'"></comment>
       <subscriber v-if="mode == 'subscriber'"></subscriber>
     </div>
@@ -68,9 +68,11 @@
   import { formatPlayCount,formatDate } from '@/utils/filters'
   import TabNav from '@/components/common/tab-nav'
   import {getPlaylistDetail} from '@/api/playlist'
+  import {getSongsDetail} from '@/api/music.js'
   import Songlist from './playlist-detail/songlist.vue'
   import Comment from './playlist-detail/comment.vue'
   import Subscriber from './playlist-detail/subscriber.vue'
+  import {size_1v1_std, size_1v1_small} from '@/utils/img-size.js'
   export default {
     components: {
       TabNav,
@@ -83,6 +85,7 @@
         id: null,
         playlist: null,
         showDesc: false,
+        songList: [],
         trackIds: [],
         mode: 'songlist',
         modeList:[
@@ -90,6 +93,14 @@
           { name: 'comment', label: '评论'},
           { name: 'subscriber', label: '收藏者'}
         ]
+      }
+    },
+    computed:{
+      playlistCoverUrl(){
+        return `${this.playlist.coverImgUrl}?param=${size_1v1_std}`
+      },
+      userCoverUrl(){
+        return `${this.playlist.creator.avatarUrl}?param=${size_1v1_small}`
       }
     },
     methods: {
@@ -107,6 +118,7 @@
       changeDesc(){
         this.showDesc = !this.showDesc
       },
+      
       toPlaylist(tagName){
         this.$router.push({
           name: 'playlist',
@@ -117,12 +129,15 @@
           }
         })
       },
-      init(){
+      async getData(){
         this.id = this.$route.params.id
-        getPlaylistDetail(this.id).then(res => {
-          this.playlist = res.playlist
-          this.trackIds = this.playlist.trackIds.map(track => track.id)
-        })
+        this.songList = []
+        this.playlist = null
+        let { playlist } = await getPlaylistDetail(this.id)
+        this.playlist = playlist
+        this.trackIds = playlist.trackIds.map(track => track.id)
+        let {songs} = await getSongsDetail(this.trackIds.join(','))
+        this.songList = songs
       }
     },
     filters:{
@@ -130,7 +145,13 @@
       formatPlayCount
     },
     created () {
-      this.init()
+      this.getData()
+    },
+    watch:{
+      $route(){
+        this.getData()
+        this.mode = 'songlist'
+      }
     }
   }
 </script>
@@ -140,6 +161,8 @@
 .page-playlist-detail{
   width: 100%;
   height: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
   @include scroll-style;
   .playlist-detail-header{
     width: 100%;

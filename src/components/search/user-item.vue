@@ -1,7 +1,7 @@
 <template>
   <div class="user-item" @click="toUserDetail(user.userId)">
     <!-- avatar -->
-    <div class="user-avatar" :style="{'backgroundImage': `url(${user.avatarUrl})`}">
+    <div class="user-avatar" :style="{'backgroundImage': `url(${coverUrl})`}">
       <div class="sign" v-if="user.avatarDetail" :style="{'backgroundImage': `url(${user.avatarDetail.identityIconUrl})`}"></div>
     </div>
     <!-- name -->
@@ -13,6 +13,7 @@
 
 <script>
 	import { toUserDetail, markKeyword } from '@/utils/methods'
+  import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props:{
       user: {
@@ -21,6 +22,11 @@
       },
       keyword: {
         type: String
+      }
+    },
+    computed:{
+      coverUrl(){
+        return `${this.user.avatarUrl}?param=${size_1v1_small}`
       }
     },
     methods:{

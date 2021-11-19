@@ -8,7 +8,7 @@ export default {
       type: Number,
       required: true
     },
-    margin: {
+    margin: { 
       type: Number,
       default: 20
     }

@@ -7,6 +7,9 @@ import actions from './actions'
 import plugins from './plugins'
 import Player from '@/utils/Player'
 
+import {checkLoginStatus} from '@/api/auth'
+import {logoutInLocal} from '@/utils/auth'
+
 import {changeTheme} from '@/utils/common'
 Vue.use(Vuex)
 
@@ -31,5 +34,22 @@ player = new Proxy(player, {
   },
 });
 store.state.player = player;
+
+if(store.state.data.loginStatus){
+  checkLogin()
+}
+
+// 检查登录状态
+async function checkLogin(){
+  let {data} = await checkLoginStatus()
+  if(data.account){
+    // 登录 获取用户信息
+    store.dispatch('getUserPlaylist')
+    store.dispatch('getLikedSongList')
+  }else{
+    // 未登录 删除本地登录信息
+    logoutInLocal()
+  }
+}
 
 export default store

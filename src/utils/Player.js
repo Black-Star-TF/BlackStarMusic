@@ -72,8 +72,6 @@ export default class Player{
     return this._currentIndex
   }
 
-  
-
   // 设置当前播放的歌曲索引
   set currentIndex(val){
     this._currentIndex = val

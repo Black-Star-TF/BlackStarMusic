@@ -1,6 +1,6 @@
 <template>
   <div class="simi-playlist-item" @click="toPlaylistDetail(playlist.id)">
-    <img :src="playlist.coverImgUrl" class="playlist-cover">
+    <img :src="coverUrl" class="playlist-cover">
     <div class="playlist-info">
       <div class="playlist-name">{{playlist.name}}</div>
       <div class="play-count">
@@ -13,11 +13,17 @@
 <script>
 import {toPlaylistDetail} from '@/utils/methods'
 import {formatPlayCount} from '@/utils/filters'
+import {size_1v1_small} from '@/utils/img-size.js'
 export default {
   props:{
     playlist:{
       type: Object,
       required: true
+    }
+  },
+  computed:{
+    coverUrl(){
+      return `${this.playlist.coverImgUrl}?param=${size_1v1_small}`
     }
   },
   methods: {
