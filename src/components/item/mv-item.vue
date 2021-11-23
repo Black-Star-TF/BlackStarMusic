@@ -2,7 +2,7 @@
 	 <div class="video-item" :style="style">
 		 <div class="video-cover" @click="playVideo(mv.id)" :style="{'backgroundImage':`url(${coverUrl})`}">
 				<!-- 播放量 -->
-				<span class="video-playcount"><span class="iconfont icon-pause"></span> {{mv.playCount | formatPlayCount}}</span>
+				<span class="video-playcount"><span class="iconfont icon-pause"></span> {{mv.playCount | formatCount}}</span>
 			</div>
 			<div class="video-name" @click="playVideo(mv.id)"><span>{{mv.name}}</span></div>
 			<!-- 歌手 -->
@@ -17,7 +17,7 @@
 
 <script>
   import { playVideo,toArtistDetail } from '@/utils/methods'
-  import { formatPlayCount } from '@/utils/filters'
+  import { formatCount } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
   import {size_video_std} from '@/utils/img-size.js'
 	export default {
@@ -38,7 +38,7 @@
       toArtistDetail
     },
     filters:{
-      formatPlayCount
+      formatCount
     }
 	}
 </script>

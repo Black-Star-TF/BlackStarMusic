@@ -12,13 +12,4 @@ export function getAlbumDetail(id){
 }
 
 // 获取专辑评论
-export function getAlbumComments(id, limit = null, offset = null){
-  return request({
-    url: '/comment/album',
-    params:{
-			id,
-			limit,
-			offset
-		}
-  })
-}
+export const getAlbumComments = params => request.get('/comment/album', {params})

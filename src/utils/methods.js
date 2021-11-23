@@ -1,7 +1,5 @@
 import {getPlaylistDetail} from '@/api/playlist'
 import store from '@/store'
-
-
 // 播放歌曲有关方法
 
 // 播放音乐并替换播放列表
@@ -51,4 +49,14 @@ export function toUserDetail(id){
 export function markKeyword(str){
   let reg = new RegExp(this.keyword,'ig')
   return str.replace(reg, ($)=> `<span class="keyword">${$}</span>`)
+}
+
+export function toHotComment(id,type){
+  this.$router.push({
+    path: '/hotcomment',
+    query:{
+      id,
+      type
+    }
+  })
 }

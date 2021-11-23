@@ -75,7 +75,9 @@ export default {
     }
   },
   computed: {},
-  methods: {},
+  methods: {
+      
+  },
   filters: {},
   created () {}
 }

@@ -33,7 +33,8 @@ export default {
   },
   async getLikedSongList({state,commit}){
     // 获取喜欢的歌曲列表 id
-    let res = await getLikedSongList(state.data.userProfile.userId)
+    // timestamp
+    let res = await getLikedSongList({uid: state.data.userProfile.userId, timestamp: new Date().getTime()})
     commit('updateData', {key: 'likedSongList', value: res.ids})
   },
 }

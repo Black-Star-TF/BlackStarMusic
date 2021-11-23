@@ -1,71 +1,15 @@
 import request from '@/utils/request.js'
-
 // 请求推荐歌单
-export function getRecommendPlaylist(limit = 10){
-	return request({
-		url: '/personalized',
-		params: {
-			limit
-		}
-	})
-}
-
+export const getRecommendPlaylist = params => request.get('/personalized', {params}) 
 // 请求热门歌单分类
-export function getHotPlaylistCate(){
-	return request({
-		url: '/playlist/hot'
-	})
-}
-
+export const getHotPlaylistCate = () => request.get('/playlist/hot')
 // 请求全部歌单分类
-export function getPlaylistCate(){
-	return request({
-		url: '/playlist/catlist'
-	})
-}
-
+export const getPlaylistCate = () => request.get('/playlist/catlist')
 // 获取歌单列表
-export function getPlaylists(cat,limit,offset){
-	return request({
-		url: '/top/playlist',
-		params: {
-			cat,
-			limit,
-			offset
-		}
-	})
-}
-
+export const getPlaylists = params => request.get('/top/playlist', {params})
 // 获取歌单详情
-export function getPlaylistDetail(id){
-	return request ({
-		url: '/playlist/detail',
-		params:{
-			id
-		}
-	})
-}
-
+export const getPlaylistDetail = params => request.get('/playlist/detail', {params})
 // 获取歌单评论
-export function getPlaylistComments(id, limit = null, offset = null){
-	return request({
-		url: '/comment/playlist',
-		params:{
-			id,
-			limit,
-			offset
-		}
-	})
-}
-
-// 请求歌单收藏者
-export function getPlaylistSubscribers(id,limit = null,offset = null){
-	return request({
-		url: '/playlist/subscribers',
-		params:{
-			id,
-			limit,
-			offset
-		}
-	})
-}
+export const getPlaylistComments = params => request.get('/comment/playlist', {params})
+// 获取歌单收藏者
+export const getPlaylistSubscribers = params => request.get('/playlist/subscribers', {params})

@@ -1,52 +1,53 @@
 <template>
   <div class="simi-playlist-item" @click="toPlaylistDetail(playlist.id)">
-    <img :src="coverUrl" class="playlist-cover">
+    <img :src="coverUrl" class="playlist-cover" />
     <div class="playlist-info">
-      <div class="playlist-name">{{playlist.name}}</div>
+      <div class="playlist-name">{{ playlist.name }}</div>
       <div class="play-count">
-        <span class="iconfont icon-pause"></span>{{playlist.playCount | formatPlayCount}}
+        <span class="iconfont icon-pause"></span
+        >{{ playlist.playCount | formatCount}}
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {toPlaylistDetail} from '@/utils/methods'
-import {formatPlayCount} from '@/utils/filters'
-import {size_1v1_small} from '@/utils/img-size.js'
+import { toPlaylistDetail } from "@/utils/methods";
+import { formatCount} from "@/utils/filters";
+import { size_1v1_small } from "@/utils/img-size.js";
 export default {
-  props:{
-    playlist:{
+  props: {
+    playlist: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  computed:{
-    coverUrl(){
-      return `${this.playlist.coverImgUrl}?param=${size_1v1_small}`
-    }
+  computed: {
+    coverUrl() {
+      return `${this.playlist.coverImgUrl}?param=${size_1v1_small}`;
+    },
   },
   methods: {
-    toPlaylistDetail
+    toPlaylistDetail,
   },
   filters: {
-    formatPlayCount
+    formatCount,
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.simi-playlist-item{
+.simi-playlist-item {
   height: 60px;
   padding: 5px;
   box-sizing: border-box;
   display: flex;
   border-radius: 5px;
-  &:hover{
+  &:hover {
     background-color: var(--table-hover-color);
   }
-  .playlist-cover{
+  .playlist-cover {
     width: 50px;
     height: 50px;
     border-radius: 5px;
@@ -54,10 +55,10 @@ export default {
     background-color: #fff;
     margin-right: 10px;
   }
-  .playlist-info{
+  .playlist-info {
     flex: 1;
     height: 50px;
-    .playlist-name{
+    .playlist-name {
       font-size: 14px;
       height: 25px;
       line-height: 25px;
@@ -65,11 +66,11 @@ export default {
       color: var(--color-level2);
     }
 
-    .play-count{
+    .play-count {
       font-size: 13px;
       @include ellipsis;
       color: var(--color-level4);
-      .iconfont{
+      .iconfont {
         font-size: 12px;
         margin-right: 5px;
       }

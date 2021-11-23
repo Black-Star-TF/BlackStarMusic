@@ -17,7 +17,7 @@
         </div>
         <div class="info">
           <span>发布：{{videoDetail.publishTime | formatDate}}</span>
-          <span>播放：{{videoDetail.playTime | formatPlayCount}}次</span>
+          <span>播放：{{videoDetail.playTime | formatCount}}次</span>
         </div>
         <div class="video-group">
           <span class="video-tag" v-for="tag in videoDetail.videoGroup" :key="tag.id">{{tag.name}}</span>
@@ -32,37 +32,11 @@
           <span class="jubao">举报</span>
         </div>
         <div class="comment-title">
-          <span class="title">听友评论</span> <span class="count">(已有{{videoDetail.commentCount | formatPlayCount}}条评论)</span>
-        </div>
-        <comment-input-area></comment-input-area>
-      </div>
-      <div ref="anchor"></div>
-      <div v-if="videoDetail && videoComments" >
-        <!-- 热门评论 -->
-        <div class="hot-comment comment-part" v-if="videoComments.hotComments && videoComments.hotComments.length > 0">
-          <h3>精彩评论</h3>
-          <comment-item v-for="comment in videoComments.hotComments" :key="comment.commentId" :comment="comment"></comment-item>
-          <div class="more-hot-comment">
-            <span v-if="videoComments.moreHot" class="btn">更多精彩评论</span>
-          </div>
-        </div>
-
-        <!-- 最新评论 -->
-        <div class="new-comment comment-part" v-if="videoComments.comments&&videoComments.comments.length > 0">
-          <h3>最新评论</h3>
-          <comment-item v-for="comment in videoComments.comments" :key="comment.commentId" :comment="comment"></comment-item>
-          <el-pagination
-            v-if="videoComments.total > pageSize"
-            background
-            layout="prev, pager, next"
-            :total="videoComments.total"
-            :current-page.sync="pageNo"
-            :page-size="pageSize"
-            @current-change="changeCurrentPage">
-          </el-pagination>
+          <span class="title">听友评论</span> <span class="count">(已有{{videoDetail.commentCount | formatCount}}条评论)</span>
         </div>
       </div>
-      <div class="zhanwei"></div>
+      <!-- 评论 -->
+      <comment :type="type" :id="id"></comment>
     </div>
     <div class="about">
       <div class="title">相关推荐</div>
@@ -73,35 +47,28 @@
 </template>
 
 <script>
-import { getVideoUrl, getVideoDetail, getRelativeVideo,getVideoInfo,getVideoComment} from '@/api/video'
+import { getVideoUrl, getVideoDetail, getRelativeVideo,} from '@/api/video'
 import { toArtistDetail } from '@/utils/methods'
-import { formatPlayCount, formatDate } from '@/utils/filters'
+import { formatCount, formatDate } from '@/utils/filters'
 import RelativeVideoItem from '@/components/item/relative-video-item'
-import CommentItem from '@/components/item/comment-item.vue'
-import CommentInputArea from '@/components/common/comment-input-area.vue'
+import Comment from '@/components/common/comment.vue'  
+import RESOURCE_TYPE from '@/utils/resource-type'
 export default {
   components: {
     RelativeVideoItem,
-    CommentItem,
-    CommentInputArea
+    Comment
   },
   data () {
     return {
       id: null,
+      type: RESOURCE_TYPE.VIDEO,
       videoUrl: '',
       videoDetail: null,
-      videoInfo: null,
       relativeVideoList: [],
-      videoComments: null,
-      pageNo: 1,
-      pageSize: 20,
       showDesc: false
     }
   },
   computed: {
-    offset(){
-      return (this.pageNo - 1) * this.pageSize
-    },
     icon(){
       return this.showDesc ? 'icon-sanjiao2' : 'icon-sanjiao1'
     }
@@ -111,26 +78,12 @@ export default {
     changeDesc(){
       this.showDesc = !this.showDesc
     },
-    changeCurrentPage(){
-      this.videoComments = null
-      this.getVideoComments()
-    },
-    getVideoComments(){
-      // 获取 mv评论
-      getVideoComment(this.id, this.pageSize, this.offset).then(res=>{
-        this.videoComments = res
-      })
-    },
     initData(){
       // 初始化data
       this.id = null,
       this.videoUrl = '',
       this.videoDetail = null,
-      this.videoInfo = null,
       this.relativeVideoList = [],
-      this.videoComments = null,
-      this.pageNo = 1,
-      this.pageSize = 20,
       this.showDesc = false
     },
     init(){
@@ -149,12 +102,10 @@ export default {
       getVideoDetail(this.id).then(res=>{
         this.videoDetail = res.data
       })
-      // 获取视频评论
-      this.getVideoComments()
     }
   },
   filters: {
-    formatPlayCount,
+    formatCount,
     formatDate
   },
   beforeRouteEnter(to,from,next){
@@ -326,46 +277,9 @@ export default {
         color: var(--color-level3);
       }
     }
-    .comment-part{
-      margin: 30px 0;
-      h3{
-        font-size: 16px;
-        color: var(--color-level2);
-      }
-      .more-hot-comment{
-        margin: 30px 0;
-        height: 30px;
-        line-height: 30px;
-        display: flex;
-        justify-content: center;
-        .btn{
-          display: inline-block;
-          padding: 0 15px;
-          height: 30px;
-          line-height: 30px;
-          color: var(--color-level2);
-          border-radius: 16px;
-          border: 1px solid var(--color-level5);
-          cursor: pointer;
-          margin-right: 10px;
-          font-size: 14px;
-          &:hover{
-            background-color: var(--color-level5);
-          }
-        }
-      }
-    }
-    .zhanwei{
-      height: 30px;
-    }
   }
   .about{
     width: calc(var(--min-width) - 650px);
   }
-}
-
-.el-pagination {
-  display: flex;
-  justify-content: center;
 }
 </style>

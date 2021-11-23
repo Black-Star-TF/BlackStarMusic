@@ -1,194 +1,209 @@
 <template>
-	<div class="view-playlist" ref="page">
-		<template >
-			<container v-if="currentTag">
-				<template v-slot:left>
-					<div class="current-tag-container">
-						<!-- 歌单分类列表 -->
-						<span class="current-tag" @click.stop="change()">{{currentTag.name}}</span>
-						<div class="playlist-categories" v-if="showCate" @click.stop>
-							<div class="playlist-all">
-								<span :class="{'active': all.name == currentTag.name}" @click="changeTag(all)">{{all.name}}</span>
-							</div>
-							<div class="playlist-group" v-for="(value,key) in categories" :key="key">
-								<div class="group-name">
-									<span class="name">{{value}}</span>
-								</div>
-								<div class="group-tags">
-									<template v-for="tag in playlistCate" >
-										<div class="tag-container" :key="tag.name" v-if="tag.category == key">
-											<span :class="{'active': tag.name == currentTag.name}" @click="changeTag(tag)">
-												{{tag.name}}
-											</span>
-										</div>
-									</template>
-								</div>
-							</div>
-						</div>
-					</div>
-				</template>
-				<template v-slot:right>
-					<div class="hot-tags-nav">
-						<span
-						class="tag"
-						v-for="tag in hotTags"
-						:class="{'active': tag.name == currentTag.name}"
-						@click="changeTag(tag)"
-						:key="tag.name">{{tag.name}}</span>
-					</div>
-				</template>
-				<template v-slot:content v-if="loaded">
-					<playlist-item
-					v-for="(playlist,index) in playlists" 
-					:num="5" 
-					:index="index" 
-					:playlistItem="playlist" 
-					:key="`${index}-${playlist.id}`">
-					</playlist-item>
-				</template>
-			</container>
+  <div class="view-playlist" ref="page">
+    <template>
+      <container v-if="currentTag">
+        <template v-slot:left>
+          <div class="current-tag-container">
+            <!-- 歌单分类列表 -->
+            <span class="current-tag" @click.stop="change()">{{currentTag.name}}</span>
+            <div class="playlist-categories" v-if="showCate" @click.stop>
+              <div class="playlist-all">
+                <span
+                  :class="{ active: all.name == currentTag.name }"
+                  @click="changeTag(all)"
+                  >{{ all.name }}</span
+                >
+              </div>
+              <div
+                class="playlist-group"
+                v-for="(value, key) in categories"
+                :key="key"
+              >
+                <div class="group-name">
+                  <span class="name">{{ value }}</span>
+                </div>
+                <div class="group-tags">
+                  <template v-for="tag in playlistCate">
+                    <div
+                      class="tag-container"
+                      :key="tag.name"
+                      v-if="tag.category == key"
+                    >
+                      <span
+                        :class="{ active: tag.name == currentTag.name }"
+                        @click="changeTag(tag)"
+                      >
+                        {{ tag.name }}
+                      </span>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+        <template v-slot:right>
+          <div class="hot-tags-nav">
+            <span
+              class="tag"
+              v-for="tag in hotTags"
+              :class="{ active: tag.name == currentTag.name }"
+              @click="changeTag(tag)"
+              :key="tag.name"
+            >
+							{{ tag.name }}
+						</span>
+          </div>
+        </template>
+        <template v-slot:content v-if="loaded">
+          <playlist-item
+            v-for="(playlist, index) in playlists"
+            :num="5"
+            :index="index"
+            :playlistItem="playlist"
+            :key="`${index}-${playlist.id}`"
+          />
+        </template>
+      </container>
 
-			<!-- 分页 -->
-			<el-pagination 
-				v-if="loaded" 
-				background 
-				layout="prev, pager, next"
-				:total="total"
-				:page-size="limit"
-				:current-page.sync="currentPage" 
-				@current-change="changeCurrentPage" 
-				@prev-click="skip(-1)"
-				@next-click="skip(1)"
-			>
-			</el-pagination>
-		</template>
+      <!-- 分页 -->
+      <el-pagination
+        v-if="loaded"
+        background
+        layout="prev, pager, next"
+        :total="total"
+        :page-size="limit"
+        :current-page.sync="currentPage"
+        @current-change="changeCurrentPage"
+      />
+    </template>
 
-		<!-- 加载图标 -->
-		<!-- <Loading :loading="loading" /> -->
-		
-	</div>
+    <!-- 加载图标 -->
+    <!-- <Loading :loading="loading" /> -->
+  </div>
 </template>
 
 <script>
-	import axios from 'axios'
-	import Container from '@/components/common/container'
-	import PlaylistItem from '@/components/item/playlist-item'
-	// import Loading from '@/components/common/Loading'
-	import {
-		getHotPlaylistCate,
-		getPlaylistCate,
-		getPlaylists
-	} from '@/api/playlist.js'
-	export default {
-		data() {
-			return {
-				playlistCate: [],
-				all: null,
-				currentTag: null,
-				categories: null,
-				hotTags: [],
-				playlists: [],
-				showCate: false,
-				limit: 50,
-				total: 0,
-				currentPage: 1,
-				scrollTop: 0,
-			}
-		},
-		components: {
-			Container,
-			PlaylistItem,
-			// Loading
-		},
-		computed: {
-			offset() {
-				return (this.currentPage - 1) * this.limit
-			},
-			loaded() {
-				return this.playlists.length > 0
-			}
-		},
-		methods: {
-			// 翻页
-			changeCurrentPage() {
-				this.getPlaylistsData()
-			},
-			closePanel(){
-				this.showCate = false
-			},
-			// 切换歌单分类
-			changeTag(tag) {
-				this.currentTag = tag
-				this.showCate = false
-			},
-			// 切换歌单分类面板状态
-			change(status = null) {
-				if (status == null) {
-					this.showCate = !this.showCate
-				} else {
-					this.showCate = status
-				}
-			},
-			// 获取歌单列表
-			async getPlaylistsData() {
-				this.playlists = []
-				let res = await getPlaylists(this.currentTag.name, this.limit, this.offset)
-				this.playlists = res.playlists
-				this.total = res.total
-			},
-			getScrollTop(e){
-				this.scrollTop = e.target.scrollTop
-			},
-			async getData(){
-				let res = await axios.all([
-					getHotPlaylistCate(),
-					getPlaylistCate()
-				])
-				// 获取热门歌单分类
-				this.hotTags = res[0].tags
-				// 获取歌单分类
-				this.playlistCate = res[1].sub
-				this.all = res[1].all
-				this.categories = res[1].categories
-				this.currentTag = this.$route.params.tag || this.all
-				this.getPlaylistsData()
-			}
-		},
-		created() {
-			this.getData()
-		},
-		mounted(){
-			this.$refs.page.addEventListener('scroll', this.getScrollTop)
-			// 添加关闭歌单分类窗口的事件
-			const app = document.getElementById('app')
-			app.addEventListener('click', this.closePanel)
-		},
-		activated(){
-			this.$refs.page.scrollTo(0,this.scrollTop);
-		},
-		beforeDestroy(){
-			this.$refs.page.removeEventListener('scroll', this.getScrollTop)
-			// 移除关闭歌单分类窗口的事件
-			const app = document.getElementById('app')
-			app.removeEventListener('click', this.closePanel)
-		},
-		watch: {
-			currentTag() {
-				// 获取歌单数据
-				this.currentPage = 1
-				this.getPlaylistsData()
-			}
-		}
-	}
+import axios from "axios";
+import Container from "@/components/common/container";
+import PlaylistItem from "@/components/item/playlist-item";
+// import Loading from '@/components/common/Loading'
+import {
+  getHotPlaylistCate,
+  getPlaylistCate,
+  getPlaylists,
+} from "@/api/playlist.js";
+export default {
+  data() {
+    return {
+      playlistCate: [],
+      all: null,
+      currentTag: null,
+      categories: null,
+      hotTags: [],
+      playlists: [],
+      showCate: false,
+      limit: 50,
+      total: 0,
+      currentPage: 1,
+      scrollTop: 0,
+    };
+  },
+  components: {
+    Container,
+    PlaylistItem,
+    // Loading
+  },
+  computed: {
+    offset() {
+      return (this.currentPage - 1) * this.limit;
+    },
+    loaded() {
+      return this.playlists.length > 0;
+    },
+  },
+  methods: {
+    // 翻页
+    changeCurrentPage() {
+      this.getPlaylistsData();
+    },
+    closePanel() {
+      this.showCate = false;
+    },
+    // 切换歌单分类
+    changeTag(tag) {
+      this.currentTag = tag;
+      this.showCate = false;
+    },
+    // 切换歌单分类面板状态
+    change(status = null) {
+      if (status == null) {
+        this.showCate = !this.showCate;
+      } else {
+        this.showCate = status;
+      }
+    },
+    // 获取歌单列表
+    async getPlaylistsData() {
+      this.playlists = [];
+      let {playlists,total} = await getPlaylists({
+        cat:this. currentTag.name,
+        limit :this.limit,
+        offset: this.offset
+			});
+      this.playlists = playlists;
+      this.total = total;
+    },
+    getScrollTop(e) {
+      this.scrollTop = e.target.scrollTop;
+    },
+    async getData() {
+      let res = await axios.all([getHotPlaylistCate(), getPlaylistCate()]);
+      // 获取热门歌单分类
+      this.hotTags = res[0].tags;
+      // 获取歌单分类
+      this.playlistCate = res[1].sub;
+      this.all = res[1].all;
+      this.categories = res[1].categories;
+      this.currentTag = this.$route.params.tag || this.all;
+      this.getPlaylistsData();
+    },
+  },
+  created() {
+    this.getData();
+  },
+  mounted() {
+    this.$refs.page.addEventListener("scroll", this.getScrollTop);
+    // 添加关闭歌单分类窗口的事件
+    const app = document.getElementById("app");
+    app.addEventListener("click", this.closePanel);
+  },
+  activated() {
+    this.$refs.page.scrollTo(0, this.scrollTop);
+  },
+  beforeDestroy() {
+    this.$refs.page.removeEventListener("scroll", this.getScrollTop);
+    // 移除关闭歌单分类窗口的事件
+    const app = document.getElementById("app");
+    app.removeEventListener("click", this.closePanel);
+  },
+  watch: {
+    currentTag() {
+      // 获取歌单数据
+      this.currentPage = 1;
+      this.getPlaylistsData();
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-@import url('~@/styles/variables.scss');
-.view-playlist{
-	height: 100%;
-	padding: 0 7% 30px;
-	box-sizing: border-box;
-	overflow: overlay;
+@import url("~@/styles/variables.scss");
+.view-playlist {
+  height: 100%;
+  padding: 0 7% 30px;
+  box-sizing: border-box;
+  overflow: overlay;
 }
 .current-tag-container {
   height: 70px;
@@ -218,7 +233,7 @@
     width: 800px;
     z-index: 1000;
     background-color: var(--panel-box-bg-color);
-    box-shadow: 0 0 5px 1px rgba($color: #000, $alpha: .1);
+    box-shadow: 0 0 5px 1px rgba($color: #000, $alpha: 0.1);
     border-radius: 5px;
     position: absolute;
     top: 65px;
@@ -243,7 +258,7 @@
       box-sizing: border-box;
       border-bottom: 1px solid var(--main-border-color);
 
-      >span {
+      > span {
         font-size: 14px;
         color: var(--color-level2);
 
@@ -282,7 +297,7 @@
           width: calc(100% / 6);
           margin: 10px 0;
 
-          >span {
+          > span {
             color: var(--color-level2);
             padding: 0 10px;
             cursor: pointer;
@@ -302,7 +317,6 @@
   }
 }
 
-
 .hot-tags-nav {
   height: 70px;
   line-height: 70px;
@@ -310,7 +324,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  >span.tag {
+  > span.tag {
     display: inline-block;
     font-size: 14px;
     height: 20px;
@@ -319,13 +333,13 @@
     padding: 0 8px;
     margin: 0 3px;
     cursor: pointer;
-		color: var(--color-level3);
-    &:hover{
+    color: var(--color-level3);
+    &:hover {
       color: var(--color-level2);
     }
-    &.active{
+    &.active {
       color: var(--color-netease-red);
-			background-color: var(--playlist-tag-active-bg-color);
+      background-color: var(--playlist-tag-active-bg-color);
     }
   }
 }

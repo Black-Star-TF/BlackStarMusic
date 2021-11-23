@@ -9,23 +9,24 @@
       <template v-slot:right>
         <div class="newest-mv-nav">
           <span
-          class="nav-item"
-          v-for="item in type"
-          :key="item" 
-          @click="changeNewMVType(item)"
-          :class="{'active': item === currentNewMVType}">
+            class="nav-item"
+            v-for="item in type"
+            :key="item" 
+            @click="changeNewMVType(item)"
+            :class="{'active': item === currentNewMVType}"
+          >
             {{item}}
           </span>
         </div>
       </template>
       <template v-slot:content>
         <mv-item
-        v-for="(mv,index) in newMVList"
-        :mv="mv"
-        :num="4"
-        :index="index"
-        :key="mv.id || index">
-        </mv-item>
+          v-for="(mv,index) in newMVList"
+          :mv="mv"
+          :num="4"
+          :index="index"
+          :key="mv.id || index"
+        />
       </template>
     </container>
 
@@ -37,12 +38,12 @@
       </template>
       <template v-slot:content>
         <mv-item
-        v-for="(mv,index) in hotMVList"
-        :mv="mv"
-        :num="4"
-        :index="index"
-        :key="mv.id">
-        </mv-item>
+          v-for="(mv,index) in hotMVList"
+          :mv="mv"
+          :num="4"
+          :index="index"
+          :key="mv.id"
+        />
       </template>
     </container>
 
@@ -54,11 +55,12 @@
       </template>
       <template v-slot:content>
         <exclusive-item
-        v-for="(mv,index) in exclusiveMVList"
-        :exclusiveItem="mv"
-        :num="4"
-        :index="index"
-        :key="mv.id"></exclusive-item>
+          v-for="(mv,index) in exclusiveMVList"
+          :exclusiveItem="mv"
+          :num="4"
+          :index="index"
+          :key="mv.id"
+        />
       </template>
     </container>
 
@@ -72,23 +74,24 @@
       <template v-slot:right>
         <div class="toplist-mv-nav">
           <span
-          class="nav-item"
-          v-for="item in type"
-          :key="item"
-          @click="changeMVToplistType(item)"
-          :class="{'active': item === currentMVToplistType}">
+            class="nav-item"
+            v-for="item in type"
+            :key="item"
+            @click="changeMVToplistType(item)"
+            :class="{'active': item === currentMVToplistType}"
+          >
             {{item}}
           </span>
         </div>
       </template>
       <template v-slot:content>
         <mv-chart-item
-        v-for="(mv,index) in mvToplist"
-        :key="mv.id || index"
-        :num="2"
-        :index="index"
-        :mvItem="mv">
-        </mv-chart-item>
+          v-for="(mv,index) in mvToplist"
+          :key="mv.id || index"
+          :num="2"
+          :index="index"
+          :mvItem="mv"
+        />
       </template>
     </container>
   </div>
@@ -99,7 +102,6 @@
 	import MvItem from '@/components/item/mv-item'
   import ExclusiveItem from '@/components/item/exclusive-item'
   import MvChartItem from '@/components/item/mv-chart-item'
-   
   import {getNewestMV, getAllMV, getExclusiveVideo,getMVToplist } from '@/api/video.js'
   export default { 
     components: {
@@ -140,14 +142,13 @@
         this.getMVToplistData()
       }
     },
-    filters: {},
     created () {
       this.getNewestMVData()
       getExclusiveVideo(8).then(res => {
         this.exclusiveMVList = res.data
       })
 
-      getAllMV(8,'最热').then(res => {
+      getAllMV({limit: 8,type: '最热'}).then(res => {
         this.hotMVList = res.data
       })
 

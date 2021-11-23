@@ -16,43 +16,23 @@
         </div>
         <div class="info">
           <span>发布：{{videoDetail.publishTime}}</span>
-          <span>播放：{{videoDetail.playCount | formatPlayCount}}次</span>
+          <span>播放：{{videoDetail.playCount | formatCount}}次</span>
         </div>
         <div class="desc" v-if="showDesc">
           {{videoDetail.desc}}
         </div>
         <div class="operation">
-          <span class="operation-item"><span class="iconfont icon-dianzan"></span> 赞({{videoInfo.likedCount}})</span>
-          <span class="operation-item"><span class="iconfont icon-shoucang"></span> 收藏({{videoDetail.subCount}})</span>
-          <span class="operation-item"><span class="iconfont icon-fenxiang1"></span> 分享({{videoInfo.shareCount}})</span>
+          <span class="operation-item"><span class="iconfont icon-dianzan"></span> 赞({{videoInfo.likedCount | formatCount}})</span>
+          <span class="operation-item"><span class="iconfont icon-shoucang"></span> 收藏({{videoDetail.subCount | formatCount}})</span>
+          <span class="operation-item"><span class="iconfont icon-fenxiang1"></span> 分享({{videoInfo.shareCount | formatCount}})</span>
           <span class="jubao">举报</span>
         </div>
         <div class="comment-title">
-          <span class="title">听友评论</span> <span class="count">(已有{{videoInfo.commentCount | formatPlayCount}}条评论)</span>
-        </div>
-        <comment-input-area></comment-input-area>
-      </div>
-      <div ref="anchor"></div>
-      <div v-if="videoDetail && videoInfo && videoComments" >
-        <!-- 热门评论 -->
-        <div class="hot-comment comment-part" v-if="videoComments.hotComments && videoComments.hotComments.length > 0">
-          <h3>精彩评论</h3>
-          <comment-item v-for="comment in videoComments.hotComments" :key="comment.commentId" :comment="comment"></comment-item>
-          <div class="more-hot-comment">
-            <span v-if="videoComments.moreHot" class="btn">更多精彩评论</span>
-          </div>
-        </div>
-
-        <!-- 最新评论 -->
-        <div class="new-comment comment-part" v-if="videoComments.comments&&videoComments.comments.length > 0">
-          <h3>最新评论</h3>
-          <comment-item v-for="comment in videoComments.comments" :key="comment.commentId" :comment="comment"></comment-item>
-          <el-pagination background layout="prev, pager, next" :total="videoComments.total"
-            :current-page.sync="pageNo" :page-size="pageSize" @current-change="changeCurrentPage">
-          </el-pagination>
+          <span class="title">听友评论</span> <span class="count">(已有{{videoInfo.commentCount | formatCount}}条评论)</span>
         </div>
       </div>
-      <div class="zhanwei"></div>
+      <!-- 评论 -->
+      <comment :type="type" :id="id"></comment>
     </div>
     <div class="about">
       <div class="title">相关推荐</div>
@@ -63,21 +43,21 @@
 </template>
 
 <script>
-import { getMVUrl, getMVDetail, getRelativeVideo,getMVInfo,getMVComment} from '@/api/video'
-import { toArtistDetail } from '@/utils/methods'
-import { formatPlayCount } from '@/utils/filters'
+import { getMVUrl, getMVDetail, getRelativeVideo,getMVInfo} from '@/api/video'
+import { toArtistDetail,toHotComment } from '@/utils/methods'
+import { formatCount } from '@/utils/filters'
 import RelativeVideoItem from '@/components/item/relative-video-item'
-import CommentItem from '@/components/item/comment-item.vue'
-import CommentInputArea from '@/components/common/comment-input-area.vue'
+import Comment from '@/components/common/comment.vue'  
+import RESOURCE_TYPE from '@/utils/resource-type'
 export default {
   components: {
     RelativeVideoItem,
-    CommentItem,
-    CommentInputArea
+    Comment
   },
   data () {
     return {
       id: null,
+      type: RESOURCE_TYPE.MV,
       videoUrl: '',
       videoDetail: null,
       videoInfo: null,
@@ -89,27 +69,15 @@ export default {
     }
   },
   computed: {
-    offset(){
-      return (this.pageNo - 1) * this.pageSize
-    },
     icon(){
       return this.showDesc ? 'icon-sanjiao2' : 'icon-sanjiao1'
     }
   },
   methods: {
     toArtistDetail,
+    toHotComment,
     changeDesc(){
       this.showDesc = !this.showDesc
-    },
-    changeCurrentPage(){
-      this.videoComments = null
-      this.getVideoComments()
-    },
-    getVideoComments(){
-      // 获取 mv评论
-      getMVComment(this.id, this.pageSize, this.offset).then(res=>{
-        this.videoComments = res
-      })
     },
     initData(){
       this.id = null,
@@ -117,9 +85,6 @@ export default {
       this.videoDetail = null,
       this.videoInfo = null,
       this.relativeVideoList = [],
-      this.videoComments = null,
-      this.pageNo = 1,
-      this.pageSize = 20,
       this.showDesc = false
     },
     init(){
@@ -142,7 +107,6 @@ export default {
       getMVInfo(this.id).then(res=>{
         this.videoInfo = res
       })
-      this.getVideoComments()
     }
   },
   beforeRouteEnter(to,from,next){
@@ -151,7 +115,7 @@ export default {
     })
   },
   filters: {
-    formatPlayCount
+    formatCount
   },
   created () {
     this.init()
@@ -288,48 +252,9 @@ export default {
         color: var(--color-level3);
       }
     }
-    .comment-part{
-      margin: 30px 0;
-      h3{
-        font-size: 16px;
-        color: var(--color-level2);
-      }
-      .more-hot-comment{
-        margin: 30px 0;
-        height: 30px;
-        line-height: 30px;
-        display: flex;
-        justify-content: center;
-        .btn{
-          display: inline-block;
-          padding: 0 15px;
-          height: 30px;
-          line-height: 30px;
-          color: var(--color-level2);
-          border-radius: 16px;
-          border: 1px solid var(--color-level5);
-          cursor: pointer;
-          margin-right: 10px;
-          font-size: 14px;
-          &:hover{
-            background-color: var(--color-level5);
-          }
-        }
-      }
-    }
-    .zhanwei{
-      height: 30px;
-    }
-    
-
   }
   .about{
     width: calc(var(--min-width) - 650px);
   }
-}
-
-.el-pagination {
-  display: flex;
-  justify-content: center;
 }
 </style>

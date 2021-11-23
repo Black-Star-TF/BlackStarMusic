@@ -21,9 +21,9 @@
         <span v-else>{{formatIndex(index+1)}}</span>
       </div>
       <div class="row column song-operation">
-        <span class="song-operation-item iconfont liked icon-xihuan-shi" v-if="isLiked(song.id)">
+        <span class="song-operation-item iconfont liked icon-xihuan-shi" v-if="isLiked(song.id)" @click="handleLikeSong(song.id, false)">
         </span>
-        <span class="song-operation-item iconfont icon-xihuan-kon" v-else>
+        <span class="song-operation-item iconfont icon-xihuan-kon" v-else @click="handleLikeSong(song.id, true)">
         </span>
         <span class="song-operation-item iconfont icon-xiazai"></span>
       </div>
@@ -69,6 +69,7 @@
 
 <script>
   import ContextMenu from '@/components/common/context-menu'
+  import {likeSong} from '@/api/music'
   import { toAlbumDetail,toArtistDetail,markKeyword, playVideo } from '@/utils/methods'
   import { formatDuration } from '@/utils/filters'
   export default {
@@ -112,6 +113,19 @@
       toAlbumDetail,
       toArtistDetail,
       markKeyword,
+      async handleLikeSong(id, like){
+        if(!this.$store.state.data.loginStatus){
+          this.$message.error('请先登录')
+        }
+        await likeSong({id, like})
+        // 重新获取喜欢的音乐
+        await this.$store.dispatch('getLikedSongList')
+        if(like){
+          this.$message.success('收藏成功')
+        }else{
+          this.$message.success('取消收藏')
+        }
+      },
       setActive(index){
         this.activeIndex = index
       },

@@ -2,7 +2,7 @@
   <div class="app-header" id="header">
     <div class="left-nav">
       <button @click="logout" v-show="!app.songDetailVisible">退出登录</button>
-      <button @click="test">歌曲详情</button>
+      <!-- <button @click="test">歌曲详情</button> -->
       <span v-show="!app.songDetailVisible" class="iconfont icon-changyong_fanhui" title="后退" @click="$router.go(-1)"></span>
       <span v-show="!app.songDetailVisible" class="iconfont icon-changyong_gengduo" title="前进" @click="$router.go(1)"></span>
     </div>

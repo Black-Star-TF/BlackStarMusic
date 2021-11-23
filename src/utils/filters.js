@@ -7,7 +7,7 @@ export function formatDuration(duration){
   return `${minutes}:${seconds}`
 }
 
-export function formatPlayCount(count){
+export function formatCount(count){
   if(count >= 10000){
     return `${Math.ceil(count/10000)}万`
   }else{

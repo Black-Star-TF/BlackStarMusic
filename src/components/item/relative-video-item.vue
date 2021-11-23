@@ -2,7 +2,7 @@
   <div class="relative-video-item">
     <div class="video-cover" @click="playVideo(video.vid)" :style="{'backgroundImage': `url(${coverUrl})`}">
       <!-- 播放量 -->
-				<span class="video-playcount"><span class="iconfont icon-pause"></span> {{video.playTime | formatPlayCount}}</span>
+				<span class="video-playcount"><span class="iconfont icon-pause"></span> {{video.playTime | formatCount}}</span>
 				<!-- 时长 -->
 				<span class="video-duration">{{video.durationms | formatDuration}}</span>
     </div>
@@ -26,7 +26,7 @@
 
 <script>
 import {playVideo,toArtistDetail,toUserDetail} from '@/utils/methods'
-import {formatDuration,formatPlayCount} from '@/utils/filters'
+import {formatDuration,formatCount} from '@/utils/filters'
 import {size_video_small} from '@/utils/img-size.js'
 export default {
   data () {
@@ -54,7 +54,7 @@ export default {
   },
   filters: {
     formatDuration,
-    formatPlayCount
+    formatCount
   }
 }
 </script>

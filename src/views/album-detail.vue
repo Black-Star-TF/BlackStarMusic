@@ -17,8 +17,8 @@
               <span class="iconfont icon-jia"></span>
             </span>
           </span>
-          <span class="subscribe operation-item"><span class="iconfont icon-shoucang"></span>  收藏({{album.info.likedCount | formatPlayCount}})</span>
-          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{album.info.shareCount | formatPlayCount}})</span>
+          <span class="subscribe operation-item"><span class="iconfont icon-shoucang"></span>  收藏({{album.info.likedCount | formatCount}})</span>
+          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{album.info.shareCount | formatCount}})</span>
           <span class="download-all operation-item"><span class="iconfont icon-xiazai"></span> 下载全部</span>
         </div>
 
@@ -43,7 +43,7 @@
             @click="mode = item.name"
           >
             {{item.label}}
-            <span class="comment-count" v-if="item.name == 'comment'">({{album.info.commentCount}})</span>
+            <span class="comment-count" v-if="item.name == 'comment'">({{album.info.commentCount | formatCount}})</span>
           </div>
         </template>
       </tab-nav>
@@ -51,7 +51,7 @@
 
     <div class="album-detail-content">
       <songlist v-if="mode == 'songlist'" :songList="songList"></songlist>
-      <comment v-if="mode == 'comment'"></comment>
+      <comment v-if="mode == 'comment'" :type="type" :id="id"></comment>
       <description v-if="mode == 'description'" :description="album.description"></description>
     </div>
   </div>
@@ -61,11 +61,12 @@
 import TabNav from '@/components/common/tab-nav'
 import {getAlbumDetail} from '@/api/album'
 import {getSongsDetail} from '@/api/music.js'
-import {formatDate, formatPlayCount} from '@/utils/filters'
+import {formatDate, formatCount} from '@/utils/filters'
 import Songlist from './playlist-detail/songlist.vue'
-import Comment from './album-detail/comment.vue'
+import Comment from '@/components/common/comment.vue'
 import Description from './album-detail/description.vue'
 import {size_1v1_std} from '@/utils/img-size.js'
+import RESOURCE_TYPE from '@/utils/resource-type'
 export default {
   components: {
     TabNav,
@@ -76,6 +77,7 @@ export default {
   data () {
     return {
       id: null,
+      type: RESOURCE_TYPE.ALBUM,
       songList: [],
       album: null,
       mode: 'songlist',
@@ -109,14 +111,13 @@ export default {
       let res = await getAlbumDetail(this.id)
       this.album = res.album
       let trackIds = res.songs.map(track => track.id)
-      console.log(res);
       let {songs} = await getSongsDetail(trackIds.join(','))
       this.songList = songs
     }
   },
   filters: {
     formatDate,
-    formatPlayCount
+    formatCount
   },
   created () {
     this.getData()

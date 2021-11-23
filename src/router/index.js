@@ -90,6 +90,10 @@ const routes = [
         path: '/search',
         meta:{ hasKey: true },
         component: ()=> import('@/views/search'),
+      },
+      {
+        path: 'hotcomment',
+        component: ()=> import('@/views/hot-comment'),
       }
     ]
   },

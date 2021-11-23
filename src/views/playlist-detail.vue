@@ -22,8 +22,8 @@
               <span class="iconfont icon-jia"></span>
             </span>
           </span>
-          <span class="subscribe operation-item"><span class="iconfont icon-shoucang"></span>  收藏({{playlist.subscribedCount | formatPlayCount}})</span>
-          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{playlist.shareCount | formatPlayCount}})</span>
+          <span class="subscribe operation-item"><span class="iconfont icon-shoucang"></span>  收藏({{playlist.subscribedCount | formatCount}})</span>
+          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{playlist.shareCount | formatCount}})</span>
           <span class="download-all operation-item"><span class="iconfont icon-xiazai"></span> 下载全部</span>
         </div>
         <div class="playlist-tags" v-if="playlist.tags.length > 0">
@@ -31,7 +31,7 @@
         </div>
         <div class="playlist-play-data">
           歌曲数：<span>{{playlist.trackCount}}</span>
-          播放数：<span>{{playlist.playCount | formatPlayCount}}</span>
+          播放数：<span>{{playlist.playCount | formatCount}}</span>
         </div>
         <div class="playlist-profile" :class="{'show': showDesc}" v-if="playlist.description">
           <div class="switch" :class="{'show': showDesc}" @click="changeDesc"></div>
@@ -49,7 +49,7 @@
             @click="mode = item.name"
           >
             {{item.label}}
-            <span class="comment-count" v-if="item.name == 'comment'">({{playlist.commentCount}})</span>
+            <span class="comment-count" v-if="item.name == 'comment'">({{playlist.commentCount | formatCount}})</span>
           </div>
         </template>
       </tab-nav>
@@ -57,7 +57,7 @@
 
     <div class="playlist-detail-content">
       <songlist v-if="mode == 'songlist'" :songList="songList"></songlist>
-      <comment v-if="mode == 'comment'"></comment>
+      <comment v-if="mode == 'comment'" :type="type" :id="id"></comment>
       <subscriber v-if="mode == 'subscriber'"></subscriber>
     </div>
   </div>
@@ -65,14 +65,15 @@
  
 <script>
   import { toUserDetail } from '@/utils/methods'
-  import { formatPlayCount,formatDate } from '@/utils/filters'
+  import { formatCount,formatDate } from '@/utils/filters'
   import TabNav from '@/components/common/tab-nav'
   import {getPlaylistDetail} from '@/api/playlist'
   import {getSongsDetail} from '@/api/music.js'
   import Songlist from './playlist-detail/songlist.vue'
-  import Comment from './playlist-detail/comment.vue'
+  import Comment from '@/components/common/comment.vue'
   import Subscriber from './playlist-detail/subscriber.vue'
   import {size_1v1_std, size_1v1_small} from '@/utils/img-size.js'
+  import RESOURCE_TYPE from '@/utils/resource-type'
   export default {
     components: {
       TabNav,
@@ -83,6 +84,7 @@
     data () {
       return {
         id: null,
+        type: RESOURCE_TYPE.PLAYLIST,
         playlist: null,
         showDesc: false,
         songList: [],
@@ -133,7 +135,7 @@
         this.id = this.$route.params.id
         this.songList = []
         this.playlist = null
-        let { playlist } = await getPlaylistDetail(this.id)
+        let { playlist } = await getPlaylistDetail({id: this.id})
         this.playlist = playlist
         this.trackIds = playlist.trackIds.map(track => track.id)
         let {songs} = await getSongsDetail(this.trackIds.join(','))
@@ -142,7 +144,7 @@
     },
     filters:{
       formatDate,
-      formatPlayCount
+      formatCount
     },
     created () {
       this.getData()
@@ -161,7 +163,7 @@
 .page-playlist-detail{
   width: 100%;
   height: 100%;
-  padding-bottom: 50px;
+  padding-bottom: 30px;
   box-sizing: border-box;
   @include scroll-style;
   .playlist-detail-header{

@@ -51,7 +51,7 @@
 
 			<!-- 查看更多 -->
 			<div class="more">
-				<span @click="getAll">查看全部</span>
+				<span @click="toPlaylistDetail(toplist.id)">查看全部</span>
 			</div>
 		</div>
 	</div>
@@ -79,10 +79,12 @@
 			toPlaylistDetail,
 			toArtistDetail,
 			play(song){
+				// TODO: 播放音乐
 				this.playMusic(song.id)
 			},
-			getAll(){
-				this.toPlaylistDetail(this.toplist.id)
+			async getTracksData(){
+				const {playlist: {tracks}} = await getPlaylistDetail({id: this.toplist.id})
+				this.list = tracks.slice(0,5)
 			}
 		},
 		computed: {
@@ -97,13 +99,11 @@
 				let month = date.getMonth() + 1
 				let day = date.getDate()
 				return `${month}月${day}日`
-			}
+			},
 		},
 		created() {
 			this.time = this.toplist.updateTime
-			getPlaylistDetail(this.toplist.id).then(res => {
-				this.list = res.playlist.tracks.slice(0,5)
-			})
+			this.getTracksData()
 		}
 	}
 </script>

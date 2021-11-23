@@ -1,20 +1,20 @@
 <template>
-  <div class="page-total-mv" ref="totalMV">
+  <div class="page-total-mv">
     <page-header>
       <div class="page-name">全部MV</div>
     </page-header>
     
 		<group-nav :group="mvCate" :currentCate="currentCate" @cate-change="changeCate"></group-nav>
     <!-- mv列表 -->
-		<container  v-if="loading">
+		<container  v-if="loaded">
 			<template v-slot:content>
 				<mv-item
-        v-for="(mv,index) in mvList"
-        :mv="mv"
-        :num="4"
-        :index="index"
-        :key="mv.id || index">
-        </mv-item>
+          v-for="(mv,index) in mvList"
+          :mv="mv"
+          :num="4"
+          :index="index"
+          :key="mv.id || index"
+        />
 			</template>
 		</container>
 		<!-- 没有获取到数据时的加载动画 -->
@@ -44,8 +44,8 @@
     data () {
       return {
         mvList: [],
-        limit: 20,
-        currentPage: 1,
+        pageSize: 20,
+        pageNo: 1,
         getMore: false,
         hasMore: false,
         currentCate: {
@@ -88,9 +88,9 @@
     },
     computed: {
       offset(){
-        return (this.currentPage - 1) * this.limit
+        return (this.pageNo - 1) * this.pageSize
       },
-      loading(){
+      loaded(){
         return this.mvList.length > 0
       }
     },
@@ -101,57 +101,41 @@
         this.mvList = []
         this.getAllMVData()
       },
-      getAllMVData(){
-        getAllMV(this.limit,this.currentCate.type,this.currentCate.area,this.currentCate.order,this.offset).then(res => {
-          this.mvList = this.mvList.concat(res.data)
-          this.hasMore = res.hasMore
-          this.getMore = false
+      async getAllMVData(){
+        const {data, hasMore} = await getAllMV({
+          area: this.currentCate.area,
+          type: this.currentCate.type,
+          limit: this.pageSize,
+          offset: this.offset,
+          order: this.currentCate.order
         })
+        this.mvList = this.mvList.concat(data)
+        this.hasMore = hasMore
+        this.getMore = false
       },
-      getMoreData(){
-				let mainEle = this.$refs.totalMV
-				let scrollTop = mainEle.scrollTop;
-				let offsetHeight = mainEle.offsetHeight;
-				let scrollHeight = mainEle.scrollHeight;
+      getMoreData(e){
+        let {scrollTop, offsetHeight, scrollHeight} = e.target
 				// 判断是否滚动到底部
-				if (scrollHeight - offsetHeight - scrollTop <= 1) {
-					if(this.hasMore){
-						this.currentPage ++;
-						this.getMore = true
-						this.getAllMVData();
-					}
-				}
-			},
-			throttle(){
-				if (this.timer == null) {
-					this.timer = setTimeout(()=>{
-						this.getMoreData()
-						this.timer = null;
-					}, 2000);
-				}
+        if(!this.hasMore || this.getMore || scrollHeight - offsetHeight - scrollTop > 5) return
+        this.pageNo++;
+        this.getMore = true
+        this.getAllMVData();
 			}
     },
-    filters: {},
     created () {
       let query = this.$route.query
-      if(query){
-        this.currentCate.area = query.area || this.currentCate.area
-        this.currentCate.type = query.type || this.currentCate.type
-        this.currentCate.order = query.order || this.currentCate.order
-      }
+      Object.keys(query).forEach(key => {
+        this.currentCate[key] = query[key]
+      })
       this.getAllMVData()
     },
     mounted(){
 			// 鼠标滚动到底部，获取更多数据
-			// 获取具有滚动条的元素
-			let mainEle = this.$refs.totalMV
-			// 获取滚动条属性
-			mainEle.addEventListener('scroll', this.throttle)
+			this.$el.addEventListener('scroll', this.getMoreData)
 		},
 		beforeDestroy(){ 
-			let mainEle = this.$refs.totalMV
 			// 移除事件
-			mainEle.removeEventListener('scroll', this.throttle)
+			this.$el.removeEventListener('scroll', this.getMoreData)
 		}
   }
 </script>
@@ -162,6 +146,7 @@
     box-sizing: border-box;
     padding: 15px 5vw;
     padding-top: 10px;
+    overflow: overlay;
     @media screen and (max-width: 1100px) {
       padding: 30px 50px;
     }

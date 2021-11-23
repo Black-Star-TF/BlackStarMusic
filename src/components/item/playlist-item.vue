@@ -6,7 +6,7 @@
 			@click="toPlaylistDetail(playlistItem.id)"
 			:style="{'backgroundImage':`url(${coverUrl})`}">
 				<!-- 播放数量 -->
-				<span class="play-count"><span class="iconfont icon-pause"></span> {{playlistItem.playCount | formatPlayCount}}</span>
+				<span class="play-count"><span class="iconfont icon-pause"></span> {{playlistItem.playCount | formatCount}}</span>
 				<!-- 播放按钮 -->
 				<div class="icon-play" @click.stop="playPlaylist(playlistItem.id)">
 					<span class="iconfont icon-bofang"></span>
@@ -21,7 +21,7 @@
 
 <script>
 	import { playPlaylist,toPlaylistDetail } from '@/utils/methods'
-	import { formatPlayCount } from '@/utils/filters'
+	import { formatCount } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	import {size_1v1_std} from '@/utils/img-size.js'
 	export default {
@@ -42,7 +42,7 @@
 			toPlaylistDetail
 		},
 		filters:{
-			formatPlayCount
+			formatCount
 		}
 	}
 </script>

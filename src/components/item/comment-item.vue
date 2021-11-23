@@ -16,7 +16,7 @@
 
       <div class="comment-operations">
         <span class="report">举报</span>
-        <span class="iconfont icon-dianzan">{{comment.likedCount}}</span>
+        <span class="iconfont icon-dianzan">{{comment.likedCount | formatCount}}</span>
         <span class="iconfont icon-fenxiang1"></span>
         <span class="iconfont icon-pinglun"></span>
       </div>
@@ -26,6 +26,7 @@
 
 <script>
 import { toUserDetail } from '@/utils/methods'
+import { formatCount } from '@/utils/filters'
 import {size_1v1_small} from '@/utils/img-size.js'
 export default {
   props:{
@@ -49,6 +50,9 @@ export default {
   methods: {
     toUserDetail
   },
+  filters:{
+    formatCount
+  }
 }
 </script>
 
@@ -136,4 +140,3 @@ export default {
   }
 } 
 </style>
--+

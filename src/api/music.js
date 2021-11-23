@@ -54,16 +54,7 @@ export function getSongsDetail(ids){
 }
 
 // 获取歌曲评论
-export function getSongComments(id,limit,offset){
-	return request({
-		url: '/comment/music',
-		params:{
-			id,
-			limit,
-			offset
-		}
-	})
-}
+export const getSongComments = params => request.get('/comment/music', {params})
 
 // 请求歌曲url
 export function getSongUrl(id){
@@ -107,12 +98,18 @@ export function getSimiSongs(id){
 }
 
 // 获取喜欢的歌曲列表
-export function getLikedSongList(uid){
+export function getLikedSongList(params){
 	return request({
 		url: '/likelist',
-		params: {
-			uid
-		}
+		params
+	})
+}
+
+// 喜欢某个音乐
+export function likeSong(params){
+	return request({
+		url: '/like',
+		params
 	})
 }
 

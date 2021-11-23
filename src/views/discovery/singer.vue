@@ -35,7 +35,7 @@
 			return {
 				singerList: [],
 				limit: 24,
-				pageNum: 1,
+				pageNo: 1,
 				hasMore: true,
 				getMore: false,
 				currentCate: {
@@ -122,21 +122,14 @@
 				this.$nextTick((()=>{
 					this.getMore = false
 				}))
-				
 			},
-			getMoreData(){
-				let mainEle = this.$refs.singerPage
-				let scrollTop = mainEle.scrollTop;
-				let offsetHeight = mainEle.offsetHeight;
-				let scrollHeight = mainEle.scrollHeight;
+			getMoreData(e){
+				let {scrollTop, offsetHeight, scrollHeight} = e.target
 				// 判断是否滚动到底部
-				if (scrollHeight - offsetHeight - scrollTop <= 1 && !this.getMore) {
-					if(this.hasMore){
-						this.pageNum ++;
-						this.getMore = true
-						this.getData();
-					}
-				}
+        if(!this.hasMore || this.getMore || scrollHeight - offsetHeight - scrollTop > 5) return
+        this.pageNo++;
+        this.getMore = true
+        this.getData();
 			},
 		},
 		computed: {
@@ -144,7 +137,7 @@
 				return this.singerList.length > 0
 			},
 			offset(){
-				return (this.pageNum - 1) * this.limit
+				return (this.pageNo - 1) * this.limit
 			}
 		},
 		created() {
@@ -152,11 +145,11 @@
 		},
 		mounted(){
 			// 鼠标滚动到底部，获取更多数据
-			this.$refs.singerPage.addEventListener('scroll', this.getMoreData)
+			this.$el.addEventListener('scroll', this.getMoreData)
 		},
 		beforeDestroy(){
 			// 移除事件
-			this.$refs.singerPage.removeEventListener('scroll', this.getMoreData)
+			this.$el.removeEventListener('scroll', this.getMoreData)
 		}
 	}
 </script>

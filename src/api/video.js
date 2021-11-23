@@ -25,7 +25,6 @@ export function getExclusive(limit,offset){
 	})
 }
 
-
 // 获取最新mv
 export function getNewestMV(limit,area = null){
   return request({
@@ -49,18 +48,7 @@ export function getExclusiveVideo(limit,offset = 0){
 }
 
 // 获取全部mv
-export function getAllMV(limit, type = null, area = null, order = null, offset = 0 ){
-  return request ({
-    url: '/mv/all',
-    params: {
-      area,
-      type,
-      limit,
-      order,
-      offset
-    }
-  })
-}
+export const getAllMV = params => request.get('/mv/all', {params})
 
 // 获取mv排行榜
 export function getMVToplist(limit,area = null , offset = 0){
@@ -104,16 +92,7 @@ export function getMVInfo(mvid){
   })
 }
 // 获取mv评论
-export function getMVComment(id,limit=null, offset=null){
-  return request({
-    url: '/comment/mv',
-    params:{
-      id,
-      limit,
-      offset
-    }
-  })
-}
+export const getMVComments = params => request.get('/comment/mv', {params})
 
 // 获取相关视频
 export function getRelativeVideo(id){
@@ -189,13 +168,4 @@ export function getVideoInfo(vid){
   })
 }
 // 获取视频评论
-export function getVideoComment(id,limit=null, offset=null){
-  return request({
-    url: '/comment/video',
-    params:{
-      id,
-      limit,
-      offset
-    }
-  })
-}
+export const getVideoComments = params => request.get('/comment/video', {params})
