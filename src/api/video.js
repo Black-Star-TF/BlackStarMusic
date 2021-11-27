@@ -1,18 +1,13 @@
 import request from '@/utils/request.js'
 
+// export const xxx = () => request.get()
+// export const xxx = params => request.get('', { params })
 // 请求推荐mv数据
-export function getRecommendMV(){
-	return request({
-		url: '/personalized/mv'
-	})
-}
+export const getRecommendMV = () => request.get('/personalized/mv')
+
 
 // 请求推荐页独家放送数据
-export function getRecommendExclusive(){
-	return request({
-		url: '/personalized/privatecontent'
-	})
-}
+export const getRecommendExclusive = () => request.get('/personalized/privatecontent')
 
 // 请求独家放送数据
 export function getExclusive(limit,offset){
@@ -48,7 +43,7 @@ export function getExclusiveVideo(limit,offset = 0){
 }
 
 // 获取全部mv
-export const getAllMV = params => request.get('/mv/all', {params})
+export const getAllMV = params => request.get('/mv/all', { params })
 
 // 获取mv排行榜
 export function getMVToplist(limit,area = null , offset = 0){

@@ -1,84 +1,28 @@
 
 import request from '@/utils/request.js'
-// timestamp=1503019930000
-// 生成二维码key
-export function getKey(params){
-  return request({
-    url: '/login/qr/key',
-    params
-  })
-}
 
-// 获取能够生成二维码的数据
-export function getQR(params){
-  return request({
-    url: '/login/qr/create',
-    params
-  })
-}
-
-// 检查二维码状态
-export function checkQRStatus(params){
-  return request({
-    url: '/login/qr/check',
-    params
-  })
-}
-
+// 二维码key
+export const getKey = params => request.get('/login/qr/key', { params });
+// 二维码数据
+export const getQR = params => request.get('/login/qr/create', { params });
+// 二维码状态
+export const checkQRStatus = params => request.get('/login/qr/check', { params });
 // 退出登录
-export function logout(){
-  return request({
-    url: '/logout'
-  })
-}
-
+export const logout = () => request.get('/logout');
 // 检查登录状态
-export function checkLoginStatus(){
-  return request({
-    url: '/login/status'
-  })
-}
-
-
+export const checkLoginStatus = () => request.get('/login/status');
 // 使用手机号登录
-export function loginWithPhone(data){
-  let timestamp = new Date().getTime()
-  return request({
-    url: `/login/cellphone?timestamp=${timestamp}`,
-    method: 'POST',
-    data
-  })
-}
-
+export const  loginWithPhone = data => request.post(`/login/cellphone?timestamp=${new Date().getTime()}`, data);
 // 获取账号信息
-export function getUserProfile(){
-  return request({
-    url: '/user/account'
-  })
-}
-
+export const getUserProfile = () => request.get('/user/account');
 // 获取用户详情
-export function getUserDetail(params){
-  return request({
-    url: '/user/detail',
-    params
-  })
-}
-
+export const getUserDetail = params => request.get('/user/detail', { params });
 /**
  * 获取用户歌单
  * 说明 : 登录后调用此接口 , 传入用户 id, 可以获取用户歌单
- * - uid : 用户 id
- * - limit : 返回数量 , 默认为 30
- * - offset : 偏移数量，用于分页 , 如 :( 页数 -1)*30, 其中 30 为 limit 的值 , 默认为 0
  * @param {Object} params
- * @param {number} params.uid
- * @param {number} params.limit
- * @param {number} params.offset
+ * @param {number} params.uid    --用户 id
+ * @param {number} params.limit  --返回数量 , 默认为 30
+ * @param {number} params.offset --偏移数量，用于分页 , 如 :( 页数 -1)*30, 其中 30 为 limit 的值 , 默认为 0
  */
-export function getUserPlaylist(params){
-  return request({
-    url: '/user/playlist',
-    params
-  })
-}
+export const getUserPlaylist = params => request.get('/user/playlist', { params });

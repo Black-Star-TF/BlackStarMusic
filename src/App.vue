@@ -21,17 +21,15 @@
 </template>
 
 <script>
-import MusicHeader from '@/components/layout/music-header.vue'
-import MusicPlayer from '@/components/layout/music-player.vue'
-import SongDetail from '@/views/song-detail.vue'
-import PlaylistDrawer from '@/components/drawer/playlist-drawer'
-import MessageDrawer from '@/components/drawer/message-drawer'
+import MusicHeader from '@/views/main/layout/music-header.vue'
+import SongDetail from '@/views/main/drawer/song-detail.vue'
+import PlaylistDrawer from '@/views/main/drawer/playlist-drawer'
+import MessageDrawer from '@/views/main/drawer/message-drawer'
 import {mapState} from 'vuex'
 export default {
   name: 'App',
   components:{
     MusicHeader,
-    MusicPlayer,
     SongDetail,
     PlaylistDrawer,
     MessageDrawer
@@ -77,8 +75,6 @@ export default {
 }
 
 .drawer-enter, .drawer-leave-to{
-  // width: 0;
-  // transform: translateX(var(--app-drawer-width))
   right: calc(var(--app-drawer-width) * -1);
 }
 
@@ -88,8 +84,6 @@ export default {
 
 .drawer-enter-to, .drawer-leave{
   right: 0;
-  // width: var(--app-drawer-width);
-  // transform: translateX(0)
 }
 
 </style>

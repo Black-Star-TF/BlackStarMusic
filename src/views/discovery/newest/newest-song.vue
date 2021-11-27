@@ -21,7 +21,7 @@
 			<template v-slot:content v-if="loaded">
 				<!-- 新歌列表 -->
 				<div style="width: 100%;margin-top:10px;">
-					<newest-song2-item v-for="(song, index) in songList" :index="index+1" :key="song.id" :song="song"></newest-song2-item>
+					<newest-song-item v-for="(song, index) in songList" :index="index+1" :key="song.id" :song="song"></newest-song-item>
 				</div>
 			</template>
 		</container>
@@ -33,7 +33,7 @@
 	import Container from '@/components/common/container'
 	// import NewSongTable from '@/components/table/new-song-table'
 	import { getTopNewSong } from '@/api/music.js'
-	import NewestSong2Item from '@/components/item/newest-song2-item.vue'
+	import NewestSongItem from './components/newest-song-item.vue'
 	// import Loading from '@/components/common/Loading'
 	export default {
 		name: 'NewestSong',
@@ -53,7 +53,7 @@
 		components: {
 			Container,
 			// NewSongTable,
-			NewestSong2Item
+			NewestSongItem
 			// Loading
 		},
 		methods: {

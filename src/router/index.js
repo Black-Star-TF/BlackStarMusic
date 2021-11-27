@@ -8,12 +8,12 @@ const routes = [
   {
     path: '/',
     redirect: '/discovery',
-    component: ()=> import('@/components/layout'),
+    component: () => import('@/views/main'),
     children: [
       {
         // 发现音乐
         path: '/discovery',
-        component: ()=> import('@/views/discovery'),
+        component: () => import('@/views/discovery/index'),
         meta:{
           keepAlive: true,
         },
@@ -21,11 +21,11 @@ const routes = [
       },
       {
         path: '/privatefm',
-        component: ()=> import('@/views/privatefm')
+        component: () => import('@/views/private-fm/index')
       },
       {
-        path: '/video',
-        component: ()=> import('@/views/video'),
+        path: '/shipin',
+        component: () => import('@/views/shipin/index'),
         children:[
           {
             path: '',
@@ -33,38 +33,50 @@ const routes = [
           },
           {
             path: 'mv',
-            component: ()=> import('@/views/video/mv'),
+            component: () => import('@/views/shipin/mv/index'),
           },
           {
-            path: 'shipin',
-            component: ()=> import('@/views/video/shipin'),
+            path: 'video',
+            component: () => import('@/views/shipin/video/index'),
           }
         ]
       },
       {
         path:'totalmv',
-        component: ()=> import('@/views/total-mv'),
+        component: () => import('@/views/total-mv/index'),
       },
       {
-        path: '/firend',
-        component: ()=> import('@/views/firend')
+        path: '/friend',
+        component: () => import('@/views/friend/index')
       },
       {
-        path: '/playlistdetail/:id',
-        component: ()=> import('@/views/playlist-detail'),
+        path: '/playlist',
+        component: () => import('@/views/playlist/index'),
       },
       {
-        path: '/albumdetail/:id',
-        component: ()=> import('@/views/album-detail'),
+        path: '/album',
+        component: () => import('@/views/album/index'),
+      },
+      {
+        path: '/radio',
+        component: () => import('@/views/radio/index'),
+      },
+      {
+        path: '/singer',
+        component: () => import('@/views/singer/index'),
+      },
+      {
+        path: '/user',
+        component: () => import('@/views/user/index'),
       },
       {
         // 设置
         path: '/settings',
-        component: ()=> import('@/views/settings')
+        component: () => import('@/views/settings/index')
       },
       {
         path: '/download',
-        component: ()=> import('@/views/download'),
+        component: () => import('@/views/download/index'),
         children:[
           {
             path: '',
@@ -84,28 +96,57 @@ const routes = [
       },
       {
         path: '/recent',
-        component: ()=> import('@/views/recent'),
+        component: () => import('@/views/recent/index'),
       },
       {
         path: '/search',
         meta:{ hasKey: true },
-        component: ()=> import('@/views/search'),
+        component: () => import('@/views/search/index'),
       },
       {
-        path: 'hotcomment',
-        component: ()=> import('@/views/hot-comment'),
+        path: '/hotcomment',
+        component: () => import('@/views/hot-comment/index'),
+      },
+      {
+        path: '/clound'
+      },
+      {
+        path: '/myradio',
+        component: () => import('@/views/my-radio/index'),
+      },
+      {
+        path: '/favorites',
+        component: () => import('@/views/favorites/index'),
+        children: [
+          {
+            path: '',
+            redirect: 'album'
+          },
+          {
+            path: 'album'
+          },
+          {
+            path: 'singer'
+          },
+          {
+            path: 'video'
+          },
+          {
+            path: 'column'
+          }
+        ]
       }
     ]
   },
   {
-    path: '/videodetail/:id',
+    path: '/video',
     meta:{ hasKey: true },
-    component: ()=> import('@/views/video-detail'),
+    component: () => import('@/views/video/index'),
   },
   {
-    path: '/mvdetail/:id',
+    path: '/mv',
     meta:{ hasKey: true },
-    component: ()=> import('@/views/mv-detail'),
+    component: () => import('@/views/mv/index'),
   }
 ]
 

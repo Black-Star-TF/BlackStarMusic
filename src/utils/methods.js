@@ -5,7 +5,6 @@ import store from '@/store'
 // 播放音乐并替换播放列表
 export function playMusic(id){
   console.log('播放音乐', id);
-
 }
 // 播放全部
 export function playPlaylist(id){
@@ -20,30 +19,30 @@ export function playPlaylist(id){
 export function playRadio(id){
   console.log('播放电台',id);
 }
-export function toRadioDetail(id){
-  console.log('跳转到电台详情页', id);
+export function toRadioDetail(rid){
+  this.$router.push({ path: `/radio`, query: { rid } })
 }
 // 播放视频
 export function playVideo(id){
   let reg = /^[0-9]+$/
-  let path = reg.test(id) ? '/mvdetail' : '/videodetail'
-  this.$router.push(`${path}/${id}`)
+  let path = reg.test(id) ? '/mv' : '/video'
+  this.$router.push({ path, query: { id } })
 }
 // 跳转到歌单详情页
 export function toPlaylistDetail(id){
-  this.$router.push(`/playlistdetail/${id}`)
+  this.$router.push({ path: `/playlist`, query: { id } })
 }
 // 跳转到专辑详情页
 export function toAlbumDetail(id){
-  this.$router.push(`/albumdetail/${id}`)
+  this.$router.push({ path: `/album`, query: { id } })
 }
 // 跳转到歌手详情页
 export function toArtistDetail(id){
-  console.log('跳转到歌手详情页', id);
+  this.$router.push({ path: `/singer`, query: { id } })
 }
 // 跳转到用户详情页
-export function toUserDetail(id){
-  console.log('跳转到用户详情页', id);
+export function toUserDetail(userId){
+  this.$router.push({ path: `/user`, query: { userId } })
 }
 // 高亮显示关键词
 export function markKeyword(str){

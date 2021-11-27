@@ -8,7 +8,7 @@ export default [
     meta:{
       keepAlive: true,
     },
-    component: () => import('@/views/discovery/rcmd')
+    component: () => import('@/views/discovery/rcmd/index')
   },
   {
     path: 'playlist',
@@ -16,34 +16,34 @@ export default [
     meta:{
       keepAlive: true,
     },
-    component: () => import('@/views/discovery/playlist')
+    component: () => import('@/views/discovery/playlist/index')
   },
   {
     path: 'djradio',
     meta:{
       keepAlive: true,
     },
-    component: () => import('@/views/discovery/radio')
+    component: () => import('@/views/discovery/radio/index')
   },
   {
-    path: 'chart',
+    path: 'toplist',
     meta:{
       keepAlive: true,
     },
-    component: () => import('@/views/discovery/chart')
+    component: () => import('@/views/discovery/top-list/index')
   },
   {
     path: 'singer',
     meta:{
       keepAlive: true,
     },
-    component: () => import('@/views/discovery/singer')
+    component: () => import('@/views/discovery/singer/index')
   },
   {
     path: 'newest',
     meta:{
       keepAlive: true,
     },
-    component: () => import('@/views/discovery/newest'),
+    component: () => import('@/views/discovery/newest/index'),
   }
 ]

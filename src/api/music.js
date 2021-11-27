@@ -1,20 +1,15 @@
 import request from '@/utils/request.js'
-//  推荐页轮播图
 
-export function getRecommendBanner(){
-	return request({
-		url: '/banner'
-	})
-}
+
+
+//  推荐页轮播图
+export const getRecommendBanner = () => request.get('/banner')
 
 // 请求推荐最新歌曲
-export function getrecommendNewestSong(){
-	return request({
-		url: '/personalized/newsong'
-	})
-}
+export const getrecommendNewestSong = () => request.get('/personalized/newsong')
 
 // 获取新歌速递
+
 export function getTopNewSong(type){
 	return request({
 		url: '/top/song',
@@ -37,11 +32,8 @@ export function getRcmdNewAlbum(area,limit,offset){
 }
 
 // 获取全部新碟
-export function getAllNewAlbum(){
-	return request({
-		url: '/album/new'
-	})
-}
+export const getAllNewAlbum = () => request.get('/album/new')
+
 
 // 请求歌曲信息
 export function getSongsDetail(ids){
@@ -54,7 +46,7 @@ export function getSongsDetail(ids){
 }
 
 // 获取歌曲评论
-export const getSongComments = params => request.get('/comment/music', {params})
+export const getSongComments = params => request.get('/comment/music', { params })
 
 // 请求歌曲url
 export function getSongUrl(id){
@@ -98,28 +90,7 @@ export function getSimiSongs(id){
 }
 
 // 获取喜欢的歌曲列表
-export function getLikedSongList(params){
-	return request({
-		url: '/likelist',
-		params
-	})
-}
+export const getLikedSongList = params => request.get('/likelist', { params })
 
 // 喜欢某个音乐
-export function likeSong(params){
-	return request({
-		url: '/like',
-		params
-	})
-}
-
-// 获取专辑信息
-
-export function getAlbumDetail(id){
-	return request({
-		url: '/album',
-		params:{
-			id
-		}
-	})
-}
+export const likeSong = params => request.get('/like', { params })
