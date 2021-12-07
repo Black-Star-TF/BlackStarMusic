@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.favorites {
+.favorites-wrapper {
   height: 100%;
   .favorites-content {
     height: 100%;

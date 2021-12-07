@@ -101,19 +101,19 @@ export default {
       this.qrKeyCheckInterval = setInterval(()=>{
         checkQRStatus({key, timestamp: this.getTimestamp()}).then(res=>{
           if(res.code == 800){
-            console.log('二维码过期');
+            // console.log('二维码过期');
             clearInterval(this.qrKeyCheckInterval)
             this.qrKeyCheckInterval = null
             this.qrValid = false
           }
           if(res.code == 801){
-            console.log('等待扫码');
+            // console.log('等待扫码');
           }
           if(res.code == 802){
-            console.log('等待确认');
+            // console.log('等待确认');
           }
           if(res.code == 803){
-            console.log('登录成功');
+            // console.log('登录成功');
             this.visible = false
             clearInterval(this.qrKeyCheckInterval)
             this.qrKeyCheckInterval = null
@@ -122,7 +122,7 @@ export default {
             this.loginSuccess(res)
           }
         }).catch(err=>{
-          console.log('二维码过期');
+          // console.log('二维码过期');
           clearInterval(this.qrKeyCheckInterval)
           this.qrKeyCheckInterval = null
           this.qrValid = false

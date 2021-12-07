@@ -4,16 +4,16 @@
      -->
     <div class="search-playlist-cover" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
     <!-- 歌单名 -->
-    <div class="search-playlist-name"><span class="name" v-html="markKeyword(playlist.name)"></span></div>
+    <div class="search-playlist-name"><span class="name" v-html="markKeywords(playlist.name)"></span></div>
     <!-- 歌单中歌曲数量 -->
     <div class="search-playlist-song-count">{{playlist.trackCount}}首</div>
     <!-- 歌单作者 -->
-    <div class="search-playlist-creator">by <span class="creator" @click.stop="toUserDetail(playlist.creator.userId)" v-html="markKeyword(playlist.creator.nickname)"></span></div>
+    <div class="search-playlist-creator">by <span class="creator" @click.stop="toUserDetail(playlist.creator.userId)" v-html="markKeywords(playlist.creator.nickname)"></span></div>
   </div>
 </template>
 
 <script>
-	import { markKeyword, toPlaylistDetail, toUserDetail } from '@/utils/methods'
+	import { markKeywords, toPlaylistDetail, toUserDetail } from '@/utils/methods'
   import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props: {
@@ -32,7 +32,7 @@
       }
     },
     methods:{
-      markKeyword,
+      markKeywords,
       toPlaylistDetail,
       toUserDetail
     }

@@ -1,96 +1,98 @@
 <template>
   <div class="view-recommend">
-    <template v-if="loaded">
-      <!-- 轮播图 -->
-      <el-carousel :interval="4000" type="card" height="15vw">
-        <el-carousel-item
-          v-for="(item, index) in banners"
-          :key="item.targetId || index + 1"
-          width="50%"
-        >
-          <div
-            class="banner-item"
-            :style="{
-              backgroundImage: `url(${getBannerCover(item.imageUrl)})`,
-            }"
-          ></div>
-        </el-carousel-item>
-      </el-carousel>
+    <page-box>
+      <template v-if="loaded">
+        <!-- 轮播图 -->
+        <el-carousel :interval="4000" type="card" height="15vw">
+          <el-carousel-item
+            v-for="(item, index) in banners"
+            :key="item.targetId || index + 1"
+            width="50%"
+          >
+            <div
+              class="banner-item"
+              :style="{
+                backgroundImage: `url(${getBannerCover(item.imageUrl)})`,
+              }"
+            ></div>
+          </el-carousel-item>
+        </el-carousel>
 
-      <!-- 推荐歌单 -->
-      <container>
-        <template v-slot:left>
-          <div class="container-title">
-            <router-link to="playlist" tag="span">推荐歌单</router-link>
-          </div>
-        </template>
-        <template v-slot:content>
-          <playlist-item
-            v-for="(playlist, index) in playlists"
-            :playlistItem="playlist"
-            :index="index"
-            :num="5"
-            :key="playlist.id"
-          />
-        </template>
-      </container>
+        <!-- 推荐歌单 -->
+        <container>
+          <template v-slot:left>
+            <div class="container-title">
+              <router-link to="playlist" tag="span">推荐歌单</router-link>
+            </div>
+          </template>
+          <template v-slot:content>
+            <playlist-item
+              v-for="(playlist, index) in playlists"
+              :playlistItem="playlist"
+              :index="index"
+              :num="5"
+              :key="playlist.id"
+            />
+          </template>
+        </container>
 
-      <!-- 独家放送 -->
-      <container>
-        <template v-slot:left>
-          <div class="container-title">
-            <router-link to="/exclusive" tag="span">独家放送</router-link>
-          </div>
-        </template>
-        <template v-slot:content>
-          <exclusive-item
-            v-for="(item, index) in exclusives"
-            :exclusiveItem="item"
-            :num="3"
-            :index="index"
-            :key="item.id"
-          />
-        </template>
-      </container>
+        <!-- 独家放送 -->
+        <container>
+          <template v-slot:left>
+            <div class="container-title">
+              <router-link to="/exclusive" tag="span">独家放送</router-link>
+            </div>
+          </template>
+          <template v-slot:content>
+            <exclusive-item
+              v-for="(item, index) in exclusives"
+              :exclusiveItem="item"
+              :num="3"
+              :index="index"
+              :key="item.id"
+            />
+          </template>
+        </container>
 
-      <!-- 最新音乐 -->
-      <container>
-        <template v-slot:left>
-          <div class="container-title">
-            <router-link to="newest" tag="span">最新音乐</router-link>
-          </div>
-        </template>
-        <template v-slot:content>
-          <newest-song-item
-            v-for="(item, index) in newestSongs"
-            :newestSongItem="item"
-            :num="2"
-            :index="index"
-            :key="item.id"
-          />
-        </template>
-      </container>
+        <!-- 最新音乐 -->
+        <container>
+          <template v-slot:left>
+            <div class="container-title">
+              <router-link to="newest" tag="span">最新音乐</router-link>
+            </div>
+          </template>
+          <template v-slot:content>
+            <newest-song-item
+              v-for="(item, index) in newestSongs"
+              :newestSongItem="item"
+              :num="2"
+              :index="index"
+              :key="item.id"
+            />
+          </template>
+        </container>
 
-      <!-- 推荐MV -->
-      <container>
-        <template v-slot:left>
-          <div class="container-title">
-            <router-link to="/video/mv" tag="span">推荐MV</router-link>
-          </div>
-        </template>
-        <template v-slot:content>
-          <mv-item
-            v-for="(mv, index) in mvs"
-            :mv="mv"
-            :index="index"
-            :key="mv.id"
-          />
-        </template>
-      </container>
-    </template>
-
-    <!-- <Loading :loading="loading"/>	 -->
+        <!-- 推荐MV -->
+        <container>
+          <template v-slot:left>
+            <div class="container-title">
+              <router-link to="/shipin/mv" tag="span">推荐MV</router-link>
+            </div>
+          </template>
+          <template v-slot:content>
+            <mv-item
+              v-for="(mv, index) in mvs"
+              :mv="mv"
+              :index="index"
+              :key="mv.id"
+            />
+          </template>
+        </container>
+      </template>
+    </page-box>
   </div>
+
+  <!-- <Loading :loading="loading"/>	 -->
 </template>
 
 <script>
@@ -99,6 +101,7 @@ import PlaylistItem from "../playlist/components/playlist";
 import ExclusiveItem from "@/views/shipin/mv/components/exclusive-item.vue";
 import NewestSongItem from "./components/newest-song";
 import MvItem from "@/views/shipin/mv/components/mv-item";
+import PageBox from "@/components/common/page-box";
 // import Loading from '@/components/common/Loading'
 import axios from "axios";
 import { getRecommendBanner, getrecommendNewestSong } from "@/api/music.js";
@@ -124,6 +127,7 @@ export default {
     ExclusiveItem,
     NewestSongItem,
     MvItem,
+    PageBox,
     // Loading
   },
   methods: {
@@ -134,7 +138,7 @@ export default {
       this.loaded = false;
       let res = await axios.all([
         getRecommendBanner(),
-        getRecommendPlaylist({limit: 10}),
+        getRecommendPlaylist({ limit: 10 }),
         getRecommendExclusive(),
         getrecommendNewestSong(),
         getRecommendMV(),
@@ -161,7 +165,7 @@ export default {
 <style lang="scss" scoped>
 .view-recommend {
   height: 100%;
-  padding: 30px 7%;
+  padding: 30px 0;
   box-sizing: border-box;
   overflow: overlay;
   .container-title {

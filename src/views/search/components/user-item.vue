@@ -5,14 +5,14 @@
       <div class="sign" v-if="user.avatarDetail" :style="{'backgroundImage': `url(${user.avatarDetail.identityIconUrl})`}"></div>
     </div>
     <!-- name -->
-    <div class="user-name"><span class="name" v-html="markKeyword(user.nickname)"></span></div>
+    <div class="user-name"><span class="name" v-html="markKeywords(user.nickname)"></span></div>
     <!-- description -->
     <div class="user-description">{{user.description || user.signature}}</div>
   </div>
 </template>
 
 <script>
-	import { toUserDetail, markKeyword } from '@/utils/methods'
+	import { toUserDetail, markKeywords } from '@/utils/methods'
   import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props:{
@@ -31,7 +31,7 @@
     },
     methods:{
       toUserDetail,
-      markKeyword
+      markKeywords
     }
   }
 </script>

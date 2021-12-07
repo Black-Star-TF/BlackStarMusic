@@ -1,55 +1,84 @@
 <template>
   <div class="page-shipin">
-    <container>
-      <template v-slot:left>
-        <div class="current-category-container">
-          <span class="current-category" @click.stop="change()">{{currentCate.name}}</span>
-          <div class="video-categories" v-if="showCate" @click.stop>
-            <div class="video-all">
-              <span :class="{'active': total.name == currentCate.name}" @click="changeCategory(total)">{{total.name}}</span>
-            </div>
-            <div class="category-container">
-              <div class="category-item" v-for="cate in videoGroup" :key="cate.name">
-                <span :class="{'active': cate.name == currentCate.name}" @click="changeCategory(cate)">
-                {{cate.name}}
-                </span>
+    <page-box>
+      <container>
+        <template v-slot:left>
+          <div class="current-category-container">
+            <span class="current-category" @click.stop="change()">{{
+              currentCate.name
+            }}</span>
+            <div class="video-categories" v-if="showCate" @click.stop>
+              <div class="video-all">
+                <span
+                  :class="{ active: total.name == currentCate.name }"
+                  @click="changeCategory(total)"
+                  >{{ total.name }}</span
+                >
+              </div>
+              <div class="category-container">
+                <div
+                  class="category-item"
+                  v-for="cate in videoGroup"
+                  :key="cate.name"
+                >
+                  <span
+                    :class="{ active: cate.name == currentCate.name }"
+                    @click="changeCategory(cate)"
+                  >
+                    {{ cate.name }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </template>
+        </template>
 
-      <template v-slot:right>
-        <div class="hot-tags-nav">
-          <span
-          class="tag"
-          v-for="cate in videoCategory"
-          :class="{'active': cate.name == currentCate.name}"
-          @click="changeCategory(cate)"
-          :key="cate.name">{{cate.name}}</span>
-        </div>
-      </template>
+        <template v-slot:right>
+          <div class="hot-tags-nav">
+            <span
+              class="tag"
+              v-for="cate in videoCategory"
+              :class="{ active: cate.name == currentCate.name }"
+              @click="changeCategory(cate)"
+              :key="cate.name"
+              >{{ cate.name }}</span
+            >
+          </div>
+        </template>
 
-      <template v-slot:content>
-        <video-item v-for="(video,index) in videoList" :key="video.vid" :num="4" :video="video" :index="index"></video-item>
-      </template>
-    </container>
-    
+        <template v-slot:content>
+          <video-item
+            v-for="(video, index) in videoList"
+            :key="video.vid"
+            :num="4"
+            :video="video"
+            :index="index"
+          ></video-item>
+        </template>
+      </container>
+    </page-box>
   </div>
 </template>
 
 <script>
-import Container from '@/components/common/container'
-import VideoItem from './components/video-item'
-import {getVideoCategory,getVideoGroup,getVideoList,getAllVideo} from '@/api/video.js'
+import Container from "@/components/common/container";
+import VideoItem from "./components/video-item";
+import PageBox from "@/components/common/page-box";
+import {
+  getVideoCategory,
+  getVideoGroup,
+  getVideoList,
+  getAllVideo,
+} from "@/api/video.js";
 export default {
-  name: '',
+  name: "",
   mixins: [],
   components: {
     Container,
-    VideoItem
+    VideoItem,
+    PageBox,
   },
-  data () {
+  data() {
     return {
       videoList: [],
       videoGroup: [],
@@ -58,74 +87,74 @@ export default {
       showCate: false,
       total: {
         id: 0,
-        name: '全部视频'
-      }
-    }
+        name: "全部视频",
+      },
+    };
   },
   computed: {},
   methods: {
     // 切换视频分类面板状态
     change(status = null) {
       if (status == null) {
-        this.showCate = !this.showCate
+        this.showCate = !this.showCate;
       } else {
-        this.showCate = status
+        this.showCate = status;
       }
     },
-    changeCategory(cate){
-      this.currentCate = cate
-      this.videoList = []
-      if(cate.id == this.total.id){
-        this.getAllVideoData()
-      }else{
-        this.getVideoListData(cate.id)
+    changeCategory(cate) {
+      this.currentCate = cate;
+      this.videoList = [];
+      if (cate.id == this.total.id) {
+        this.getAllVideoData();
+      } else {
+        this.getVideoListData(cate.id);
       }
-      this.showCate = false
+      this.showCate = false;
     },
     // 获取视频列表
-    getVideoListData(id){
-      getVideoList(id).then(res=>{
-        this.videoList = res.datas.map(item => item.data)
-      })
+    getVideoListData(id) {
+      getVideoList(id).then(res => {
+        this.videoList = res.datas.map(item => item.data);
+      });
     },
-    getAllVideoData(){
-      getAllVideo().then(res=>{
-        this.videoList = res.datas.map(item => item.data)
-      })
+    getAllVideoData() {
+      getAllVideo().then(res => {
+        this.videoList = res.datas.map(item => item.data);
+      });
     },
   },
   filters: {},
-  created () {
-    this.currentCate = this.total
+  created() {
+    this.currentCate = this.total;
     // 获取视频分类
-    getVideoCategory().then(res=>{
-      this.videoCategory = res.data
-    })
+    getVideoCategory().then(res => {
+      this.videoCategory = res.data;
+    });
 
-    getVideoGroup().then(res=>{
-      this.videoGroup = res.data
-    })
+    getVideoGroup().then(res => {
+      this.videoGroup = res.data;
+    });
 
-    this.changeCategory(this.currentCate)
+    this.changeCategory(this.currentCate);
     // 添加关闭歌单分类窗口的事件
-    const app = document.getElementById('app')
-    app.addEventListener('click', () => {
-      this.showCate = false
-    })
+    const app = document.getElementById("app");
+    app.addEventListener("click", () => {
+      this.showCate = false;
+    });
   },
-  beforeDestroy(){
+  beforeDestroy() {
     // 移除关闭歌单分类窗口的事件
-    const app = document.getElementById('app')
-    app.removeEventListener('click', () => {
-      this.showCate = false
-    })
-  }
-}
+    const app = document.getElementById("app");
+    app.removeEventListener("click", () => {
+      this.showCate = false;
+    });
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.current-category-container{
+.current-category-container {
   height: 70px;
   line-height: 70px;
   position: relative;
@@ -152,7 +181,7 @@ export default {
     width: 800px;
     z-index: 1000;
     background-color: var(--panel-box-bg-color);
-    box-shadow: 0 0 5px 1px rgba($color: #000, $alpha: .1);
+    box-shadow: 0 0 5px 1px rgba($color: #000, $alpha: 0.1);
     border-radius: 5px;
     position: absolute;
     top: 65px;
@@ -175,7 +204,7 @@ export default {
       padding: 0 20px;
       box-sizing: border-box;
       border-bottom: 1px solid var(--main-border-color);
-      >span {
+      > span {
         font-size: 14px;
         color: var(--color-level2);
         &:hover {
@@ -201,7 +230,7 @@ export default {
         line-height: 30px;
         margin-bottom: 10px;
         font-size: 14px;
-        >span {
+        > span {
           color: var(--color-level2);
           padding: 0 10px;
           cursor: pointer;
@@ -227,7 +256,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  >span.tag {
+  > span.tag {
     display: inline-block;
     font-size: 14px;
     height: 20px;
@@ -242,7 +271,7 @@ export default {
     }
     &.active {
       color: var(--color-netease-red);
-			background-color: var(--playlist-tag-active-bg-color);
+      background-color: var(--playlist-tag-active-bg-color);
     }
   }
 }

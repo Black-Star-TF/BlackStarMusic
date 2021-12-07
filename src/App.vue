@@ -1,8 +1,9 @@
 <template>
   <div id="app">
     <!-- header -->
-    <music-header></music-header>
+    <music-header :keywords.sync="keywords" @search="handleSearch"></music-header>
     <router-view/>
+
     <!-- 歌曲详情 -->
     <transition name="move">
       <song-detail v-if="app.songDetailVisible" :songId="currentSong.id"></song-detail>
@@ -13,7 +14,11 @@
     </transition>
 
     <transition name="drawer">
-      <message-drawer v-if="app.messgeDrawerVisible"></message-drawer>
+      <message-drawer v-if="app.messageDrawerVisible"></message-drawer>
+    </transition>
+
+    <transition name="drawer">
+      <search-drawer v-if="app.searchDrawerVisible" :keywords.sync="keywords" @search="handleSearch"></search-drawer>
     </transition>
 
     <!-- 播放列表 -->
@@ -25,24 +30,43 @@ import MusicHeader from '@/views/main/layout/music-header.vue'
 import SongDetail from '@/views/main/drawer/song-detail.vue'
 import PlaylistDrawer from '@/views/main/drawer/playlist-drawer'
 import MessageDrawer from '@/views/main/drawer/message-drawer'
-import {mapState} from 'vuex'
+import SearchDrawer from '@/views/main/drawer/search-drawer'
+import { mapState, mapMutations} from 'vuex'
+import { search } from "@/utils/methods";
 export default {
   name: 'App',
   components:{
     MusicHeader,
     SongDetail,
     PlaylistDrawer,
-    MessageDrawer
+    MessageDrawer,
+    SearchDrawer
   },
   data(){
     return {
-      songDetailVisible: false
+      songDetailVisible: false,
+      keywords: ''
     }
   },
   computed:{
-    ...mapState(['player', 'app']),
+    ...mapState(['player', 'app', 'data']),
     currentSong(){
       return this.player.currentTrack
+    }
+  },
+  methods:{
+    ...mapMutations(["updateApp", "updateData"]),
+    search,
+    handleInput(keywords){
+      this.keywords = keywords
+    },
+    handleSearch(keywords){
+      this.keywords = keywords
+      const temp = this.data.searchRecords.filter(item => item !== this.keywords)
+      this.updateData({key: "searchRecords", value: [this.keywords, ...temp]})
+      // 关闭搜索提示框
+      this.updateApp({ key: "searchDrawerVisible", value: false });
+      this.search(this.keywords)
     }
   }
 }

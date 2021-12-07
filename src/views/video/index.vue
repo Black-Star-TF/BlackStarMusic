@@ -244,7 +244,7 @@ export default {
         margin-right: 10px;
         font-size: 14px;
         &:hover{
-          background-color: var(--color-level5);
+          background-color: var(--operation-btn-hover-bg-color);
         }
       }
       .jubao{

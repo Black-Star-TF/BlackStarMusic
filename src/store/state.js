@@ -16,6 +16,7 @@ export default {
   app: {
     songDetailVisible: false,
     playlistDrawerVisible: false,
-    messgeDrawerVisible: false
+    messageDrawerVisible: false,
+    searchDrawerVisible: false,
   }
 }

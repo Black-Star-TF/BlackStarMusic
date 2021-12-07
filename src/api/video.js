@@ -10,15 +10,7 @@ export const getRecommendMV = () => request.get('/personalized/mv')
 export const getRecommendExclusive = () => request.get('/personalized/privatecontent')
 
 // 请求独家放送数据
-export function getExclusive(limit,offset){
-	return request({
-		url: '/personalized/privatecontent/list',
-		params:{
-			limit,
-			offset
-		}
-	})
-}
+export const getExclusive = params => request.get('/personalized/privatecontent/list', { params })
 
 // 获取最新mv
 export function getNewestMV(limit,area = null){

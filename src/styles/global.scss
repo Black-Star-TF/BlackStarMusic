@@ -1,11 +1,13 @@
-@import url('//at.alicdn.com/t/font_2882306_tyawxtd3cmj.css');
+@import url("//at.alicdn.com/t/font_2882306_tpsh873cc2a.css");
+
 :root {
-  --min-width: 1030px;
+  --min-width: 1000px;
+  --min-height: 670px;
   --color-keyword: #91b7e2;
   // 位置变量
   --app-header-height: 50px;
   --app-aside-width: 200px;
-  --app-player-height: 70px;
+  --app-player-height: 60px;
   --app-drawer-width: 400px;
   --color-netease-red: #c2473a;
   --playlist-tag-active-bg-color: rgba(255, 0, 0, 0.13);
@@ -18,7 +20,7 @@
   // header
   --header-bg-color: #f9f9f9;
   --header-left-bg-color: #f6f6f6;
-  --header-color-level1:#000;
+  --header-color-level1: #000;
   --header-color-level2: #4a4a4a;
   --header-color-level3: #656565;
   --header-nav-color: #707070;
@@ -34,14 +36,14 @@
   // main
   --main-bg-color: #fff;
   --main-border-color: #d9d9d9;
-  --main-container-bg-color:#f5f5f5;
+  --main-container-bg-color: #f5f5f5;
   --color-level1: #000;
   --color-level2: #444;
   --color-level3: #666;
   --color-level4: #999;
   --color-level5: #ccc;
-  
-  --table-stripe-color:#fafafa;
+
+  --table-stripe-color: #fafafa;
   --table-hover-color: #f2f2f2;
 
   --link-color: #5b7cab;
@@ -49,20 +51,23 @@
 
   --scroll-bar-bg-color: #e0e0e0;
   --context-menu-bg-color: #e4e8e4;
-  // 6b9ff9
+  // 6b9ff9 右键菜单
   --context-menu-item-hover-bg-color: #6b9ff9;
+
+  // 操作按钮hover背景色
+  --operation-btn-hover-bg-color: #f2f2f2;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --panel-box-bg-color: #363636;
   --search-bg-color: #4a4a4a;
   --search-text-color: #aaa;
   // header
   --header-bg-color: #2a2a2a;
   --header-left-bg-color: #2c2c2c;
-  --header-color-level1:#fff;
+  --header-color-level1: #fff;
   --header-color-level2: #b5b5b5;
-  --header-color-level3:#888;
+  --header-color-level3: #888;
   --header-nav-color: #b5b5b5;
 
   --disc-outer-bg-color: #292929;
@@ -77,7 +82,7 @@
   // main
   --main-bg-color: #252525;
   --main-border-color: #202020;
-  --main-container-bg-color:#2d2d2d;
+  --main-container-bg-color: #2d2d2d;
 
   --color-level1: #fff;
   --color-level2: #b3b3b3;
@@ -85,7 +90,7 @@
   --color-level4: #555;
   --color-level5: #494949;
 
-  --table-stripe-color:#292929;
+  --table-stripe-color: #292929;
   --table-hover-color: #2e2e2e;
 
   --link-color: #90b8e2;
@@ -94,29 +99,42 @@
   --scroll-bar-bg-color: #404040;
   --context-menu-bg-color: #292c2c;
   --context-menu-item-hover-bg-color: #2c57b7;
+  --operation-btn-hover-bg-color: #303030;
 }
 
-[data-theme='red'] {
+[data-theme="red"] {
   --search-bg-color: #d17268;
   --search-text-color: #ddd;
   --header-bg-color: var(--color-netease-red);
   --header-left-bg-color: #ca5b4f;
-  --header-color-level1:#fff;
+  --header-color-level1: #fff;
   --header-color-level2: #ddd;
-  --header-color-level3:#ccc;
+  --header-color-level3: #ccc;
   --header-nav-color: #e1a39d;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 8px;
   background-color: none;
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background-color: var(--scroll-bar-bg-color);
 }
 
-.keyword{
+.keywords {
   color: var(--color-keyword);
 }
+
+// @media screen and (max-width: 1300px) {
+//   .page-limit-width {
+//     margin: 0 30px;
+//   }
+// }
+// @media screen and (min-width: 1300px) {
+//   .page-limit-width {
+//     width: 1040px;
+//     margin: 0 auto;
+//   }
+// }

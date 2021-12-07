@@ -9,7 +9,11 @@ export const getPlaylistCate = () => request.get('/playlist/catlist')
 export const getPlaylists = params => request.get('/top/playlist', {params})
 // 获取歌单详情
 export const getPlaylistDetail = params => request.get('/playlist/detail', {params})
+// 歌单歌曲列表
+export const getPlaylistSongs = params => request.get('/playlist/track/all', { params })
 // 获取歌单评论
 export const getPlaylistComments = params => request.get('/comment/playlist', {params})
 // 获取歌单收藏者
 export const getPlaylistSubscribers = params => request.get('/playlist/subscribers', {params})
+// 取消、收藏歌单
+export const subscribePlaylist = params => request.get('/playlist/subscribe', { params })

@@ -17,14 +17,24 @@
               <span class="iconfont icon-jia"></span>
             </span>
           </span>
-          <span class="subscribe operation-item"><span class="iconfont icon-shoucang"></span>  收藏({{album.info.likedCount | formatCount}})</span>
-          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{album.info.shareCount | formatCount}})</span>
+          <!-- 收藏 -->
+          <span class="subscribe operation-item" v-if="!albumDynamicInfo.isSub" @click="handleSubscribeAlbum(1)">
+            <span class="iconfont icon-shoucang"></span>  
+            收藏({{ albumDynamicInfo.subCount | formatCount }})
+          </span>
+          <!-- 已收藏 -->
+          <span class="subscribe operation-item" v-else @click="handleSubscribeAlbum(0)">
+            <span class="iconfont icon-shoucangchenggong"></span>  
+            已收藏({{ albumDynamicInfo.subCount | formatCount }})
+          </span>
+
+          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{albumDynamicInfo.shareCount | formatCount}})</span>
           <span class="download-all operation-item"><span class="iconfont icon-xiazai"></span> 下载全部</span>
         </div>
 
         <div class="album-artist">
           <span class="label">歌手：</span>
-          <span class="artist-name">{{album.artist.name}}</span>
+          <span class="artist-name" @click="toArtistDetail(album.artist.id)">{{album.artist.name}}</span>
         </div>
         <div class="album-publish-time">
           <span class="label">时间：</span>
@@ -43,14 +53,14 @@
             @click="mode = item.name"
           >
             {{item.label}}
-            <span class="comment-count" v-if="item.name == 'comment'">({{album.info.commentCount | formatCount}})</span>
+            <span class="comment-count" v-if="item.name == 'comment'">({{albumDynamicInfo.commentCount | formatCount}})</span>
           </div>
         </template>
       </tab-nav>
     </div>
 
     <div class="album-detail-content">
-      <album-songs v-if="mode == 'songlist'" :trackIds="trackIds"></album-songs>
+      <album-songs v-if="mode == 'songlist'" :songList="songList"></album-songs>
       <album-comments v-if="mode == 'comment'" :id="id"></album-comments>
       <album-desc v-if="mode == 'description'" :description="album.description"></album-desc>
     </div>
@@ -58,14 +68,15 @@
 </template>
 
 <script>
+import { toArtistDetail } from '@/utils/methods'
 import TabNav from '@/components/common/tab-nav'
-import { getAlbumDetail } from '@/api/album'
+import { getAlbumDetail, getAlbumDynamicInfo, subscribeAlbum } from '@/api/album'
 import { formatDate, formatCount } from '@/utils/filters'
 import AlbumSongs from './album-songs.vue'
 import AlbumComments from './album-comments.vue'
 import AlbumDesc from './album-desc.vue'
 import { size_1v1_std } from '@/utils/img-size.js'
-
+import axios from 'axios'
 export default {
   components: {
     TabNav,
@@ -77,8 +88,8 @@ export default {
     return {
       id: null,
       songList: [],
-      trackIds: [],
       album: null,
+      albumDynamicInfo: null,
       mode: 'songlist',
       modeList:[
         { name: 'songlist', label: '歌曲列表' },
@@ -93,6 +104,17 @@ export default {
     }
   },
   methods: {
+    toArtistDetail,
+    async handleSubscribeAlbum(type){
+      // TODO: 确认取消收藏
+      const res = await subscribeAlbum({ t: type, id: this.id})
+      if(type === 1){
+        this.$message.success('收藏成功')
+      }else{
+        this.$message.success('取消收藏')
+      }
+      this.getDynamicInfo()
+    },
     addToPlaylist(){
       this.$store.state.player.addTracksToPlaylist(this.trackIds)
       this.$message.success('添加成功')
@@ -109,11 +131,17 @@ export default {
       this.album = null
       this.trackIds = []
     },
+    async getDynamicInfo (){
+      this.albumDynamicInfo = await getAlbumDynamicInfo({ id: this.id, timestamp: new Date().getTime()})
+    },
     async getData(){
-      this.init()
-      let res = await getAlbumDetail({ id: this.id })
-      this.album = res.album
-      this.trackIds = res.songs.map(track => track.id)
+      const res = await axios.all([
+        getAlbumDetail({ id: this.id }),
+        getAlbumDynamicInfo({ id: this.id })
+      ])
+      this.album = res[0].album
+      this.songList = res[0].songs
+      this.albumDynamicInfo = res[1]
     }
   },
   filters: {
@@ -121,10 +149,12 @@ export default {
     formatCount
   },
   created () {
+    this.init()
     this.getData()
   },
   watch:{
     $route(){
+      this.init()
       this.getData()
       this.mode = 'songlist'
     }
@@ -196,7 +226,7 @@ export default {
           margin-right: 10px;
           font-size: 14px;
           &:hover{
-            background-color: var(--color-level5);
+            background-color: var(--operation-btn-hover-bg-color);
           }
         }
 

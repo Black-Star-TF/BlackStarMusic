@@ -19,6 +19,17 @@
       </tab-nav>
     </div>
     <div class="container">
+      <!-- 最佳匹配 -->
+      <multiple-match
+        v-if="
+          type === 1 &&
+            multipleMatchResult &&
+            multipleMatchResult.orders.length > 0 &&
+            pageNo === 1
+        "
+        :result="multipleMatchResult"
+      ></multiple-match>
+
       <!-- 单曲 -->
       <template v-if="results && type == 1">
         <song-list-table
@@ -87,8 +98,7 @@
       </template>
 
       <el-pagination
-        v-if="results"
-        background
+        v-if="results && total > pageSize"
         layout="prev, pager, next"
         :total="total"
         :page-size="pageSize"
@@ -103,7 +113,7 @@
 <script>
 import TabNav from "@/components/common/tab-nav";
 import SongListTable from "@/components/table/song-list-table";
-
+import MultipleMatch from "./components/multiple-match.vue";
 import SingerItem from "./components/singer-item";
 import AlbumItem from "./components/album-item";
 import PlaylistItem from "./components/playlist-item";
@@ -111,11 +121,12 @@ import UserItem from "./components/user-item";
 import RadioItem from "./components/radio-item";
 import VideoItem from "./components/video-item";
 
-import { getSearchResult } from "@/api/search.js";
+import { getSearchResult, getMultiMatch } from "@/api/search.js";
 import { mapState } from "vuex";
 export default {
   components: {
     TabNav,
+    MultipleMatch,
     SongListTable,
     SingerItem,
     AlbumItem,
@@ -134,6 +145,7 @@ export default {
       results: null,
       total: 0,
       resultStr: "",
+      multipleMatchResult: null,
       tabList: [
         { id: 1, name: "单曲" },
         { id: 100, name: "歌手" },
@@ -236,6 +248,10 @@ export default {
     this.keyword = this.$route.query.keyword;
     if (this.type == 1) {
       this.pageSize = 100;
+      // 获取多重匹配结果
+      getMultiMatch({ keywords: this.keyword }).then(res => [
+        (this.multipleMatchResult = res.result),
+      ]);
     }
     // 请求数据
     this.getSearchResultData();
@@ -272,16 +288,12 @@ export default {
   .container {
     height: calc(100% - 80px);
     overflow: auto;
+    padding: 0 30px;
   }
 
   .video-container {
-    padding: 0 30px;
     display: flex;
     flex-wrap: wrap;
   }
-}
-.el-pagination {
-  display: flex;
-  justify-content: center;
 }
 </style>

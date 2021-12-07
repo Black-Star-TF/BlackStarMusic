@@ -10,8 +10,7 @@
     </div>
     <program-item v-for="program in programs" :key="program.id" :program="program"></program-item>
     <el-pagination 
-      v-if="loaded && total > pageSize" 
-      background 
+      v-if="loaded && total > pageSize"
       layout="prev, pager, next"
       :total="total"
       :page-size="pageSize"

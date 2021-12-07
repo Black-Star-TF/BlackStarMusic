@@ -17,7 +17,7 @@ export default {
   methods: {
     ...mapMutations(['updateApp']),
     close(){
-      this.updateApp({key: 'messgeDrawerVisible', value: false})
+      this.updateApp({key: 'messageDrawerVisible', value: false})
     }
   },
   filters: {},

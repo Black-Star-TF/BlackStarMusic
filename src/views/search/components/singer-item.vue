@@ -3,7 +3,7 @@
     <!-- cover -->
     <div class="singer-cover" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
     <!-- name -->
-    <div class="singer-name"><span class="name" v-html="markKeyword(singer.name)"></span><span class="alias" v-if="singer.alias.length > 0">({{singer.alias[0]}})</span></div>
+    <div class="singer-name"><span class="name" v-html="markKeywords(singer.name)"></span><span class="alias" v-if="singer.alias.length > 0">({{singer.alias[0]}})</span></div>
     <!-- user-icon -->
     <div class="user-icon">
       <span @click.stop="toUserDetail(singer.accountId)" class="iconfont icon-icon" v-if="singer.accountId"></span>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import { toUserDetail,toArtistDetail,markKeyword } from '@/utils/methods'
+  import { toUserDetail,toArtistDetail,markKeywords } from '@/utils/methods'
   import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props:{
@@ -30,7 +30,7 @@
       }
     },
     methods:{
-      markKeyword,
+      markKeywords,
       toUserDetail,
       toArtistDetail
     }

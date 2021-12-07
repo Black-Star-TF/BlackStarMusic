@@ -4,18 +4,18 @@
     <div class="radio-cover" :style="{'backgroundImage': `url(${coverUrl})`}"></div>
     <!-- 电台名 -->
     <div class="radio-name">
-      <span class="name" v-html="markKeyword(radio.name)"></span>
+      <span class="name" v-html="markKeywords(radio.name)"></span>
     </div>
     <!-- 歌手 -->
     <div class="radio-creator">
       by 
-      <span class="creator-name" @click.stop="toUserDetail(radio.dj.userId)" v-html="markKeyword(radio.dj.nickname)"></span>
+      <span class="creator-name" @click.stop="toUserDetail(radio.dj.userId)" v-html="markKeywords(radio.dj.nickname)"></span>
     </div>
   </div>
 </template>
 
 <script>
-	import { toRadioDetail, toUserDetail, markKeyword} from '@/utils/methods'
+	import { toRadioDetail, toUserDetail, markKeywords} from '@/utils/methods'
   import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props: {
@@ -35,7 +35,7 @@
     },
     methods:{
       toRadioDetail,
-      markKeyword,
+      markKeywords,
       toUserDetail
     },
   }

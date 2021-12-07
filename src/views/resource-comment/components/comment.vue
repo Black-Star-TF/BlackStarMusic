@@ -16,8 +16,7 @@
       <h3>最新评论</h3>
       <comment-item v-for="comment in comments" :key="comment.commentId" :comment="comment"></comment-item>
       <el-pagination 
-        v-if="loaded" 
-        background 
+        v-if="loaded"
         layout="prev, pager, next"
         :total="total"
         :page-size="pageSize"

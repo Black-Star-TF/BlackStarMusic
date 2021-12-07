@@ -29,7 +29,7 @@
       </div>
       <div class="row column song-name">
         <div class="song-name-content">
-          <span class="main-name" v-if="keyword" v-html="markKeyword(song.name)"></span>
+          <span class="main-name" v-if="keyword" v-html="markKeywords(song.name)"></span>
           <span class="main-name" :class="{'active': song.id == currentTrackId}" v-else>{{song.name}}</span>
           <span class="alias-name" v-if="song.alia.length > 0"> ({{song.alia[0]}})</span>
         </div>
@@ -39,14 +39,14 @@
       <div class="row column song-artists">
         <span class="song-artists-content">
           <span class="artist" v-for="(artist,index) in song.ar" :key="`${index}-${artist.id}`">
-            <span class="artist-name" v-if="keyword" @click="toArtistDetail(artist.id)" v-html="markKeyword(artist.name)"></span>
+            <span class="artist-name" v-if="keyword" @click="toArtistDetail(artist.id)" v-html="markKeywords(artist.name)"></span>
             <span class="artist-name" v-else @click="toArtistDetail(artist.id)">{{artist.name}}</span>
             <span class="separator" v-if="index < song.ar.length -1"> / </span>
           </span>
         </span>
       </div>
       <div class="row column song-album">
-        <span class="song-album-name" v-if="keyword" @click="toAlbumDetail(song.al.id)" v-html="markKeyword(song.al.name)"></span>
+        <span class="song-album-name" v-if="keyword" @click="toAlbumDetail(song.al.id)" v-html="markKeywords(song.al.name)"></span>
         <span class="song-album-name" v-else @click="toAlbumDetail(song.al.id)">{{song.al.name}}</span>
       </div>
       <div class="row column song-duration">
@@ -70,7 +70,7 @@
 <script>
   import ContextMenu from '@/components/common/context-menu'
   import {likeSong} from '@/api/music'
-  import { toAlbumDetail,toArtistDetail,markKeyword, playVideo } from '@/utils/methods'
+  import { toAlbumDetail,toArtistDetail,markKeywords, playVideo } from '@/utils/methods'
   import { formatDuration } from '@/utils/filters'
   export default {
     components:{
@@ -112,7 +112,7 @@
       playVideo,
       toAlbumDetail,
       toArtistDetail,
-      markKeyword,
+      markKeywords,
       async handleLikeSong(id, like){
         if(!this.$store.state.data.loginStatus){
           this.$message.error('请先登录')

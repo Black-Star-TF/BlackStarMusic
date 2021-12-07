@@ -1,83 +1,85 @@
 <template>
   <div class="view-playlist" ref="page">
-    <template>
-      <container v-if="currentTag">
-        <template v-slot:left>
-          <div class="current-tag-container">
-            <!-- 歌单分类列表 -->
-            <span class="current-tag" @click.stop="change()">{{currentTag.name}}</span>
-            <div class="playlist-categories" v-if="showCate" @click.stop>
-              <div class="playlist-all">
-                <span
-                  :class="{ active: all.name == currentTag.name }"
-                  @click="changeTag(all)"
-                  >{{ all.name }}</span
-                >
-              </div>
-              <div
-                class="playlist-group"
-                v-for="(value, key) in categories"
-                :key="key"
-              >
-                <div class="group-name">
-                  <span class="name">{{ value }}</span>
+    <page-box>
+      <template>
+        <container v-if="currentTag">
+          <template v-slot:left>
+            <div class="current-tag-container">
+              <!-- 歌单分类列表 -->
+              <span class="current-tag" @click.stop="change()">{{
+                currentTag.name
+              }}</span>
+              <div class="playlist-categories" v-if="showCate" @click.stop>
+                <div class="playlist-all">
+                  <span
+                    :class="{ active: all.name == currentTag.name }"
+                    @click="changeTag(all)"
+                    >{{ all.name }}</span
+                  >
                 </div>
-                <div class="group-tags">
-                  <template v-for="tag in playlistCate">
-                    <div
-                      class="tag-container"
-                      :key="tag.name"
-                      v-if="tag.category == key"
-                    >
-                      <span
-                        :class="{ active: tag.name == currentTag.name }"
-                        @click="changeTag(tag)"
+                <div
+                  class="playlist-group"
+                  v-for="(value, key) in categories"
+                  :key="key"
+                >
+                  <div class="group-name">
+                    <span class="name">{{ value }}</span>
+                  </div>
+                  <div class="group-tags">
+                    <template v-for="tag in playlistCate">
+                      <div
+                        class="tag-container"
+                        :key="tag.name"
+                        v-if="tag.category == key"
                       >
-                        {{ tag.name }}
-                      </span>
-                    </div>
-                  </template>
+                        <span
+                          :class="{ active: tag.name == currentTag.name }"
+                          @click="changeTag(tag)"
+                        >
+                          {{ tag.name }}
+                        </span>
+                      </div>
+                    </template>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </template>
-        <template v-slot:right>
-          <div class="hot-tags-nav">
-            <span
-              class="tag"
-              v-for="tag in hotTags"
-              :class="{ active: tag.name == currentTag.name }"
-              @click="changeTag(tag)"
-              :key="tag.name"
-            >
-							{{ tag.name }}
-						</span>
-          </div>
-        </template>
-        <template v-slot:content v-if="loaded">
-          <playlist-item
-            v-for="(playlist, index) in playlists"
-            :num="5"
-            :index="index"
-            :playlistItem="playlist"
-            :key="`${index}-${playlist.id}`"
-          />
-        </template>
-      </container>
+          </template>
+          <template v-slot:right>
+            <div class="hot-tags-nav">
+              <span
+                class="tag"
+                v-for="tag in hotTags"
+                :class="{ active: tag.name == currentTag.name }"
+                @click="changeTag(tag)"
+                :key="tag.name"
+              >
+                {{ tag.name }}
+              </span>
+            </div>
+          </template>
+          <template v-slot:content v-if="loaded">
+            <playlist-item
+              v-for="(playlist, index) in playlists"
+              :num="5"
+              :index="index"
+              :playlistItem="playlist"
+              :key="`${index}-${playlist.id}`"
+            />
+          </template>
+        </container>
 
-      <!-- 分页 -->
-      <el-pagination
-        v-if="loaded"
-        background
-        layout="prev, pager, next"
-        :total="total"
-        :page-size="limit"
-        :current-page.sync="currentPage"
-        @current-change="changeCurrentPage"
-      />
-    </template>
-
+        <!-- 分页 -->
+        <el-pagination
+          v-if="loaded"
+          layout="prev, pager, next"
+          :total="total"
+          :page-size="limit"
+          :current-page.sync="currentPage"
+          @current-change="changeCurrentPage"
+        />
+      </template>
+    </page-box>
     <!-- 加载图标 -->
     <!-- <Loading :loading="loading" /> -->
   </div>
@@ -87,6 +89,7 @@
 import axios from "axios";
 import Container from "@/components/common/container";
 import PlaylistItem from "./components/playlist";
+import PageBox from "@/components/common/page-box";
 // import Loading from '@/components/common/Loading'
 import {
   getHotPlaylistCate,
@@ -112,6 +115,7 @@ export default {
   components: {
     Container,
     PlaylistItem,
+    PageBox,
     // Loading
   },
   computed: {
@@ -146,11 +150,11 @@ export default {
     // 获取歌单列表
     async getPlaylistsData() {
       this.playlists = [];
-      let {playlists,total} = await getPlaylists({
-        cat:this. currentTag.name,
-        limit :this.limit,
-        offset: this.offset
-			});
+      let { playlists, total } = await getPlaylists({
+        cat: this.currentTag.name,
+        limit: this.limit,
+        offset: this.offset,
+      });
       this.playlists = playlists;
       this.total = total;
     },
@@ -201,7 +205,6 @@ export default {
 @import url("~@/styles/variables.scss");
 .view-playlist {
   height: 100%;
-  padding: 0 7% 30px;
   box-sizing: border-box;
   overflow: overlay;
 }
@@ -223,7 +226,6 @@ export default {
     vertical-align: middle;
     cursor: pointer;
     background-color: transparent;
-
     &:hover {
       background-color: var(--main-container-bg-color);
     }
@@ -342,10 +344,5 @@ export default {
       background-color: var(--playlist-tag-active-bg-color);
     }
   }
-}
-
-.el-pagination {
-  display: flex;
-  justify-content: center;
 }
 </style>

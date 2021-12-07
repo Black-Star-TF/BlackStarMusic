@@ -22,16 +22,32 @@
               <span class="iconfont icon-jia"></span>
             </span>
           </span>
-          <span class="subscribe operation-item"><span class="iconfont icon-shoucang"></span>  收藏({{playlist.subscribedCount | formatCount}})</span>
-          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{playlist.shareCount | formatCount}})</span>
-          <span class="download-all operation-item"><span class="iconfont icon-xiazai"></span> 下载全部</span>
+          <!-- 收藏 -->
+          <span class="subscribe operation-item" v-if="!playlist.subscribed" @click="handleSubscribePlaylist(1)">
+            <span class="iconfont icon-shoucang"></span>  
+            收藏({{playlist.subscribedCount | formatCount}})
+          </span>
+          <!-- 已收藏 -->
+          <span class="subscribe operation-item" v-else @click="handleSubscribePlaylist(2)">
+            <span class="iconfont icon-shoucangchenggong"></span>  
+            已收藏({{playlist.subscribedCount | formatCount}})
+          </span>
+
+          <span class="share operation-item">
+            <span class="iconfont icon-fenxiang"></span> 
+            分享({{playlist.shareCount | formatCount}})
+          </span>
+          <span class="download-all operation-item">
+            <span class="iconfont icon-xiazai"></span> 
+            下载全部
+          </span>
         </div>
         <div class="playlist-tags" v-if="playlist.tags.length > 0">
           标签： <span class="tag-item" v-for="item in playlist.tags" :key="item" @click="toPlaylist(item)">{{item}}</span>
         </div>
         <div class="playlist-play-data">
-          歌曲数：<span>{{playlist.trackCount}}</span>
-          播放数：<span>{{playlist.playCount | formatCount}}</span>
+          歌曲数: <span>{{playlist.trackCount}}</span>
+          播放数: <span>{{playlist.playCount | formatCount}}</span>
         </div>
         <div class="playlist-profile" :class="{'show': showDesc}" v-if="playlist.description">
           <div class="switch" :class="{'show': showDesc}" @click="changeDesc"></div>
@@ -56,7 +72,7 @@
     </div>
 
     <div class="playlist-detail-content">
-      <playlist-songs v-if="mode == 'songlist'" :trackIds="trackIds"></playlist-songs>
+      <playlist-songs v-if="mode == 'songlist'" :id="id"></playlist-songs>
       <playlist-comments v-if="mode == 'comment'" :id="id"></playlist-comments>
       <playlist-subscribers v-if="mode == 'subscriber'" :id="id"></playlist-subscribers>
     </div>
@@ -67,12 +83,13 @@
   import { toUserDetail } from '@/utils/methods'
   import { formatCount,formatDate } from '@/utils/filters'
   import TabNav from '@/components/common/tab-nav'
-  import { getPlaylistDetail } from '@/api/playlist'
+  import { getPlaylistDetail, subscribePlaylist } from '@/api/playlist'
   import PlaylistSongs from './playlist-songs.vue'
   import PlaylistComments from './playlist-comments.vue'
   import PlaylistSubscribers from './playlist-subscribers.vue'
   import { size_1v1_std, size_1v1_small } from '@/utils/img-size.js'
   import RESOURCE_TYPE from '@/utils/resource-type'
+  import { mapActions } from 'vuex'
   export default {
     components: {
       TabNav,
@@ -106,6 +123,18 @@
     },
     methods: {
       toUserDetail,
+      ...mapActions(['getUserPlaylist']),
+      async handleSubscribePlaylist(type){
+        // TODO: 取消收藏提示
+        const res = await subscribePlaylist({ t: type, id: this.id })
+        if(type === 1){
+          this.$message.success('收藏成功')
+        }else{
+          this.$message.success('取消收藏')
+        }
+        this.getData(new Date().getTime())
+        this.getUserPlaylist()
+      },
       addToPlaylist(){
         this.$store.state.player.addTracksToPlaylist(this.trackIds)
         this.$message.success('添加成功')
@@ -135,11 +164,10 @@
         this.playlist = null
         this.trackIds = []
       },
-      async getData(){
-        this.init()
-        let { playlist } = await getPlaylistDetail({ id: this.id })
+      async getData(timestamp = null){
+        
+        let { playlist } = await getPlaylistDetail({ id: this.id, timestamp})
         this.playlist = playlist
-        this.trackIds = playlist.trackIds.map(track => track.id)
       }
     },
     filters:{
@@ -147,10 +175,12 @@
       formatCount
     },
     created () {
+      this.init()
       this.getData()
     },
     watch:{
       $route(){
+        this.init()
         this.getData()
         this.mode = 'songlist'
       }
@@ -248,7 +278,7 @@
           margin-right: 10px;
           font-size: 14px;
           &:hover{
-            background-color: var(--color-level5);
+            background-color: var(--operation-btn-hover-bg-color);
           }
         }
 

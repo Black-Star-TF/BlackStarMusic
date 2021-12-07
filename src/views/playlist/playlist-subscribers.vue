@@ -8,8 +8,7 @@
       :num="3"
     />
     <el-pagination 
-      v-if="loaded" 
-      background 
+      v-if="loaded"
       layout="prev, pager, next"
       :total="total"
       :page-size="pageSize"

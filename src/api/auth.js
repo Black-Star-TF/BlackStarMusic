@@ -26,3 +26,11 @@ export const getUserDetail = params => request.get('/user/detail', { params });
  * @param {number} params.offset --偏移数量，用于分页 , 如 :( 页数 -1)*30, 其中 30 为 limit 的值 , 默认为 0
  */
 export const getUserPlaylist = params => request.get('/user/playlist', { params });
+// 收藏的专辑
+export const getFavoritesAlbum = params => request.get('/album/sublist', { params });
+// 收藏的歌手
+export const getFavoritesSinger = () => request.get('/artist/sublist');
+// 收藏的视频
+export const getFavoritesVideo = () => request.get('/mv/sublist');
+// 收藏的专栏
+export const getFavoritesColumn = params => request.get('/topic/sublist', { params });

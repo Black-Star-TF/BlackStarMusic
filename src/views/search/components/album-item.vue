@@ -5,23 +5,23 @@
     <!-- 专辑名 -->
     <div class="album-name">
       <span class="name">
-        <span v-html="markKeyword(album.name)"></span>
+        <span v-html="markKeywords(album.name)"></span>
         <!-- 专辑别名 -->
-        <span class="album-alias" v-if="album.alias.length > 0">(<span v-html="markKeyword(album.alias[0])"></span>)</span>
+        <span class="album-alias" v-if="album.alias.length > 0">(<span v-html="markKeywords(album.alias[0])"></span>)</span>
       </span>
     </div>
     <!-- 歌手 -->
     <div class="album-artist">
       <span class="artist-name" @click.stop="toArtistDetail(album.artist.id)">
-        <span v-html="markKeyword(album.artist.name)"></span>
-        <span class="artist-alias" v-if="album.artist.alias.length > 0">(<span v-html="markKeyword(album.artist.alias[0])"></span>)</span>
+        <span v-html="markKeywords(album.artist.name)"></span>
+        <span class="artist-alias" v-if="album.artist.alias.length > 0">(<span v-html="markKeywords(album.artist.alias[0])"></span>)</span>
       </span>
     </div>
   </div>
 </template>
 
 <script>
-	import { toAlbumDetail, toArtistDetail, markKeyword } from '@/utils/methods'
+	import { toAlbumDetail, toArtistDetail, markKeywords } from '@/utils/methods'
   import {size_1v1_small} from '@/utils/img-size.js'
   export default {
     props: {
@@ -39,7 +39,7 @@
       }
     },
     methods:{
-      markKeyword,
+      markKeywords,
       toAlbumDetail,
       toArtistDetail
     }

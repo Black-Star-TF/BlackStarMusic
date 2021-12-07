@@ -10,5 +10,6 @@ export default {
   // 更新运行时状态
   updateApp(state, {key,value}){
     state.app[key] = value
-  }
+  },
+  // 更新
 }

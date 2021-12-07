@@ -20,7 +20,7 @@ const routes = [
         children: discoveryRoutes
       },
       {
-        path: '/privatefm',
+        path: '/private-fm',
         component: () => import('@/views/private-fm/index')
       },
       {
@@ -42,12 +42,19 @@ const routes = [
         ]
       },
       {
-        path:'totalmv',
+        path:'total-mv',
         component: () => import('@/views/total-mv/index'),
+      },
+      {
+        path:'mv-toplist',
       },
       {
         path: '/friend',
         component: () => import('@/views/friend/index')
+      },
+      {
+        path: '/exclusive',
+        component: () => import('@/views/exclusive/index')
       },
       {
         path: '/playlist',
@@ -104,14 +111,18 @@ const routes = [
         component: () => import('@/views/search/index'),
       },
       {
-        path: '/hotcomment',
+        path: '/hot-comment',
         component: () => import('@/views/hot-comment/index'),
+      },
+      {
+        path: '/resource-comment',
+        component: () => import('@/views/resource-comment/index'),
       },
       {
         path: '/clound'
       },
       {
-        path: '/myradio',
+        path: '/my-radio',
         component: () => import('@/views/my-radio/index'),
       },
       {
@@ -123,16 +134,20 @@ const routes = [
             redirect: 'album'
           },
           {
-            path: 'album'
+            path: 'album',
+            component: () => import('@/views/favorites/album/index'),
           },
           {
-            path: 'singer'
+            path: 'singer',
+            component: () => import('@/views/favorites/singer/index'),
           },
           {
-            path: 'video'
+            path: 'video',
+            component: () => import('@/views/favorites/video/index'),
           },
           {
-            path: 'column'
+            path: 'column',
+            component: () => import('@/views/favorites/column/index'),
           }
         ]
       }
@@ -147,6 +162,10 @@ const routes = [
     path: '/mv',
     meta:{ hasKey: true },
     component: () => import('@/views/mv/index'),
+  },
+  {
+    path: '*',
+    component: () => import('@/views/404.vue'),
   }
 ]
 
@@ -156,8 +175,6 @@ VueRouter.prototype.push = function push(location) {
 };
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
   routes
 })
 

@@ -15,74 +15,76 @@
         <span class="weidenglu" @click="handleLogin">未登录</span>
       </template>
     </div>
-    <!-- 菜单 -->
-    
-    <router-link class="nav-item" to="/discovery" tag="div" active-class="active">
-      <i class="iconfont icon-wangyiyunyinleclick"></i>发现音乐
-    </router-link>
-    <router-link class="nav-item" to="/privatefm" tag="div" active-class="active">
-      <i class="iconfont icon-Sharingwuxianlanyagongxiang10"></i>私人FM
-    </router-link>
-    <router-link class="nav-item" to="/shipin" tag="div" active-class="active">
-      <i class="iconfont icon-video"></i>视频
-    </router-link>
-    <router-link class="nav-item" to="/friend" tag="div" active-class="active">
-      <i class="iconfont icon-friend"></i>朋友
-    </router-link>
+
+    <div class="nav-wrapper">
+      <!-- 菜单 -->
+      <router-link class="nav-item" to="/discovery" tag="div" active-class="active">
+        <i class="iconfont icon-wangyiyunyinleclick"></i>发现音乐
+      </router-link>
+      <router-link class="nav-item" to="/private-fm" tag="div" active-class="active">
+        <i class="iconfont icon-Sharingwuxianlanyagongxiang10"></i>私人FM
+      </router-link>
+      <router-link class="nav-item" to="/shipin" tag="div" active-class="active">
+        <i class="iconfont icon-video"></i>视频
+      </router-link>
+      <router-link class="nav-item" to="/friend" tag="div" active-class="active">
+        <i class="iconfont icon-friend"></i>朋友
+      </router-link>
     <!-- 我的音乐 -->
-    <div class="group-name">我的音乐</div>
-    <router-link class="nav-item" to="/download" tag="div" active-class="active">
-      <i class="iconfont icon-xiazai"></i>下载管理
-    </router-link>
-    <router-link class="nav-item" to="/recent" tag="div" active-class="active">
-      <i class="iconfont icon-bendi-zuijinbofang" ></i>最近播放
-    </router-link>
-    <router-link class="nav-item" to="/clound" tag="div" active-class="active" v-if="data.loginStatus">
-      <i class="iconfont icon-yun"></i>我的音乐云盘
-    </router-link>
-    <router-link class="nav-item" to="/myradio" tag="div" active-class="active" v-if="data.loginStatus">
-      <i class="iconfont icon-dianziyinyuan"></i>我的电台
-    </router-link>
-    <router-link class="nav-item" to="/favorites" tag="div" active-class="active" v-if="data.loginStatus">
-      <i class="iconfont icon-xingbiao"></i>我的收藏
-    </router-link>
-    <!-- 创建的歌单 -->
-    <div class="group-name" @click="showCreated = !showCreated">
-      <span class="iconfont icon-shouqi1" v-if="!showCreated"></span>
-      <span class="iconfont icon-sanjiao1" v-else></span>
-      创建的歌单
-    </div>
-    <div v-show="showCreated">
-      <router-link 
-        v-for="(playlist,index) in playlistsCreatedByMe"
-        :key="playlist.id"
-        class="nav-item" 
-        :to="{path: '/playlist', query: { id: playlist.id } }" 
-        tag="div"
-        :class="{'active': isRouterActive(playlist.id)}"
-      >
-        <i class="iconfont icon-xihuan-kon" v-if="index == 0"></i>
-        <i class="iconfont icon-gedan" v-else></i>
-        {{index == 0 ? '我喜欢的音乐' :playlist.name}}
+      <div class="group-name">我的音乐</div>
+      <router-link class="nav-item" to="/download" tag="div" active-class="active">
+        <i class="iconfont icon-xiazai"></i>下载管理
       </router-link>
-    </div>
-    <!-- 收藏的歌单 -->
-    <div class="group-name" @click="showSubscribed = !showSubscribed">
-      <span class="iconfont icon-shouqi1" v-if="!showSubscribed"></span>
-      <span class="iconfont icon-sanjiao1" v-else></span>
-      收藏的歌单
-    </div>
-    <div v-show="showSubscribed">
-      <router-link 
-        v-for="playlist in playlistsSubscribedByMe"
-        :key="playlist.id"
-        class="nav-item" 
-        :to="{path: '/playlist', query: { id: playlist.id } }" 
-        tag="div" 
-        :class="{'active': isRouterActive(playlist.id)}"
-      >
-        <i class="iconfont icon-gedan"></i>{{playlist.name}}
+      <router-link class="nav-item" to="/recent" tag="div" active-class="active">
+        <i class="iconfont icon-bendi-zuijinbofang" ></i>最近播放
       </router-link>
+      <router-link class="nav-item" to="/clound" tag="div" active-class="active" v-if="data.loginStatus">
+        <i class="iconfont icon-yun"></i>我的音乐云盘
+      </router-link>
+      <router-link class="nav-item" to="/my-radio" tag="div" active-class="active" v-if="data.loginStatus">
+        <i class="iconfont icon-dianziyinyuan"></i>我的电台
+      </router-link>
+      <router-link class="nav-item" to="/favorites" tag="div" active-class="active" v-if="data.loginStatus">
+        <i class="iconfont icon-xingbiao"></i>我的收藏
+      </router-link>
+      <!-- 创建的歌单 -->
+      <div class="group-name" @click="showCreated = !showCreated">
+        <span class="iconfont icon-shouqi1" v-if="!showCreated"></span>
+        <span class="iconfont icon-sanjiao1" v-else></span>
+        创建的歌单
+      </div>
+      <div v-show="showCreated">
+        <router-link 
+          v-for="(playlist,index) in playlistsCreatedByMe"
+          :key="playlist.id"
+          class="nav-item" 
+          :to="{path: '/playlist', query: { id: playlist.id } }" 
+          tag="div"
+          :class="{'active': isRouterActive(playlist.id)}"
+        >
+          <i class="iconfont icon-xihuan-kon" v-if="index == 0"></i>
+          <i class="iconfont icon-gedan" v-else></i>
+          {{index == 0 ? '我喜欢的音乐' :playlist.name}}
+        </router-link>
+      </div>
+      <!-- 收藏的歌单 -->
+      <div class="group-name" @click="showSubscribed = !showSubscribed">
+        <span class="iconfont icon-shouqi1" v-if="!showSubscribed"></span>
+        <span class="iconfont icon-sanjiao1" v-else></span>
+        收藏的歌单
+      </div>
+      <div v-show="showSubscribed">
+        <router-link 
+          v-for="playlist in playlistsSubscribedByMe"
+          :key="playlist.id"
+          class="nav-item" 
+          :to="{path: '/playlist', query: { id: playlist.id } }" 
+          tag="div" 
+          :class="{'active': isRouterActive(playlist.id)}"
+        >
+          <i class="iconfont icon-gedan"></i>{{playlist.name}}
+        </router-link>
+      </div>
     </div>
     <!-- 登录页面 -->
     <login-dialog ref="loginDialog"></login-dialog>
@@ -141,13 +143,22 @@ export default {
   width: var(--app-aside-width);
   background-color: var(--aside-bg-color);
   z-index: 100;
-  overflow: overlay;
-  // 鼠标移入时，显示滚动条，鼠标移出时隐藏滚动条
-  &::-webkit-scrollbar{
-    display: none;
-  }
-  &:hover::-webkit-scrollbar{
-    display: block;
+  overflow: hidden;
+  
+  .nav-wrapper{
+    height: calc(100% - 60px);
+    overflow: hidden;
+    padding-right: 10px;
+    // 鼠标移入时，显示滚动条，鼠标移出时隐藏滚动条
+    // &::-webkit-scrollbar{
+    //   opacity: 0;
+    // }
+    // &:hover::-webkit-scrollbar{
+    //   opacity: 1;
+    // }
+    &:hover{
+      overflow: overlay;
+    }
   }
   .user{
     height: 60px;

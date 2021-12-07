@@ -1,4 +1,4 @@
-import {getPlaylistDetail} from '@/api/playlist'
+import { getPlaylistDetail } from '@/api/playlist'
 import store from '@/store'
 // 播放歌曲有关方法
 
@@ -15,10 +15,11 @@ export function playPlaylist(id){
     this.$store.state.player.playTrack(tracks[0],tracks)
   })
 }
-
+// 播放电台
 export function playRadio(id){
   console.log('播放电台',id);
 }
+// 电台详情
 export function toRadioDetail(rid){
   this.$router.push({ path: `/radio`, query: { rid } })
 }
@@ -45,17 +46,36 @@ export function toUserDetail(userId){
   this.$router.push({ path: `/user`, query: { userId } })
 }
 // 高亮显示关键词
-export function markKeyword(str){
+export function markKeywords(str){
   let reg = new RegExp(this.keyword,'ig')
-  return str.replace(reg, ($)=> `<span class="keyword">${$}</span>`)
+  return str.replace(reg, ($)=> `<span class="keywords">${$}</span>`)
+}
+// 跳转到资源评论页
+export function toResourceComment(id, type){
+  this.$router.push({ path: '/resource-comment', query:{ id, type } })
+}
+// 跳转到热门评论页
+export function toHotComment(id,type){
+  this.$router.push({ path: '/hot-comment', query:{ id, type } })
+}
+// 搜索
+export function search(keywords){
+  this.$router.push({
+    path: "/search",
+    query: {
+      keyword: keywords,
+      type: this.$route.query.type || 1,
+    },
+  });
 }
 
-export function toHotComment(id,type){
-  this.$router.push({
-    path: '/hotcomment',
-    query:{
-      id,
-      type
-    }
-  })
+// 防抖函数
+export function debounce(handler, delay) {
+  let timer;
+  return function () {
+    if(timer) clearTimeout(timer)
+    timer = setTimeout(()=>{
+      this[handler]()
+    }, delay)
+  }
 }

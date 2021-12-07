@@ -6,24 +6,24 @@
 				<!-- 时长 -->
 				<span class="video-duration">{{video.durationms | formatDuration}}</span>
 			</div>
-			<div class="video-name" @click="playVideo(video.vid)"><span class="mv-icon" v-if="isMV">MV</span> <span v-html="markKeyword(video.title)"></span></div>
+			<div class="video-name" @click="playVideo(video.vid)"><span class="mv-icon" v-if="isMV">MV</span> <span v-html="markKeywords(video.title)"></span></div>
 			<!-- 歌手 -->
 			<div class="video-artists" v-if="isMV">
 				<span class="artist-item" v-for="(artist,index) in video.creator" :key="artist.userId">
-					<span class="name" @click="toArtistDetail(artist.userId)"><span v-html="markKeyword(artist.userName)"></span></span>
+					<span class="name" @click="toArtistDetail(artist.userId)"><span v-html="markKeywords(artist.userName)"></span></span>
 					<span class="separator" v-if="index < video.creator.length - 1">/</span>
 				</span>
 			</div>
 			<!-- 作者 -->
 			<div class="video-creator" v-else>
 				by 
-				<span class="creator" @click.stop="toUserDetail(video.creator[0].userId)" v-html="markKeyword(video.creator[0].userName)"></span>
+				<span class="creator" @click.stop="toUserDetail(video.creator[0].userId)" v-html="markKeywords(video.creator[0].userName)"></span>
 			</div>
 	 </div>
 </template>
 
 <script>
-	import { playVideo, toArtistDetail, markKeyword, toUserDetail} from '@/utils/methods'
+	import { playVideo, toArtistDetail, markKeywords, toUserDetail} from '@/utils/methods'
 	import { formatCount, formatDuration } from '@/utils/filters'
 	import ItemPropsMixin from '@/mixins/item-props-mixin'
 	import {size_video_std} from '@/utils/img-size.js'
@@ -50,7 +50,7 @@
     methods:{
       playVideo,
       toArtistDetail,
-      markKeyword,
+      markKeywords,
       toUserDetail
     },
     filters:{

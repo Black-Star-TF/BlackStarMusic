@@ -11,45 +11,29 @@
 </template>
 
 <script>
-import {getSongsDetail} from '@/api/music.js'
 import SongListTable from '@/components/table/song-list-table'
 import { mapState } from 'vuex'
 // import Loading from '@/components/common/Loading'
 export default {
-  mixins: [],
   components: {
     SongListTable,
     // Loading
   },
-  data(){
-    return {
-      songList: null
-    }
-  },
   props:{
-    trackIds: {
-      type: Array,
+    songList: {
       required: true
     }
   },
   computed: {
     ...mapState(['player']),
     loaded(){
-      return this.trackIds.length > 0 && this.songList
+      return this.songList
     }
   },
   methods:{
     handlePlaySong(trackId){
-      this.player.playTrack(trackId, this.trackIds)
+      this.player.playTrack(trackId, this.songList.map(song => song.id))
     },
-    async getData(){
-      this.songList = null
-      let { songs } = await getSongsDetail(this.trackIds.join(','))
-      this.songList = songs
-    }
-  },
-  created(){
-    this.getData()
   }
 }
 </script>

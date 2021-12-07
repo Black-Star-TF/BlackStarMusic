@@ -1,12 +1,12 @@
 <template>
-  <div class="view-video">
+  <div class="view-shipin">
     <!-- 导航栏 -->
 		<page-header>
       <cate-nav :navList="navList"></cate-nav>
     </page-header>
 		
 		<!-- 内容区 -->
-		<div class="video-content">
+		<div class="shipin-content">
 			<router-view></router-view>
 		</div>
   </div>
@@ -32,16 +32,10 @@
 </script>
 
 <style lang="scss" scoped>
-  .view-video{
+  .view-shipin{
 		height: 100%;
-    overflow: overlay;
-		.video-content{
+		.shipin-content{
 			height: calc(100% - 50px);
-			box-sizing: border-box;
-			padding: 0 5vw;
-			@media screen and (max-width: 1100px) {
-				padding: 0 50px;
-			}
 		}
 	}
 </style>
