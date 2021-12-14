@@ -89,7 +89,7 @@
   import PlaylistSubscribers from './playlist-subscribers.vue'
   import { size_1v1_std, size_1v1_small } from '@/utils/img-size.js'
   import RESOURCE_TYPE from '@/utils/resource-type'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapState } from 'vuex'
   export default {
     components: {
       TabNav,
@@ -114,6 +114,7 @@
       }
     },
     computed:{
+      ...mapState(['player']),
       playlistCoverUrl(){
         return `${this.playlist.coverImgUrl}?param=${size_1v1_std}`
       },
@@ -125,7 +126,6 @@
       toUserDetail,
       ...mapActions(['getUserPlaylist']),
       async handleSubscribePlaylist(type){
-        // TODO: 取消收藏提示
         const res = await subscribePlaylist({ t: type, id: this.id })
         if(type === 1){
           this.$message.success('收藏成功')
@@ -136,15 +136,17 @@
         this.getUserPlaylist()
       },
       addToPlaylist(){
-        this.$store.state.player.addTracksToPlaylist(this.trackIds)
-        this.$message.success('添加成功')
-      },
-      playAll(){
-        // 播放当前歌单
         if(this.trackIds.length > 0){
-          this.$store.state.player.playTrack(this.trackIds[0],this.trackIds)
+          this.$store.state.player.addTracksToPlaylist(this.trackIds)
+          this.$message.success('添加成功')
         }
       },
+      async playAll(){
+        // 播放当前歌单
+        if(this.trackIds.length > 0){
+          this.player.playTrackFromPlaylist(this.trackIds[0],this.trackIds)
+        }
+      }, 
       changeDesc(){
         this.showDesc = !this.showDesc
       },
@@ -168,6 +170,7 @@
         
         let { playlist } = await getPlaylistDetail({ id: this.id, timestamp})
         this.playlist = playlist
+        this.trackIds = playlist.trackIds.map(track => track.id)
       }
     },
     filters:{

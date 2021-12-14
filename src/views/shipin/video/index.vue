@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shipin">
+  <div class="page-video" v-if="currentCate">
     <page-box>
       <container>
         <template v-slot:left>
@@ -64,6 +64,7 @@
 import Container from "@/components/common/container";
 import VideoItem from "./components/video-item";
 import PageBox from "@/components/common/page-box";
+import axios from 'axios'
 import {
   getVideoCategory,
   getVideoGroup,
@@ -74,7 +75,7 @@ export default {
   name: "",
   mixins: [],
   components: {
-    Container,
+    Container,   
     VideoItem,
     PageBox,
   },
@@ -85,6 +86,9 @@ export default {
       videoCategory: [],
       currentCate: null,
       showCate: false,
+      limit: 8,
+      pageSize: 30,
+      offset: 0,
       total: {
         id: 0,
         name: "全部视频",
@@ -101,63 +105,76 @@ export default {
         this.showCate = status;
       }
     },
+    closePanel(){
+      this.showCate = false;
+    },
     changeCategory(cate) {
       this.currentCate = cate;
       this.videoList = [];
-      if (cate.id == this.total.id) {
-        this.getAllVideoData();
-      } else {
-        this.getVideoListData(cate.id);
-      }
+      this.offset = 0;
       this.showCate = false;
+      this.getVideoList();
     },
-    // 获取视频列表
-    getVideoListData(id) {
-      getVideoList(id).then(res => {
-        this.videoList = res.datas.map(item => item.data);
-      });
+    async getVideoList(){
+      let i = 0
+      const arr = []
+      // while(i < 3){
+        if(this.currentCate.id === this.total.id){
+          // 获取全部视频
+          arr.push(getAllVideo({offset: this.offset}))
+        }else{
+          // 获取视频分类下视频
+          arr.push(getVideoList({id: this.currentCate.id, offset: this.offset, timestamp: new Date().getTime() + i}))
+        }
+      //   i++
+      //   this.offset+=this.limit
+      // }
+      const res = await axios.all(arr)
+      console.log(res);
+      let results = []
+      res.forEach(resItem => {
+        let arr = resItem.datas.filter(item => item.type === 1).map(item => item.data);
+        results = [...results, ...arr]
+      })
+      this.videoList = [ ...this.videoList, ...results ]
     },
-    getAllVideoData() {
-      getAllVideo().then(res => {
-        this.videoList = res.datas.map(item => item.data);
-      });
-    },
+    async getData(){
+      // 获取视频分类 获取视频标签
+      const res = await axios.all([
+        getVideoCategory(),
+        getVideoGroup()
+      ])
+      this.videoCategory = res[0].data;
+      this.videoGroup = res[1].data;
+      this.currentCate = this.$route.params.group || this.total;
+      this.getVideoList()
+    }
   },
-  filters: {},
   created() {
-    this.currentCate = this.total;
-    // 获取视频分类
-    getVideoCategory().then(res => {
-      this.videoCategory = res.data;
-    });
-
-    getVideoGroup().then(res => {
-      this.videoGroup = res.data;
-    });
-
-    this.changeCategory(this.currentCate);
+    this.getData()
     // 添加关闭歌单分类窗口的事件
     const app = document.getElementById("app");
-    app.addEventListener("click", () => {
-      this.showCate = false;
-    });
+    app.addEventListener("click", this.closePanel);
   },
   beforeDestroy() {
     // 移除关闭歌单分类窗口的事件
     const app = document.getElementById("app");
-    app.removeEventListener("click", () => {
-      this.showCate = false;
-    });
+    app.removeEventListener("click", (this.closePanel));
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
+.page-video{
+  height: 100%;
+  overflow: overlay;
+}
 .current-category-container {
   height: 70px;
   line-height: 70px;
   position: relative;
+  
   .current-category {
     position: relative;
     display: inline-block;
@@ -178,7 +195,7 @@ export default {
     }
   }
   .video-categories {
-    width: 800px;
+    width: 700px;
     z-index: 1000;
     background-color: var(--panel-box-bg-color);
     box-shadow: 0 0 5px 1px rgba($color: #000, $alpha: 0.1);
@@ -223,7 +240,6 @@ export default {
       padding: 0 10px;
       box-sizing: border-box;
       padding-top: 5px;
-      // @include scroll-style;
       .category-item {
         width: calc(100% / 6);
         height: 30px;

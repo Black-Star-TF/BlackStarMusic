@@ -11,7 +11,7 @@
     <div class="table-row"
       v-for="(song,index) in songList"
       :key="`${index}-${song.id}`"
-      @dblclick="playSong(song.id)"
+      @dblclick="playSong(song)"
       @contextmenu.prevent="showContextMenu(index,song,$event)"
       :class="getActiveClass(index)"
       @click="setActive(index)"
@@ -34,6 +34,7 @@
           <span class="alias-name" v-if="song.alia.length > 0"> ({{song.alia[0]}})</span>
         </div>
         <span class="song-tag-sq iconfont icon-sq" v-if="false"></span>
+        <span class="song-tag-vip iconfont icon-pc_vip" v-if="song.fee === 1"></span>
         <span class="song-tag-mv iconfont icon-shipin" v-if="song.mv !== 0" @click="playVideo(song.mv)"></span>
       </div>
       <div class="row column song-artists">
@@ -56,7 +57,7 @@
 
     <context-menu :visible.sync="contextMenuVisible" :top="contextMenuTop" :left="contextMenuLeft" :offsetBottom="70">
       <div class="song-menu" @click="contextMenuVisible = false">
-        <div class="menu-item" @click="playSong(currentSong.id)">播放</div>
+        <div class="menu-item" @click="playSong(currentSong)">播放</div>
         <div class="menu-item">查看评论</div>
         <div class="menu-item">下一首播放</div>
         <div class="menu-item">收藏</div>
@@ -143,8 +144,10 @@
       isLiked(id){
         return this.likedSongList.includes(id)
       },
-      playSong(id){
-        this.$emit('play-song',id)
+      playSong(song){
+        // TODO: 当开通vip时可以播放
+        if(song.fee === 1) return
+        this.$emit('play-song',song.id)
       },
       showContextMenu(index,song, e){
         this.activeIndex = index
@@ -229,6 +232,9 @@
         margin-left: 5px;
         &.song-tag-sq{
           font-size: 22px;
+        }
+        &.icon-pc_vip{
+          font-size: 18px;
         }
         &.song-tag-mv{
           cursor: pointer;

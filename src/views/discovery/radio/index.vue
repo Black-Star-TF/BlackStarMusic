@@ -3,17 +3,8 @@
     <page-box>
       <template v-if="loaded">
         <!-- 轮播图 -->
-        <el-carousel :interval="4000" type="card" height="15vw">
-          <el-carousel-item v-for="item in banner" width="50%" :key="item.id">
-            <div
-              class="banner-item"
-              :style="{ backgroundImage: `url(${getBannerCover(item.pic)})` }"
-            ></div>
-          </el-carousel-item>
-        </el-carousel>
-
+        <slider :list="banners"></slider>
         <!-- TODO: 电台分类 -->
-
         <!-- 付费精品 -->
         <container>
           <template v-slot:left>
@@ -80,19 +71,20 @@
           </template>
         </container>
       </template>
+      <loading v-else />
     </page-box>
-    <!-- <Loading :loading="loaded" /> -->
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import axios from "axios";
+import Slider from "@/components/common/slider";
 import Container from "@/components/common/container";
 import FreeRadioItem from "./components/free-radio";
 import PaidRadioItem from "./components/paid-radio";
 import PageBox from "@/components/common/page-box";
-// import Loading from '@/components/common/Loading'
+import Loading from "@/components/common/loading";
 import { size_banner } from "@/utils/img-size.js";
 import {
   getRadioBanner,
@@ -105,7 +97,7 @@ import {
 export default {
   data() {
     return {
-      banner: [],
+      banners: [],
       recommendRadio: [],
       recommendRadioCate: [],
       radioNum: 0,
@@ -118,7 +110,8 @@ export default {
     FreeRadioItem,
     PaidRadioItem,
     PageBox,
-    // Loading
+    Slider,
+    Loading,
   },
   methods: {
     getBannerCover(url) {
@@ -133,7 +126,7 @@ export default {
         getRecommendRadioCate(),
       ]);
       // 获取轮播图数据
-      this.banner = res[0].data;
+      this.banners = res[0].data.map(item => item.pic);
       // 获取付费精选电台
       this.paidRadios = res[1].data.list;
       // 获取电台个性推荐

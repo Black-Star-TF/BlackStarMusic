@@ -6,7 +6,10 @@
       @play-song="handlePlaySong"
     >
     </song-list-table>
-    <!-- <Loading :loading="loading"></Loading> -->
+    <div class="loading-wrapper">
+      <loading v-if="!loaded"/>
+    </div>
+    
   </div>
 </template>
 
@@ -14,11 +17,11 @@
   import { getPlaylistSongs } from '@/api/playlist.js'
   import SongListTable from '@/components/table/song-list-table'
   import { mapState } from 'vuex'
-  // import Loading from '@/components/common/Loading'
+  import Loading from '@/components/common/loading'
   export default {
     components: {
       SongListTable,
-      // Loading
+      Loading
     },
     data(){
       return {
@@ -38,7 +41,7 @@
     },
     methods:{
       handlePlaySong(trackId){
-        this.player.playTrack(trackId, this.songList.map(song => song.id))
+        this.player.playTrackFromPlaylist(trackId, this.songList.map(song => song.id))
       },
       async getData(){
         const { songs } = await getPlaylistSongs({ id: this.id, limit: 5000})
@@ -52,5 +55,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+.loading-wrapper{
+  margin-top: 30px;
+}
 </style>

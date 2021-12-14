@@ -22,11 +22,13 @@
 import { getFavoritesAlbum } from '@/api/auth'
 import AlbumItem from './components/album-item.vue'
 import Container from "@/components/common/container";
+import Loading from "@/components/common/loading";
 export default {
   components: {
     AlbumItem,
     Container,
-    Container
+    Container,
+    Loading
   },
   data () {
     return {

@@ -36,14 +36,15 @@ export const getAllNewAlbum = () => request.get('/album/new')
 
 
 // 请求歌曲信息
-export function getSongsDetail(ids){
-	return request({
-		url: '/song/detail',
-		params: {
-			ids
-		}
-	})
-}
+// export function getSongsDetail(ids){
+// 	return request({
+// 		url: '/song/detail',
+// 		params: {
+// 			ids
+// 		}
+// 	})
+// }
+export const getSongsDetail = params => request.get('/song/detail', { params })
 
 // 获取歌曲评论
 export const getSongComments = params => request.get('/comment/music', { params })
@@ -59,14 +60,15 @@ export function getSongUrl(id){
 }
 
 // 获取歌曲歌词
-export function getSongLyric(id){
-	return request({
-		url: '/lyric',
-		params:{
-			id
-		}
-	})
-}
+// export function getSongLyric(id){
+// 	return request({
+// 		url: '/lyric',
+// 		params:{
+// 			id
+// 		}
+// 	})
+// }
+export const getSongLyric = params => request.get('/lyric', { params })
 
 
 // 获取歌曲相似歌单

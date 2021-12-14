@@ -1,16 +1,16 @@
 <template>
   <div class="settings">
-    <!-- <tree-select v-model="value" multiple size="small"  :options="treeData" :treeProps="treeProps" clearable></tree-select> {{value}} -->
+      <loading/>
   </div>
 </template>
 
 <script>
-// import TreeSelect from '@/components/tree-select'
+import Loading from '@/components/common/loading'
 export default {
   name: '',
   mixins: [],
   components: {
-    // TreeSelect
+    Loading
   },
   data () {
     return {

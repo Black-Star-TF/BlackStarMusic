@@ -60,6 +60,7 @@
 import TabNav from '@/components/common/tab-nav'
 import RadioPrograms from './radio-programs.vue'
 import RadioSubscribers from './radio-subscribers.vue'
+import { toUserDetail } from '@/utils/methods'
 import { getRadioDetail } from '@/api/dj-radio.js'
 import { formatCount } from '@/utils/filters'
 import {size_1v1_std, size_1v1_small} from '@/utils/img-size.js'
@@ -94,6 +95,7 @@ export default {
     }
   },
   methods: {
+    toUserDetail,
     playAll(){
 
     },

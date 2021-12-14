@@ -92,39 +92,18 @@ export function getRelativeVideo(id){
 }
 
 // 获取视频标签
-export function getVideoGroup(){
-  return request({
-    url: '/video/group/list'
-  })
-}
+export const getVideoGroup = () => request.get('/video/group/list')
 
 // 获取视频分类
-export function getVideoCategory(){
-  return request({
-    url: '/video/category/list',
-  })
-}
+export const getVideoCategory = () => request.get('/video/category/list')
+
 
 // 获取视频列表
-export function getVideoList(id,offset=null){
-  return request({
-    url: '/video/group',
-    params:{
-      id,
-      offset
-    }
-  })
-}
+export const getVideoList = params => request.get('/video/group', { params })
+
 
 // 获取所有视频
-export function getAllVideo(offset=null){
-  return request({
-    url: '/video/timeline/all',
-    params:{
-      offset
-    }
-  })
-}
+export const getAllVideo = params => request.get('/video/timeline/all', { params })
 
 // 获取视频播放地址
 export function getVideoUrl(id){

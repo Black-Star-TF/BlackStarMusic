@@ -160,17 +160,20 @@ export default {
       return this.activeIndex == index ? "active" : "";
     },
     initScroller(scroller) {
-      this.scrollToActiveLyric();
+      // this.scrollToActiveLyric();
     },
     async init() {
       this.lyric = null;
       this.song = null;
       this.simiPlaylists = [];
       // 获取歌曲详情
-      const {songs} = await getSongsDetail(this.songId);
+      const {songs} = await getSongsDetail({ids: this.songId});
       this.song = songs[0];
       // 获取歌词
-      this.lyric = parseLyrics(await getSongLyric(this.songId));
+      this.lyric = parseLyrics(await getSongLyric({id: this.songId}));
+      this.$nextTick(()=>{
+        this.scrollToActiveLyric();
+      })
       // 获取相似歌单
       const {playlists} = await getSimiPlaylists(this.songId);
       this.simiPlaylists = playlists;
@@ -187,7 +190,7 @@ export default {
       this.init();
     },
     activeIndex(oldVal, newVal) {
-      if (oldVal !== newVal && this.lyric) {
+      if (oldVal !== newVal && this.lyric && this.activeIndex !== -1 && this.activeIndex !== 0) {
         this.scrollToActiveLyric();
       }
     },

@@ -1,8 +1,8 @@
 <template>
   <div class="app-header" id="header">
     <div class="left-nav">
-      <!-- <button @click="logout" v-show="!app.songDetailVisible">退出登录</button> -->
-      <!-- <button @click="test">歌曲详情</button> -->
+      <button @click="logout" v-show="!app.songDetailVisible">退出登录</button>
+      <!-- <button @click="test">获取用户详情</button> -->
       <span
         v-show="!app.songDetailVisible"
         class="iconfont icon-changyong_fanhui"

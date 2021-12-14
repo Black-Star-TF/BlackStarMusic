@@ -58,23 +58,26 @@
         </div>
       </div>
     </div>
+    <loading v-if="!loaded"></loading>
   </div>
 </template>
 
 <script>
 import { toAlbumDetail,toArtistDetail,markKeyword, playVideo } from '@/utils/methods'
 import { formatDate } from '@/utils/filters'
+import Loading from "@/components/common/loading";
 import PageHeader from '@/components/common/page-header'
 import {getSongsDetail} from '@/api/music.js'
 import {mapState} from 'vuex'
 export default {
-  mixins: [],
   components: {
-    PageHeader
+    PageHeader,
+    Loading
   },
   data () {
     return {
-      songList: []
+      songList: [],
+      loaded: false
     }
   },
   computed: {
@@ -82,7 +85,6 @@ export default {
     history(){
       return JSON.parse(JSON.stringify(this.player.history))
     },
-    
   },
   methods: {
     toAlbumDetail,
@@ -128,7 +130,7 @@ export default {
     },
     init(){
       let list = this.history.map(item=> item.id)
-      getSongsDetail(list.join(',')).then(res=>{
+      getSongsDetail({ids: list.join(',')}).then(res=>{
         outer:for(let item of this.history){
           for(let song of res.songs){
             if(song.id == item.id){
@@ -137,6 +139,7 @@ export default {
             }
           }
         }
+        this.loaded = true
       })
     }
   },

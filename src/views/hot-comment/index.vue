@@ -8,18 +8,21 @@
       :key="comment.commentId" 
       :comment="comment"
     />
+    <loading v-if="!loaded || getMore"/>
   </div>
 </template>
 
 <script>
 import PageHeader from '@/components/common/page-header'
 import CommentItem from '@/views/resource-comment/components/comment-item.vue'
+import Loading from "@/components/common/loading";
 import { getHotComments } from '@/api/comment'
 import { toHotComment } from '@/utils/methods'
 export default {
   components: {
     PageHeader,
-    CommentItem
+    CommentItem,
+    Loading
   },
   data () { 
     return {
@@ -35,6 +38,9 @@ export default {
   computed: {
     offset(){
       return (this.pageNo - 1) * this.limit
+    },
+    loaded(){
+      return this.hotComments.length > 0
     }
   },
   methods: {

@@ -185,6 +185,8 @@ export default {
 
 <style lang="scss" scoped>
 .page-mv {
+  height: 100%;
+  overflow: overlay;
   .container-title {
     height: 50px;
     line-height: 50px;

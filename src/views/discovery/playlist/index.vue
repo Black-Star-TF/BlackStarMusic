@@ -79,9 +79,8 @@
           @current-change="changeCurrentPage"
         />
       </template>
+      <loading v-if="!loaded" />
     </page-box>
-    <!-- 加载图标 -->
-    <!-- <Loading :loading="loading" /> -->
   </div>
 </template>
 
@@ -90,7 +89,7 @@ import axios from "axios";
 import Container from "@/components/common/container";
 import PlaylistItem from "./components/playlist";
 import PageBox from "@/components/common/page-box";
-// import Loading from '@/components/common/Loading'
+import Loading from "@/components/common/loading";
 import {
   getHotPlaylistCate,
   getPlaylistCate,
@@ -110,21 +109,22 @@ export default {
       total: 0,
       currentPage: 1,
       scrollTop: 0,
+      loaded: false
     };
   },
   components: {
     Container,
     PlaylistItem,
     PageBox,
-    // Loading
+    Loading,
   },
   computed: {
     offset() {
       return (this.currentPage - 1) * this.limit;
     },
-    loaded() {
-      return this.playlists.length > 0;
-    },
+    // loaded() {
+    //   return this.playlists.length > 0;
+    // },
   },
   methods: {
     // 翻页
@@ -150,6 +150,7 @@ export default {
     // 获取歌单列表
     async getPlaylistsData() {
       this.playlists = [];
+      this.loaded = false
       let { playlists, total } = await getPlaylists({
         cat: this.currentTag.name,
         limit: this.limit,
@@ -157,12 +158,13 @@ export default {
       });
       this.playlists = playlists;
       this.total = total;
+      this.loaded = true
     },
     getScrollTop(e) {
       this.scrollTop = e.target.scrollTop;
     },
     async getData() {
-      let res = await axios.all([getHotPlaylistCate(), getPlaylistCate()]);
+      const res = await axios.all([getHotPlaylistCate(), getPlaylistCate()]);
       // 获取热门歌单分类
       this.hotTags = res[0].tags;
       // 获取歌单分类

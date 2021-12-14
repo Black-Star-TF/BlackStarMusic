@@ -3,21 +3,7 @@
     <page-box>
       <template v-if="loaded">
         <!-- 轮播图 -->
-        <el-carousel :interval="4000" type="card" height="15vw">
-          <el-carousel-item
-            v-for="(item, index) in banners"
-            :key="item.targetId || index + 1"
-            width="50%"
-          >
-            <div
-              class="banner-item"
-              :style="{
-                backgroundImage: `url(${getBannerCover(item.imageUrl)})`,
-              }"
-            ></div>
-          </el-carousel-item>
-        </el-carousel>
-
+        <slider :list="banners"></slider>
         <!-- 推荐歌单 -->
         <container>
           <template v-slot:left>
@@ -89,10 +75,9 @@
           </template>
         </container>
       </template>
+      <loading v-else />
     </page-box>
   </div>
-
-  <!-- <Loading :loading="loading"/>	 -->
 </template>
 
 <script>
@@ -102,7 +87,8 @@ import ExclusiveItem from "@/views/shipin/mv/components/exclusive-item.vue";
 import NewestSongItem from "./components/newest-song";
 import MvItem from "@/views/shipin/mv/components/mv-item";
 import PageBox from "@/components/common/page-box";
-// import Loading from '@/components/common/Loading'
+import Slider from "@/components/common/slider";
+import Loading from "@/components/common/loading";
 import axios from "axios";
 import { getRecommendBanner, getrecommendNewestSong } from "@/api/music.js";
 import { getRecommendPlaylist } from "@/api/playlist.js";
@@ -122,13 +108,14 @@ export default {
     };
   },
   components: {
+    Slider,
     Container,
     PlaylistItem,
     ExclusiveItem,
     NewestSongItem,
     MvItem,
     PageBox,
-    // Loading
+    Loading,
   },
   methods: {
     getBannerCover(url) {
@@ -144,7 +131,7 @@ export default {
         getRecommendMV(),
       ]);
       // 获取轮播图数据
-      this.banners = res[0].banners;
+      this.banners = res[0].banners.map(item => item.imageUrl);
       // 获取推荐歌单数据
       this.playlists = res[1].result;
       // 获取独家放送数据

@@ -36,8 +36,8 @@
           </template>
         </container>
       </template>
+      <loading v-else />
     </page-box>
-    <!-- <loading :loading="loading"/> -->
   </div>
 </template>
 
@@ -46,7 +46,7 @@ import Container from "@/components/common/container";
 import OfficialList from "./components/official-list";
 import GlobalList from "./components/global-list";
 import PageBox from "@/components/common/page-box";
-// import Loading from '@/components/common/Loading'
+import Loading from "@/components/common/loading";
 
 import { getToplist } from "@/api/top-list.js";
 export default {
@@ -63,7 +63,7 @@ export default {
     OfficialList,
     GlobalList,
     PageBox,
-    // Loading
+    Loading,
   },
   methods: {
     async getData() {

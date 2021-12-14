@@ -3,21 +3,18 @@
     <song-list-table
       v-if="loaded"
       :songList="songList"
-      @play-song="handlePlaySong"
+      @play-song="handlePlay"
     >
     </song-list-table>
-    <!-- <Loading :loading="loading"></Loading> -->
   </div>
 </template>
 
 <script>
 import SongListTable from '@/components/table/song-list-table'
 import { mapState } from 'vuex'
-// import Loading from '@/components/common/Loading'
 export default {
   components: {
     SongListTable,
-    // Loading
   },
   props:{
     songList: {
@@ -31,8 +28,8 @@ export default {
     }
   },
   methods:{
-    handlePlaySong(trackId){
-      this.player.playTrack(trackId, this.songList.map(song => song.id))
+    handlePlay(trackId){
+      this.player.playTrackFromPlaylist(trackId, this.songList.map(song => song.id))
     },
   }
 }

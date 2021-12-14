@@ -35,7 +35,7 @@
   .view-shipin{
 		height: 100%;
 		.shipin-content{
-			height: calc(100% - 50px);
+			height: 100%;
 		}
 	}
 </style>

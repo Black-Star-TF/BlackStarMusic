@@ -68,7 +68,7 @@ export default {
       this.songList = []
     },
     playSong(id){
-      this.player.playTrackOfCurrentList(id)
+      this.player.playTrack(id)
     },
     handleClose(value){
       this.$emit('update:visible',value)
@@ -77,7 +77,7 @@ export default {
       this.songList = []
       let list = this.player.list
       if(list.length > 0){
-        getSongsDetail(list.join(',')).then(res=>{
+        getSongsDetail({ids: list.join(',')}).then(res=>{
           outer:for(let trackId of list){
             for(let song of res.songs){
               if(trackId == song.id){

@@ -1,6 +1,7 @@
 import axios from 'axios'
 const instance = axios.create({
-	baseURL: process.env.VUE_APP_API,
+  // baseURL: 'http://101.43.104.37:3000',
+  baseURL: 'http://localhost:3000',
 	timeout: 30000,
 	withCredentials: true
 })

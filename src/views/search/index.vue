@@ -20,23 +20,25 @@
     </div>
     <div class="container">
       <!-- 最佳匹配 -->
-      <multiple-match
-        v-if="
-          type === 1 &&
-            multipleMatchResult &&
-            multipleMatchResult.orders.length > 0 &&
-            pageNo === 1
-        "
-        :result="multipleMatchResult"
-      ></multiple-match>
 
       <!-- 单曲 -->
-      <template v-if="results && type == 1">
-        <song-list-table
-          :songList="results"
-          :keyword="keyword"
-          @play-song="handlePlay"
-        ></song-list-table>
+      <template v-if="type === 1">
+        <div class="songs-container">
+          <multiple-match
+            v-if="
+              multipleMatchResult &&
+                multipleMatchResult.orders.length > 0 &&
+                pageNo === 1
+            "
+            :result="multipleMatchResult"
+          ></multiple-match>
+          <song-list-table
+            v-if="results"
+            :songList="results"
+            :keyword="keyword"
+            @play-song="handlePlay"
+          ></song-list-table>
+        </div>
       </template>
       <!-- 歌手 -->
       <template v-if="results && type == 100">
@@ -96,6 +98,7 @@
           :keyword="keyword"
         ></user-item>
       </template>
+      <loading v-if="!loaded" />
 
       <el-pagination
         v-if="results && total > pageSize"
@@ -120,7 +123,7 @@ import PlaylistItem from "./components/playlist-item";
 import UserItem from "./components/user-item";
 import RadioItem from "./components/radio-item";
 import VideoItem from "./components/video-item";
-
+import Loading from "@/components/common/loading";
 import { getSearchResult, getMultiMatch } from "@/api/search.js";
 import { mapState } from "vuex";
 export default {
@@ -134,6 +137,7 @@ export default {
     UserItem,
     RadioItem,
     VideoItem,
+    Loading,
   },
   data() {
     return {
@@ -162,10 +166,13 @@ export default {
     offset() {
       return (this.pageNo - 1) * this.pageSize;
     },
+    loaded() {
+      return this.results;
+    },
   },
   methods: {
     handlePlay(trackId) {
-      this.player.addTrackToPlayList(trackId, true);
+      this.player.playTrack(trackId);
     },
     changeCurrentPage() {
       this.getSearchResultData();
@@ -249,9 +256,10 @@ export default {
     if (this.type == 1) {
       this.pageSize = 100;
       // 获取多重匹配结果
-      getMultiMatch({ keywords: this.keyword }).then(res => [
-        (this.multipleMatchResult = res.result),
-      ]);
+      getMultiMatch({ keywords: this.keyword }).then(res => {
+        this.multipleMatchResult = res.result;
+        console.log(this.multipleMatchResult);
+      });
     }
     // 请求数据
     this.getSearchResultData();
@@ -288,6 +296,8 @@ export default {
   .container {
     height: calc(100% - 80px);
     overflow: auto;
+  }
+  .songs-container {
     padding: 0 30px;
   }
 

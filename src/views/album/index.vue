@@ -1,11 +1,14 @@
 <template>
   <div class="page-album-detail" v-if="album">
-    <div class="album-detail-header" >
-      <div class="album-cover" :style="{'backgroundImage': `url(${albumCoverUrl})`}"></div>
+    <div class="album-detail-header">
+      <div
+        class="album-cover"
+        :style="{ backgroundImage: `url(${albumCoverUrl})` }"
+      ></div>
       <div class="album-info">
         <div class="album-name">
           <div class="type">专辑</div>
-          <div class="name">{{album.name}}</div>
+          <div class="name">{{ album.name }}</div>
         </div>
 
         <div class="album-operation">
@@ -18,27 +21,43 @@
             </span>
           </span>
           <!-- 收藏 -->
-          <span class="subscribe operation-item" v-if="!albumDynamicInfo.isSub" @click="handleSubscribeAlbum(1)">
-            <span class="iconfont icon-shoucang"></span>  
+          <span
+            class="subscribe operation-item"
+            v-if="!albumDynamicInfo.isSub"
+            @click="handleSubscribeAlbum(1)"
+          >
+            <span class="iconfont icon-shoucang"></span>
             收藏({{ albumDynamicInfo.subCount | formatCount }})
           </span>
           <!-- 已收藏 -->
-          <span class="subscribe operation-item" v-else @click="handleSubscribeAlbum(0)">
-            <span class="iconfont icon-shoucangchenggong"></span>  
+          <span
+            class="subscribe operation-item"
+            v-else
+            @click="handleSubscribeAlbum(0)"
+          >
+            <span class="iconfont icon-shoucangchenggong"></span>
             已收藏({{ albumDynamicInfo.subCount | formatCount }})
           </span>
 
-          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{albumDynamicInfo.shareCount | formatCount}})</span>
-          <span class="download-all operation-item"><span class="iconfont icon-xiazai"></span> 下载全部</span>
+          <span class="share operation-item"
+            ><span class="iconfont icon-fenxiang"></span> 分享({{
+              albumDynamicInfo.shareCount | formatCount
+            }})</span
+          >
+          <span class="download-all operation-item"
+            ><span class="iconfont icon-xiazai"></span> 下载全部</span
+          >
         </div>
 
         <div class="album-artist">
           <span class="label">歌手：</span>
-          <span class="artist-name" @click="toArtistDetail(album.artist.id)">{{album.artist.name}}</span>
+          <span class="artist-name" @click="toArtistDetail(album.artist.id)">{{
+            album.artist.name
+          }}</span>
         </div>
         <div class="album-publish-time">
           <span class="label">时间：</span>
-          <span class="publish-time">{{album.publishTime | formatDate}}</span>
+          <span class="publish-time">{{ album.publishTime | formatDate }}</span>
         </div>
       </div>
     </div>
@@ -46,14 +65,16 @@
     <div class="album-detail-nav">
       <tab-nav>
         <template v-slot:left>
-          <div 
+          <div
             v-for="item in modeList"
             :key="item.name"
-            :class="{'active': mode == item.name}" 
+            :class="{ active: mode == item.name }"
             @click="mode = item.name"
           >
-            {{item.label}}
-            <span class="comment-count" v-if="item.name == 'comment'">({{albumDynamicInfo.commentCount | formatCount}})</span>
+            {{ item.label }}
+            <span class="comment-count" v-if="item.name == 'comment'"
+              >({{ albumDynamicInfo.commentCount | formatCount }})</span
+            >
           </div>
         </template>
       </tab-nav>
@@ -62,121 +83,138 @@
     <div class="album-detail-content">
       <album-songs v-if="mode == 'songlist'" :songList="songList"></album-songs>
       <album-comments v-if="mode == 'comment'" :id="id"></album-comments>
-      <album-desc v-if="mode == 'description'" :description="album.description"></album-desc>
+      <album-desc
+        v-if="mode == 'description'"
+        :description="album.description"
+      ></album-desc>
     </div>
   </div>
 </template>
 
 <script>
-import { toArtistDetail } from '@/utils/methods'
-import TabNav from '@/components/common/tab-nav'
-import { getAlbumDetail, getAlbumDynamicInfo, subscribeAlbum } from '@/api/album'
-import { formatDate, formatCount } from '@/utils/filters'
-import AlbumSongs from './album-songs.vue'
-import AlbumComments from './album-comments.vue'
-import AlbumDesc from './album-desc.vue'
-import { size_1v1_std } from '@/utils/img-size.js'
-import axios from 'axios'
+import { toArtistDetail } from "@/utils/methods";
+import TabNav from "@/components/common/tab-nav";
+import {
+  getAlbumDetail,
+  getAlbumDynamicInfo,
+  subscribeAlbum,
+} from "@/api/album";
+import { formatDate, formatCount } from "@/utils/filters";
+import AlbumSongs from "./album-songs.vue";
+import AlbumComments from "./album-comments.vue";
+import AlbumDesc from "./album-desc.vue";
+import { size_1v1_std } from "@/utils/img-size.js";
+import axios from "axios";
 export default {
   components: {
     TabNav,
     AlbumSongs,
     AlbumComments,
-    AlbumDesc
+    AlbumDesc,
   },
-  data () {
+  data() {
     return {
       id: null,
+      trackIds: [],
       songList: [],
       album: null,
       albumDynamicInfo: null,
-      mode: 'songlist',
-      modeList:[
-        { name: 'songlist', label: '歌曲列表' },
-        { name: 'comment', label: '评论'},
-        { name: 'description', label: '专辑详情'}
-      ]
-    }
+      mode: "songlist",
+      modeList: [
+        { name: "songlist", label: "歌曲列表" },
+        { name: "comment", label: "评论" },
+        { name: "description", label: "专辑详情" },
+      ],
+    };
   },
   computed: {
-    albumCoverUrl(){
-      return `${this.album.blurPicUrl}?param=${size_1v1_std}`
-    }
+    albumCoverUrl() {
+      return `${this.album.blurPicUrl}?param=${size_1v1_std}`;
+    },
   },
   methods: {
     toArtistDetail,
-    async handleSubscribeAlbum(type){
+    async handleSubscribeAlbum(type) {
       // TODO: 确认取消收藏
-      const res = await subscribeAlbum({ t: type, id: this.id})
-      if(type === 1){
-        this.$message.success('收藏成功')
-      }else{
-        this.$message.success('取消收藏')
+      const res = await subscribeAlbum({ t: type, id: this.id });
+      if (type === 1) {
+        this.$message.success("收藏成功");
+      } else {
+        this.$message.success("取消收藏");
       }
-      this.getDynamicInfo()
+      this.getDynamicInfo();
     },
-    addToPlaylist(){
-      this.$store.state.player.addTracksToPlaylist(this.trackIds)
-      this.$message.success('添加成功')
+    addToPlaylist() {
+      if (this.trackIds.length > 0) {
+        this.$store.state.player.addTracksToPlaylist(this.trackIds);
+        this.$message.success("添加成功");
+      }
     },
-    playAll(){
+    playAll() {
       // 播放当前歌单
-      if(this.trackIds.length > 0){
-        this.$store.state.player.playTrack(this.trackIds[0],this.trackIds)
+      if (this.trackIds.length > 0) {
+        this.$store.state.player.playTrackFromPlaylist(
+          this.trackIds[0],
+          this.trackIds
+        );
       }
     },
-    init(){
-      this.id = this.$route.query.id
-      this.songList = []
-      this.album = null
-      this.trackIds = []
+    init() {
+      this.id = this.$route.query.id;
+      this.songList = [];
+      this.album = null;
+      this.trackIds = [];
     },
-    async getDynamicInfo (){
-      this.albumDynamicInfo = await getAlbumDynamicInfo({ id: this.id, timestamp: new Date().getTime()})
+    async getDynamicInfo() {
+      this.albumDynamicInfo = await getAlbumDynamicInfo({
+        id: this.id,
+        timestamp: new Date().getTime(),
+      });
     },
-    async getData(){
+    async getData() {
       const res = await axios.all([
         getAlbumDetail({ id: this.id }),
-        getAlbumDynamicInfo({ id: this.id })
-      ])
-      this.album = res[0].album
-      this.songList = res[0].songs
-      this.albumDynamicInfo = res[1]
-    }
+        getAlbumDynamicInfo({ id: this.id }),
+      ]);
+      this.album = res[0].album;
+      this.songList = res[0].songs;
+      this.albumDynamicInfo = res[1];
+      this.trackIds = this.songList.map(song => song.id);
+    },
   },
   filters: {
     formatDate,
-    formatCount
+    formatCount,
   },
-  created () {
-    this.init()
-    this.getData()
+  created() {
+    this.init();
+    this.getData();
   },
-  watch:{
-    $route(){
-      this.init()
-      this.getData()
-      this.mode = 'songlist'
-    }
-  }
-}
+  watch: {
+    $route() {
+      this.init();
+      this.getData();
+      this.mode = "songlist";
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.page-album-detail{
+.page-album-detail {
   width: 100%;
   height: 100%;
   padding-bottom: 50px;
   box-sizing: border-box;
   @include scroll-style;
-  .album-detail-header{
+  .album-detail-header {
     width: 100%;
     padding: 0 30px;
     padding-top: 10px;
     box-sizing: border-box;
     @include clearfix;
-    .album-cover{
+    .album-cover {
       float: left;
       width: 200px;
       height: 200px;
@@ -186,15 +224,15 @@ export default {
       border: 1px solid var(--main-border-color);
       box-sizing: border-box;
     }
-    .album-info{
+    .album-info {
       float: left;
       width: calc(100% - 230px);
-      .album-name{
+      .album-name {
         line-height: 30px;
         font-size: 24px;
         color: var(--color-level2);
         display: flex;
-        .type{
+        .type {
           margin-top: 5px;
           font-size: 14px;
           text-align: center;
@@ -207,14 +245,14 @@ export default {
           color: var(--color-netease-red);
           border-radius: 3px;
         }
-        .name{
+        .name {
           flex: 1;
         }
       }
 
-      .album-operation{
+      .album-operation {
         margin: 11px 0;
-        .operation-item{
+        .operation-item {
           display: inline-block;
           padding: 0 15px;
           height: 30px;
@@ -225,42 +263,42 @@ export default {
           cursor: pointer;
           margin-right: 10px;
           font-size: 14px;
-          &:hover{
+          &:hover {
             background-color: var(--operation-btn-hover-bg-color);
           }
         }
 
-        .play-all{
+        .play-all {
           border-color: var(--color-netease-red);
           color: #fff;
           padding: 0;
           background-color: var(--color-netease-red);
-          &:hover{
+          &:hover {
             background-color: var(--color-netease-red);
           }
-          .play{
+          .play {
             display: inline-block;
             padding: 0 10px;
             line-height: 30px;
-            border-right: 1px solid rgba($color: #fff, $alpha: .3);
-            .iconfont{
+            border-right: 1px solid rgba($color: #fff, $alpha: 0.3);
+            .iconfont {
               display: inline-block;
               width: 25px;
               height: 25px;
               font-size: 12px;
               text-align: center;
               margin: 0 2px;
-              transform: scale(.7);
+              transform: scale(0.7);
               line-height: 25px;
               border-radius: 50%;
               border: 1px solid #fff;
-              &::before{
+              &::before {
                 position: relative;
                 left: 1px;
               }
             }
           }
-          .add{
+          .add {
             display: inline-block;
             padding: 0 10px;
             line-height: 30px;
@@ -268,26 +306,26 @@ export default {
         }
       }
 
-      .album-artist{
+      .album-artist {
         height: 25px;
         line-height: 25px;
         font-size: 13px;
         color: var(--color-level2);
-        .artist-name{
+        .artist-name {
           cursor: pointer;
           color: var(--link-color);
-          &:hover{
+          &:hover {
             color: var(--link-hover-color);
           }
         }
       }
 
-      .album-publish-time{
+      .album-publish-time {
         height: 25px;
         line-height: 25px;
         font-size: 13px;
         color: var(--color-level2);
-        .publish-time{
+        .publish-time {
           color: var(--color-level3);
           margin-right: 5px;
         }
@@ -295,20 +333,15 @@ export default {
     }
   }
 
-
-
-  .album-detail-nav{
+  .album-detail-nav {
     padding: 0 30px;
     margin-top: 20px;
-    .comment-count{
+    .comment-count {
       font-size: 12px;
     }
   }
-  .album-detail-content{
+  .album-detail-content {
     margin-top: 1px;
   }
 }
-
-
-
 </style>

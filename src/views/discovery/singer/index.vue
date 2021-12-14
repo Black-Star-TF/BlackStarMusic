@@ -8,7 +8,7 @@
         @cate-change="changeCate"
       ></group-nav>
       <!-- 歌手列表 -->
-      <container v-if="loaded">
+      <container>
         <template v-slot:content>
           <singer-item
             v-for="(singer, index) in singerList"
@@ -19,10 +19,7 @@
           />
         </template>
       </container>
-      <!-- 没有获取到数据时的加载动画 -->
-      <!-- <Loading :loading="loading"/> -->
-      <!-- 获取更多数据时的加载动画 -->
-      <!-- <Loading :loading="!getMore"/> -->
+      <loading v-if="!loaded"/>
     </page-box>
   </div>
 </template>
@@ -32,8 +29,7 @@ import Container from "@/components/common/container";
 import GroupNav from "@/components/common/group-nav";
 import SingerItem from "./components/singer";
 import PageBox from "@/components/common/page-box";
-// import Loading from '@/components/common/Loading'
-
+import Loading from "@/components/common/loading";
 import { getSingerList } from "@/api/singer.js";
 export default {
   name: "Singer",
@@ -44,6 +40,7 @@ export default {
       pageNo: 1,
       hasMore: true,
       getMore: false,
+      loaded: false,
       currentCate: {
         area: "-1",
         type: "-1",
@@ -111,7 +108,7 @@ export default {
     GroupNav,
     SingerItem,
     PageBox,
-    // Loading
+    Loading
   },
   methods: {
     changeCate({ key, id }) {
@@ -122,6 +119,7 @@ export default {
     },
     // 请求歌手列表
     async getData() {
+      this.loaded = false
       let { type, area, initial } = this.currentCate;
       let { artists, more } = await getSingerList({
         type,
@@ -132,6 +130,7 @@ export default {
       });
       this.singerList = this.singerList.concat(artists);
       this.hasMore = more;
+      this.loaded = true
       this.$nextTick(() => {
         this.getMore = false;
       });
@@ -151,9 +150,9 @@ export default {
     },
   },
   computed: {
-    loaded() {
-      return this.singerList.length > 0;
-    },
+    // loaded() {
+    //   return this.singerList.length > 0;
+    // },
     offset() {
       return (this.pageNo - 1) * this.pageSize;
     },
