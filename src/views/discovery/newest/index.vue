@@ -1,5 +1,5 @@
 <template>
-  <div class="newest-music">
+  <div class="newest-music" ref="page">
     <page-box>
       <!-- 导航 -->
       <div class="nav-container">
@@ -8,14 +8,15 @@
           v-for="group in groups"
           :key="group.id"
           @click="changeGroup(group)"
-          :class="{ active: group.id == current.id }"
+          :class="{ active: group.id == current }"
         >
           {{ group.name }}
         </div>
       </div>
 
       <div class="newest-music-container">
-        <newest-song v-if="current.id == 1"></newest-song>
+        <newest-song v-if="current == 1"></newest-song>
+        <newest-album v-if="current == 2"></newest-album>
       </div>
     </page-box>
   </div>
@@ -24,13 +25,11 @@
 <script>
 import PageBox from "@/components/common/page-box";
 import NewestSong from "./newest-song.vue";
+import NewestAlbum from './newest-album.vue'
 export default {
   data() {
     return {
-      current: {
-        id: 1,
-        name: "新歌速递",
-      },
+      current: 2,
       groups: [
         {
           id: 1,
@@ -45,11 +44,12 @@ export default {
   },
   components: {
     NewestSong,
+    NewestAlbum,
     PageBox,
   },
   methods: {
     changeGroup(group) {
-      this.current = group;
+      this.current = group.id;
     },
   },
   computed: {},

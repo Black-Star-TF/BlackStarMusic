@@ -118,7 +118,6 @@ export default {
     async getVideoList(){
       let i = 0
       const arr = []
-      // while(i < 3){
         if(this.currentCate.id === this.total.id){
           // 获取全部视频
           arr.push(getAllVideo({offset: this.offset}))
@@ -126,11 +125,7 @@ export default {
           // 获取视频分类下视频
           arr.push(getVideoList({id: this.currentCate.id, offset: this.offset, timestamp: new Date().getTime() + i}))
         }
-      //   i++
-      //   this.offset+=this.limit
-      // }
       const res = await axios.all(arr)
-      console.log(res);
       let results = []
       res.forEach(resItem => {
         let arr = resItem.datas.filter(item => item.type === 1).map(item => item.data);

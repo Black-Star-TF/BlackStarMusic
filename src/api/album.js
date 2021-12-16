@@ -8,3 +8,5 @@ export const getAlbumDynamicInfo = params => request.get('/album/detail/dynamic'
 export const getAlbumComments = params => request.get('/comment/album', { params })
 // 取消/收藏专辑
 export const subscribeAlbum = params => request.get('/album/sub', { params })
+// 新碟上架
+export const getNewAlbum = params => request.get('/album/new', { params })
