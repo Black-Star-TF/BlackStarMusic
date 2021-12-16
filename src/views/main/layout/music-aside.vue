@@ -21,83 +21,28 @@
 
     <div class="nav-wrapper">
       <!-- 菜单 -->
-      <router-link
+      <div
         class="nav-item"
-        to="/discovery"
-        tag="div"
-        active-class="active"
+        v-for="item in commonNavList"
+        :key="item.path"
+        @click="linkTo(item.path)"
+        :class="{ active: isRouterActive(item.path) }"
       >
-        <i class="iconfont icon-wangyiyunyinleclick"></i>发现音乐
-      </router-link>
-      <router-link
-        class="nav-item"
-        to="/private-fm"
-        tag="div"
-        active-class="active"
-      >
-        <i class="iconfont icon-Sharingwuxianlanyagongxiang10"></i>私人FM
-      </router-link>
-      <router-link
-        class="nav-item"
-        to="/shipin"
-        tag="div"
-        active-class="active"
-      >
-        <i class="iconfont icon-video"></i>视频
-      </router-link>
-      <router-link
-        class="nav-item"
-        to="/friend"
-        tag="div"
-        active-class="active"
-      >
-        <i class="iconfont icon-friend"></i>朋友
-      </router-link>
+        <i class="iconfont" :class="item.icon"></i>{{ item.name }}
+      </div>
       <!-- 我的音乐 -->
       <div class="group-name">我的音乐</div>
-      <router-link
-        class="nav-item"
-        to="/download"
-        tag="div"
-        active-class="active"
-      >
-        <i class="iconfont icon-xiazai"></i>下载管理
-      </router-link>
-      <router-link
-        class="nav-item"
-        to="/recent"
-        tag="div"
-        active-class="active"
-      >
-        <i class="iconfont icon-bendi-zuijinbofang"></i>最近播放
-      </router-link>
-      <router-link
-        class="nav-item"
-        to="/clound"
-        tag="div"
-        active-class="active"
-        v-if="data.loginStatus"
-      >
-        <i class="iconfont icon-yun"></i>我的音乐云盘
-      </router-link>
-      <router-link
-        class="nav-item"
-        to="/my-radio"
-        tag="div"
-        active-class="active"
-        v-if="data.loginStatus"
-      >
-        <i class="iconfont icon-dianziyinyuan"></i>我的电台
-      </router-link>
-      <router-link
-        class="nav-item"
-        to="/favorites"
-        tag="div"
-        active-class="active"
-        v-if="data.loginStatus"
-      >
-        <i class="iconfont icon-xingbiao"></i>我的收藏
-      </router-link>
+      <template v-for="item in myMusicNavList">
+        <div
+          v-if="!item.needLogin || data.loginStatus"
+          class="nav-item"
+          :key="item.path"
+          @click="linkTo(item.path)"
+          :class="{ active: isRouterActive(item.path) }"
+        >
+          <i class="iconfont" :class="item.icon"></i>{{ item.name }}
+        </div>
+      </template>
       <!-- 创建的歌单 -->
       <div class="group-name" @click="showCreated = !showCreated">
         <span class="iconfont icon-shouqi1" v-if="!showCreated"></span>
@@ -105,18 +50,17 @@
         创建的歌单
       </div>
       <div v-show="showCreated">
-        <router-link
+        <div
+          class="nav-item"
           v-for="(playlist, index) in playlistsCreatedByMe"
           :key="playlist.id"
-          class="nav-item"
-          :to="{ path: '/playlist', query: { id: playlist.id } }"
-          tag="div"
-          :class="{ active: isRouterActive(playlist.id) }"
+          @click="toPlaylistDetail(playlist.id)"
+          :class="{ active: isRouterActive('/playlist', playlist.id) }"
         >
           <i class="iconfont icon-xihuan-kon" v-if="index == 0"></i>
           <i class="iconfont icon-gedan" v-else></i>
           {{ index == 0 ? "我喜欢的音乐" : playlist.name }}
-        </router-link>
+        </div>
       </div>
       <!-- 收藏的歌单 -->
       <div class="group-name" @click="showSubscribed = !showSubscribed">
@@ -125,16 +69,15 @@
         收藏的歌单
       </div>
       <div v-show="showSubscribed">
-        <router-link
+        <div
           v-for="playlist in playlistsSubscribedByMe"
           :key="playlist.id"
           class="nav-item"
-          :to="{ path: '/playlist', query: { id: playlist.id } }"
-          tag="div"
-          :class="{ active: isRouterActive(playlist.id) }"
+          @click="toPlaylistDetail(playlist.id)"
+          :class="{ active: isRouterActive('/playlist', playlist.id) }"
         >
           <i class="iconfont icon-gedan"></i>{{ playlist.name }}
-        </router-link>
+        </div>
       </div>
     </div>
     <!-- 登录页面 -->
@@ -143,6 +86,7 @@
 </template>
 
 <script>
+import { toPlaylistDetail } from "@/utils/methods";
 import LoginDialog from "@/components/login/login-dialog";
 import { mapState } from "vuex";
 export default {
@@ -153,6 +97,58 @@ export default {
     return {
       showCreated: false,
       showSubscribed: false,
+      commonNavList: [
+        {
+          path: "/discovery",
+          name: "发现音乐",
+          icon: "icon-wangyiyunyinleclick",
+        },
+        {
+          path: "/private-fm",
+          name: "私人FM",
+          icon: "icon-Sharingwuxianlanyagongxiang10",
+        },
+        {
+          path: "/shipin",
+          name: "视频",
+          icon: "icon-video",
+        },
+        {
+          path: "/friend",
+          name: "朋友",
+          icon: "icon-friend",
+        },
+      ],
+      myMusicNavList: [
+        {
+          path: "/download",
+          name: "下载管理",
+          icon: "icon-xiazai",
+        },
+        {
+          path: "/recent",
+          name: "最近播放",
+          icon: "icon-bendi-zuijinbofang",
+        },
+        {
+          path: "/cloud",
+          name: "我的音乐云盘",
+          icon: "icon-yun",
+          needLogin: true,
+        },
+        {
+          path: "/my-radio",
+          name: "我的电台",
+          icon: "icon-dianziyinyuan",
+          needLogin: true,
+        },
+        {
+          path: "/favorites",
+          name: "我的收藏",
+          icon: "icon-xingbiao",
+          needLogin: true,
+        },
+      ],
     };
   },
   computed: {
@@ -171,18 +167,20 @@ export default {
     },
   },
   methods: {
-    isRouterActive(id) {
-      return (
-        this.$route.fullPath.indexOf("/playlistdetail") !== -1 &&
-        this.$route.params.id == id
-      );
+    toPlaylistDetail,
+    isRouterActive(path, id) {
+      let isActive = this.$route.fullPath.startsWith(path);
+      if (id) {
+        isActive = isActive && this.$route.query.id == id;
+      }
+      return isActive;
+    },
+    linkTo(path) {
+      this.$router.push(path);
     },
     handleLogin() {
       this.$refs.loginDialog.visible = true;
     },
-  },
-  created() {
-    // console.log(this.data);
   },
 };
 </script>

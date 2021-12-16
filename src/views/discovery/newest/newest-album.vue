@@ -78,6 +78,7 @@ export default {
       });
       this.newestAlbumList = [...this.newestAlbumList, ...albums];
       this.loaded = true;
+      this.getMore = false;
     },
     getMoreData(e) {
       let { scrollTop, offsetHeight, scrollHeight } = e.target;
@@ -95,11 +96,11 @@ export default {
   },
   mounted() {
     // TODO: 鼠标滚动到底部，获取更多数据
-    // this.$parent.$refs.page.addEventListener("scroll", this.getMoreData);
+    this.$parent.$refs.page.addEventListener("scroll", this.getMoreData);
   },
   beforeDestroy() {
     // 移除事件
-    // this.$parent.$refs.page.removeEventListener("scroll", this.getMoreData);
+    this.$parent.$refs.page.removeEventListener("scroll", this.getMoreData);
   },
   created() {
     this.getData();

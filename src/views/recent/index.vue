@@ -8,10 +8,10 @@
       <div class="count">共{{ songList.length }}首</div>
       <div class="operation">
         <span class="play-all">
-          <span class="play" @click="playAll()">
+          <span class="play" @click="playAll">
             <span class="iconfont icon-bofang"></span>播放全部
           </span>
-          <span class="add" @click="addToPlaylist()">
+          <span class="add" @click="addToPlaylist">
             <span class="iconfont icon-jia"></span>
           </span>
         </span>
@@ -121,10 +121,12 @@ export default {
     playAll() {
       let list = this.history.map(item => item.id);
       if (list.length > 0) {
-        this.player.playTrack(list[0], list);
+        this.player.playTrackFromPlaylist(list[0], list);
       }
     },
-    playSong(id) {},
+    playSong(id) {
+      this.player.playTrack(id)
+    },
     formatIndex(index) {
       if (this.pageNum && this.limit) {
         let num = (this.pageNum - 1) * this.limit + index;

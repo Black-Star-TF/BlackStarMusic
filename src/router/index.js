@@ -122,7 +122,7 @@ const routes = [
         component: () => import("@/views/resource-comment/index"),
       },
       {
-        path: "/clound",
+        path: "/cloud",
       },
       {
         path: "/my-radio",

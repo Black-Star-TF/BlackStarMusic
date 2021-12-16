@@ -28,7 +28,7 @@ import NewestAlbum from "./newest-album.vue";
 export default {
   data() {
     return {
-      current: 2,
+      current: 1,
       groups: [
         {
           id: 1,
