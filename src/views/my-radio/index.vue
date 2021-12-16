@@ -3,14 +3,17 @@
     <page-header>
       <div class="page-name">我的电台</div>
     </page-header>
+    <developing/>
   </div>
 </template>
 
 <script>
 import PageHeader from '@/components/common/page-header'
+import Developing from '@/components/common/developing'
 export default {
   components: {
-    PageHeader
+    PageHeader,
+    Developing
   },
   data () {
     return {}

@@ -98,17 +98,16 @@
           :keyword="keyword"
         ></user-item>
       </template>
-      <loading v-if="!loaded" />
 
-      <el-pagination
-        v-if="results && total > pageSize"
-        layout="prev, pager, next"
+      <pagination
+        v-if="loaded"
         :total="total"
         :page-size="pageSize"
         :current-page.sync="pageNo"
-        @current-change="changeCurrentPage"
-      >
-      </el-pagination>
+        @current-change="handleCurrentPageChange"
+      />
+
+      <loading v-if="!loaded" />
     </div>
   </div>
 </template>
@@ -124,6 +123,7 @@ import UserItem from "./components/user-item";
 import RadioItem from "./components/radio-item";
 import VideoItem from "./components/video-item";
 import Loading from "@/components/common/loading";
+import Pagination from "@/components/common/pagination";
 import { getSearchResult, getMultiMatch } from "@/api/search.js";
 import { mapState } from "vuex";
 export default {
@@ -138,6 +138,7 @@ export default {
     RadioItem,
     VideoItem,
     Loading,
+    Pagination,
   },
   data() {
     return {
@@ -174,7 +175,7 @@ export default {
     handlePlay(trackId) {
       this.player.playTrack(trackId);
     },
-    changeCurrentPage() {
+    handleCurrentPageChange() {
       this.getSearchResultData();
     },
     changeType(type) {

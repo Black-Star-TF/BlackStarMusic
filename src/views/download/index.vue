@@ -6,9 +6,10 @@
     <!-- 导航栏 -->
     
     <div class="download-content">
-      <keep-alive>
+      <developing/>
+      <!-- <keep-alive>
         <router-view/>
-      </keep-alive>
+      </keep-alive> -->
     </div>
   </div>
 </template>
@@ -16,10 +17,12 @@
 <script>
 import CateNav from '@/components/common/cate-nav'
 import PageHeader from '@/components/common/page-header'
+import Developing from '@/components/common/developing'
 export default {
   components: {
     CateNav,
-    PageHeader
+    PageHeader,
+    Developing
   },
   data () {
     return {

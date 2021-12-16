@@ -70,11 +70,10 @@
         </container>
 
         <!-- 分页 -->
-        <el-pagination
+        <pagination
           v-if="loaded"
-          layout="prev, pager, next"
           :total="total"
-          :page-size="limit"
+          :page-size="pageSize"
           :current-page.sync="currentPage"
           @current-change="changeCurrentPage"
         />
@@ -90,6 +89,7 @@ import Container from "@/components/common/container";
 import PlaylistItem from "./components/playlist";
 import PageBox from "@/components/common/page-box";
 import Loading from "@/components/common/loading";
+import Pagination from "@/components/common/pagination";
 import {
   getHotPlaylistCate,
   getPlaylistCate,
@@ -105,11 +105,11 @@ export default {
       hotTags: [],
       playlists: [],
       showCate: false,
-      limit: 50,
+      pageSize: 50,
       total: 0,
       currentPage: 1,
       scrollTop: 0,
-      loaded: false
+      loaded: false,
     };
   },
   components: {
@@ -117,14 +117,12 @@ export default {
     PlaylistItem,
     PageBox,
     Loading,
+    Pagination,
   },
   computed: {
     offset() {
-      return (this.currentPage - 1) * this.limit;
+      return (this.currentPage - 1) * this.pageSize;
     },
-    // loaded() {
-    //   return this.playlists.length > 0;
-    // },
   },
   methods: {
     // 翻页
@@ -150,15 +148,15 @@ export default {
     // 获取歌单列表
     async getPlaylistsData() {
       this.playlists = [];
-      this.loaded = false
+      this.loaded = false;
       let { playlists, total } = await getPlaylists({
         cat: this.currentTag.name,
-        limit: this.limit,
+        limit: this.pageSize,
         offset: this.offset,
       });
       this.playlists = playlists;
       this.total = total;
-      this.loaded = true
+      this.loaded = true;
     },
     getScrollTop(e) {
       this.scrollTop = e.target.scrollTop;

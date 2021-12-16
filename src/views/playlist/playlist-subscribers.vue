@@ -1,84 +1,83 @@
 <template>
   <div class="detail-subscribers">
-    <subscriber-item 
-      v-for="(item,index) in subscribers" 
-      :key="item.userId" 
-      :index="index" 
-      :subscriber="item" 
-      :num="3"
-    />
-    <el-pagination 
+    <div class="subscribers-wrapper">
+      <subscriber-item
+        v-for="(item, index) in subscribers"
+        :key="item.userId"
+        :index="index"
+        :subscriber="item"
+        :num="3"
+      />
+    </div>
+
+    <pagination
       v-if="loaded"
-      layout="prev, pager, next"
       :total="total"
       :page-size="pageSize"
-      :current-page.sync="pageNo" 
-      @current-change="changeCurrentPage" 
-		/>
+      :current-page.sync="currentPage"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
 <script>
-  import { getPlaylistSubscribers } from '@/api/playlist.js'
-  import SubscriberItem from './components/subscriber-item'
-  export default {
-    components: {
-      SubscriberItem
+import { getPlaylistSubscribers } from "@/api/playlist.js";
+import SubscriberItem from "./components/subscriber-item";
+import Pagination from "@/components/common/pagination";
+export default {
+  components: {
+    SubscriberItem,
+    Pagination,
+  },
+  data() {
+    return {
+      subscribers: [],
+      total: 0,
+      pageSize: 45,
+      currentPage: 1,
+    };
+  },
+  props: {
+    id: {
+      required: true,
     },
-    data () {
-      return {
-        subscribers: [],
-        total: 0,
-        pageSize: 45,
-        pageNo: 1
-      }
+  },
+  computed: {
+    offset() {
+      return (this.currentPage - 1) * this.pageSize;
     },
-    props: {
-      id: {
-        required: true
-      }
+    loaded() {
+      return this.subscribers.length > 0;
     },
-    computed: {
-      offset(){
-        return (this.pageNo - 1) * this.pageSize
-      },
-      loaded(){
-        return this.subscribers.length > 0
-      }
+  },
+  methods: {
+    handleCurrentChange() {
+      this.getData();
     },
-    methods: {
-      changeCurrentPage(){
-        this.getData()
-      },
-      async getData(){
-        this.subscribers = []
-        let {subscribers, total} = await getPlaylistSubscribers({
-          id: this.id,
-          limit: this.pageSize,
-          offset: this.offset
-        })
-        this.subscribers = subscribers
-        this.total = total
-      }
+    async getData() {
+      this.subscribers = [];
+      let { subscribers, total } = await getPlaylistSubscribers({
+        id: this.id,
+        limit: this.pageSize,
+        offset: this.offset,
+      });
+      this.subscribers = subscribers;
+      this.total = total;
     },
-    created () {
-      this.getData()
-    },
-  }
+  },
+  created() {
+    this.getData();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.detail-subscribers{
-  padding: 10px 30px 20px;
+.detail-subscribers {
+  padding: 10px 30px 0;
   box-sizing: border-box;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.el-pagination{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  .subscribers-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 </style>
