@@ -16,7 +16,7 @@
       </template>
       <template v-slot:content>
         <album-item
-          v-for="(album,index) in newestAlbumList"
+          v-for="(album, index) in newestAlbumList"
           :key="album.id"
           :albumItem="album"
           :num="5"
@@ -37,7 +37,7 @@ export default {
   components: {
     Container,
     AlbumItem,
-    Loading
+    Loading,
   },
   data() {
     return {
@@ -66,7 +66,7 @@ export default {
     handleChange(type) {
       this.currentType = type;
       this.currentPage = 1;
-      this.newestAlbumList = []
+      this.newestAlbumList = [];
       this.getData();
     },
     async getData() {
@@ -114,6 +114,7 @@ export default {
     height: 30px;
     line-height: 30px;
     font-size: 14px;
+    margin-bottom: 10px;
     > span.tag {
       display: inline-block;
       margin: 0 10px;

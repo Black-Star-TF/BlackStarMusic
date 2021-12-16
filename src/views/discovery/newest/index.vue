@@ -1,6 +1,6 @@
 <template>
   <div class="newest-music" ref="page">
-    <page-box>
+    <div class="page-box">
       <!-- 导航 -->
       <div class="nav-container">
         <div
@@ -18,14 +18,13 @@
         <newest-song v-if="current == 1"></newest-song>
         <newest-album v-if="current == 2"></newest-album>
       </div>
-    </page-box>
+    </div>
   </div>
 </template>
 
 <script>
-import PageBox from "@/components/common/page-box";
 import NewestSong from "./newest-song.vue";
-import NewestAlbum from './newest-album.vue'
+import NewestAlbum from "./newest-album.vue";
 export default {
   data() {
     return {
@@ -45,7 +44,6 @@ export default {
   components: {
     NewestSong,
     NewestAlbum,
-    PageBox,
   },
   methods: {
     changeGroup(group) {
@@ -60,7 +58,7 @@ export default {
 <style lang="scss" scoped>
 .newest-music {
   height: 100%;
-	padding: 10px 0;
+  padding: 10px 0;
   box-sizing: border-box;
   overflow: overlay;
   .nav-container {

@@ -1,6 +1,6 @@
 <template>
   <div class="view-playlist" ref="page">
-    <page-box>
+    <div class="page-box">
       <template>
         <container v-if="currentTag">
           <template v-slot:left>
@@ -79,7 +79,7 @@
         />
       </template>
       <loading v-if="!loaded" />
-    </page-box>
+    </div>
   </div>
 </template>
 
@@ -87,7 +87,6 @@
 import axios from "axios";
 import Container from "@/components/common/container";
 import PlaylistItem from "./components/playlist";
-import PageBox from "@/components/common/page-box";
 import Loading from "@/components/common/loading";
 import Pagination from "@/components/common/pagination";
 import {
@@ -115,7 +114,6 @@ export default {
   components: {
     Container,
     PlaylistItem,
-    PageBox,
     Loading,
     Pagination,
   },

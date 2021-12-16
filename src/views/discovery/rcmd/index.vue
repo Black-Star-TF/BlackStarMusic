@@ -1,6 +1,6 @@
 <template>
   <div class="view-recommend">
-    <page-box>
+    <div class="page-box">
       <template v-if="loaded">
         <!-- 轮播图 -->
         <slider :list="banners"></slider>
@@ -76,7 +76,7 @@
         </container>
       </template>
       <loading v-else />
-    </page-box>
+    </div>
   </div>
 </template>
 
@@ -86,7 +86,6 @@ import PlaylistItem from "../playlist/components/playlist";
 import ExclusiveItem from "@/views/shipin/mv/components/exclusive-item.vue";
 import NewestSongItem from "./components/newest-song";
 import MvItem from "@/views/shipin/mv/components/mv-item";
-import PageBox from "@/components/common/page-box";
 import Slider from "@/components/common/slider";
 import Loading from "@/components/common/loading";
 import axios from "axios";
@@ -94,8 +93,16 @@ import { getRecommendBanner, getrecommendNewestSong } from "@/api/music.js";
 import { getRecommendPlaylist } from "@/api/playlist.js";
 import { getRecommendExclusive, getRecommendMV } from "@/api/video.js";
 import { size_banner } from "@/utils/img-size.js";
-
 export default {
+  components: {
+    Slider,
+    Container,
+    PlaylistItem,
+    ExclusiveItem,
+    NewestSongItem,
+    MvItem,
+    Loading,
+  },
   data() {
     return {
       banners: [],
@@ -106,16 +113,6 @@ export default {
       radios: [],
       loaded: false,
     };
-  },
-  components: {
-    Slider,
-    Container,
-    PlaylistItem,
-    ExclusiveItem,
-    NewestSongItem,
-    MvItem,
-    PageBox,
-    Loading,
   },
   methods: {
     getBannerCover(url) {

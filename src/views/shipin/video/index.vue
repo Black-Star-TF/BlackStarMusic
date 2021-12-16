@@ -1,6 +1,6 @@
 <template>
   <div class="page-video" v-if="currentCate">
-    <page-box>
+    <div class="page-box">
       <container>
         <template v-slot:left>
           <div class="current-category-container">
@@ -56,15 +56,14 @@
           ></video-item>
         </template>
       </container>
-    </page-box>
+    </div>
   </div>
 </template>
 
 <script>
 import Container from "@/components/common/container";
 import VideoItem from "./components/video-item";
-import PageBox from "@/components/common/page-box";
-import axios from 'axios'
+import axios from "axios";
 import {
   getVideoCategory,
   getVideoGroup,
@@ -72,12 +71,9 @@ import {
   getAllVideo,
 } from "@/api/video.js";
 export default {
-  name: "",
-  mixins: [],
   components: {
-    Container,   
+    Container,
     VideoItem,
-    PageBox,
   },
   data() {
     return {
@@ -95,7 +91,6 @@ export default {
       },
     };
   },
-  computed: {},
   methods: {
     // 切换视频分类面板状态
     change(status = null) {
@@ -105,7 +100,7 @@ export default {
         this.showCate = status;
       }
     },
-    closePanel(){
+    closePanel() {
       this.showCate = false;
     },
     changeCategory(cate) {
@@ -115,38 +110,43 @@ export default {
       this.showCate = false;
       this.getVideoList();
     },
-    async getVideoList(){
-      let i = 0
-      const arr = []
-        if(this.currentCate.id === this.total.id){
-          // 获取全部视频
-          arr.push(getAllVideo({offset: this.offset}))
-        }else{
-          // 获取视频分类下视频
-          arr.push(getVideoList({id: this.currentCate.id, offset: this.offset, timestamp: new Date().getTime() + i}))
-        }
-      const res = await axios.all(arr)
-      let results = []
+    async getVideoList() {
+      let i = 0;
+      const arr = [];
+      if (this.currentCate.id === this.total.id) {
+        // 获取全部视频
+        arr.push(getAllVideo({ offset: this.offset }));
+      } else {
+        // 获取视频分类下视频
+        arr.push(
+          getVideoList({
+            id: this.currentCate.id,
+            offset: this.offset,
+            timestamp: new Date().getTime() + i,
+          })
+        );
+      }
+      const res = await axios.all(arr);
+      let results = [];
       res.forEach(resItem => {
-        let arr = resItem.datas.filter(item => item.type === 1).map(item => item.data);
-        results = [...results, ...arr]
-      })
-      this.videoList = [ ...this.videoList, ...results ]
+        let arr = resItem.datas
+          .filter(item => item.type === 1)
+          .map(item => item.data);
+        results = [...results, ...arr];
+      });
+      this.videoList = [...this.videoList, ...results];
     },
-    async getData(){
+    async getData() {
       // 获取视频分类 获取视频标签
-      const res = await axios.all([
-        getVideoCategory(),
-        getVideoGroup()
-      ])
+      const res = await axios.all([getVideoCategory(), getVideoGroup()]);
       this.videoCategory = res[0].data;
       this.videoGroup = res[1].data;
       this.currentCate = this.$route.params.group || this.total;
-      this.getVideoList()
-    }
+      this.getVideoList();
+    },
   },
   created() {
-    this.getData()
+    this.getData();
     // 添加关闭歌单分类窗口的事件
     const app = document.getElementById("app");
     app.addEventListener("click", this.closePanel);
@@ -154,14 +154,14 @@ export default {
   beforeDestroy() {
     // 移除关闭歌单分类窗口的事件
     const app = document.getElementById("app");
-    app.removeEventListener("click", (this.closePanel));
+    app.removeEventListener("click", this.closePanel);
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.page-video{
+.page-video {
   height: 100%;
   overflow: overlay;
 }
@@ -169,7 +169,7 @@ export default {
   height: 70px;
   line-height: 70px;
   position: relative;
-  
+
   .current-category {
     position: relative;
     display: inline-block;

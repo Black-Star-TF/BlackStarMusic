@@ -1,6 +1,6 @@
 <template>
   <div class="page-mv">
-    <page-box>
+    <div class="page-box">
       <container>
         <template v-slot:left>
           <div class="container-title">
@@ -112,7 +112,7 @@
           />
         </template>
       </container>
-    </page-box>
+    </div>
   </div>
 </template>
 
@@ -121,7 +121,6 @@ import Container from "@/components/common/container";
 import MvItem from "./components/mv-item";
 import ExclusiveItem from "./components/exclusive-item";
 import MvChartItem from "@/components/item/mv-chart-item";
-import PageBox from "@/components/common/page-box";
 import {
   getNewestMV,
   getAllMV,
@@ -134,7 +133,6 @@ export default {
     MvItem,
     ExclusiveItem,
     MvChartItem,
-    PageBox,
   },
   data() {
     return {

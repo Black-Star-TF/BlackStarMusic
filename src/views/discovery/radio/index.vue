@@ -1,6 +1,6 @@
 <template>
   <div class="radio-page">
-    <page-box>
+      <div class="page-box">
       <template v-if="loaded">
         <!-- 轮播图 -->
         <slider :list="banners"></slider>
@@ -63,7 +63,7 @@
         </container>
       </template>
       <loading v-else />
-    </page-box>
+    </div>
   </div>
 </template>
 
@@ -74,7 +74,6 @@ import Slider from "@/components/common/slider";
 import Container from "@/components/common/container";
 import FreeRadioItem from "./components/free-radio";
 import PaidRadioItem from "./components/paid-radio";
-import PageBox from "@/components/common/page-box";
 import Loading from "@/components/common/loading";
 import RadioCategory from './components/radio-category.vue'
 import { size_banner } from "@/utils/img-size.js";
@@ -108,7 +107,6 @@ export default {
     RadioCategory,
     FreeRadioItem,
     PaidRadioItem,
-    PageBox,
     Slider,
     Loading,
   },

@@ -1,6 +1,6 @@
 <template>
   <div class="exclusive-wrapper">
-    <page-box>
+    <div class="page-box">
       <page-header>
         <div class="page-name">独家放送</div>
       </page-header>
@@ -15,14 +15,13 @@
           />
         </template>
       </container>
-    </page-box>
+    </div>
   </div>
 </template>
 
 <script>
 import PageHeader from "@/components/common/page-header";
 import Container from "@/components/common/container";
-import PageBox from "@/components/common/page-box";
 import ExclusiveItem from "@/views/shipin/mv/components/exclusive-item.vue";
 import { getExclusive } from "@/api/video";
 export default {
@@ -30,7 +29,6 @@ export default {
     PageHeader,
     Container,
     ExclusiveItem,
-    PageBox,
   },
   data() {
     return {

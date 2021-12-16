@@ -134,14 +134,14 @@
   color: var(--color-keyword);
 }
 
-// @media screen and (max-width: 1300px) {
-//   .page-limit-width {
-//     margin: 0 30px;
-//   }
-// }
-// @media screen and (min-width: 1300px) {
-//   .page-limit-width {
-//     width: 1040px;
-//     margin: 0 auto;
-//   }
-// }
+@media screen and (max-width: 1300px) {
+  .page-box {
+    margin: 0 30px;
+  }
+}
+@media screen and (min-width: 1300px) {
+  .page-box {
+    width: 1040px;
+    margin: 0 auto;
+  }
+}

@@ -1,6 +1,6 @@
 <template>
   <div class="view-singer" ref="singerPage">
-    <page-box>
+    <div class="page-box">
       <!-- 导航 -->
       <group-nav
         :group="singerCate"
@@ -19,8 +19,8 @@
           />
         </template>
       </container>
-      <loading v-if="!loaded"/>
-    </page-box>
+      <loading v-if="!loaded" />
+    </div>
   </div>
 </template>
 
@@ -28,11 +28,15 @@
 import Container from "@/components/common/container";
 import GroupNav from "@/components/common/group-nav";
 import SingerItem from "./components/singer";
-import PageBox from "@/components/common/page-box";
 import Loading from "@/components/common/loading";
 import { getSingerList } from "@/api/singer.js";
 export default {
-  name: "Singer",
+  components: {
+    Container,
+    GroupNav,
+    SingerItem,
+    Loading,
+  },
   data() {
     return {
       singerList: [],
@@ -103,13 +107,7 @@ export default {
       },
     };
   },
-  components: {
-    Container,
-    GroupNav,
-    SingerItem,
-    PageBox,
-    Loading
-  },
+
   methods: {
     changeCate({ key, id }) {
       this.currentCate[key] = id;
@@ -119,7 +117,7 @@ export default {
     },
     // 请求歌手列表
     async getData() {
-      this.loaded = false
+      this.loaded = false;
       let { type, area, initial } = this.currentCate;
       let { artists, more } = await getSingerList({
         type,
@@ -130,7 +128,7 @@ export default {
       });
       this.singerList = this.singerList.concat(artists);
       this.hasMore = more;
-      this.loaded = true
+      this.loaded = true;
       this.$nextTick(() => {
         this.getMore = false;
       });
