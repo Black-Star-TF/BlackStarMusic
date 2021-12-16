@@ -258,7 +258,6 @@ export default {
       // 获取多重匹配结果
       getMultiMatch({ keywords: this.keyword }).then(res => {
         this.multipleMatchResult = res.result;
-        console.log(this.multipleMatchResult);
       });
     }
     // 请求数据

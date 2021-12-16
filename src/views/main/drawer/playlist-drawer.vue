@@ -12,13 +12,14 @@
       </div>
     </div>
 
-    <div class="playlist-drawer-content" v-if="songList.length > 0">
+    <div class="playlist-drawer-content" v-if="songList.length > 0" ref="content">
       <div
         class="song-item"
         v-for="(song, index) in songList"
         :key="`${index}-${song.id}`"
         @dblclick="playSong(song.id)"
         :class="{ active: song.id == currentTrackId }"
+        :id="`song-${song.id}`"
       >
         <div class="song-name">
           <div class="song-name-container">
@@ -85,19 +86,17 @@ export default {
     handleClose(value) {
       this.$emit("update:visible", value);
     },
-    getSongList() {
+    async getSongList() {
       this.songList = [];
       let list = this.player.list;
       if (list.length > 0) {
-        getSongsDetail({ ids: list.join(",") }).then(res => {
-          outer: for (let trackId of list) {
-            for (let song of res.songs) {
-              if (trackId == song.id) {
-                this.songList.push(song);
-                continue outer;
-              }
-            }
-          }
+        const { songs } = await getSongsDetail({ ids: list.join(",") });
+        this.songList = songs;
+        if(!this.currentTrackId) return
+        this.$nextTick(() => {
+          let node = this.$el.querySelector(`#song-${this.currentTrackId}`);
+          let content = this.$refs.content
+          content.scrollTop = node.offsetTop - (content.offsetHeight / 2)
         });
       }
     },

@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     playSong(){
-      this.$store.state.player.addTrackToPlayList(this.song.id,true)
+      this.$store.state.player.playTrack(this.song.id,true)
     }
   },
 }
