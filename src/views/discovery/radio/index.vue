@@ -5,16 +5,12 @@
         <!-- 轮播图 -->
         <slider :list="banners"></slider>
         <!-- TODO: 电台分类 -->
+        <radio-category :radioCateList="radioCateList"></radio-category>
         <!-- 付费精品 -->
         <container>
           <template v-slot:left>
             <div class="container-title">
-              <router-link
-                :to="{ path: '/radio', query: { name: '付费精品' } }"
-                tag="span"
-                class="link"
-                >付费精品</router-link
-              >
+              <span class="link">付费精品</span>
             </div>
           </template>
           <template v-slot:content>
@@ -51,12 +47,7 @@
         <container v-for="cate in recommendRadioCate" :key="cate.categoryId">
           <template v-slot:left>
             <div class="container-title">
-              <router-link
-                :to="{ path: '/radio', query: { category: cate.categoryName } }"
-                tag="span"
-                class="link"
-                >{{ cate.categoryName }}</router-link
-              >
+              <span class="link" @click="toRadioCategory(cate)">{{ cate.categoryName }}</span>
             </div>
           </template>
           <template v-slot:content>
@@ -85,6 +76,7 @@ import FreeRadioItem from "./components/free-radio";
 import PaidRadioItem from "./components/paid-radio";
 import PageBox from "@/components/common/page-box";
 import Loading from "@/components/common/loading";
+import RadioCategory from './components/radio-category.vue'
 import { size_banner } from "@/utils/img-size.js";
 import {
   getRadioBanner,
@@ -92,21 +84,28 @@ import {
   getRecommendRadio,
   getRecommendRadioCate,
   getRadioList,
+  getRadioCateList,
 } from "@/api/dj-radio.js";
 
 export default {
   data() {
     return {
       banners: [],
+      radioCateList: [],
       recommendRadio: [],
       recommendRadioCate: [],
       radioNum: 0,
       paidRadios: [],
       loaded: false,
+      scroller: null,
+      scrollOptions: {
+        scrollX: true,
+      },
     };
   },
   components: {
     Container,
+    RadioCategory,
     FreeRadioItem,
     PaidRadioItem,
     PageBox,
@@ -117,22 +116,33 @@ export default {
     getBannerCover(url) {
       return `${url}?param=${size_banner}`;
     },
+    toRadioCategory(cate){
+      this.$router.push({
+        path: "/radio-category",
+        query: { category: cate.categoryName, id: cate.categoryId },
+      });
+    },
     async getData() {
       this.loaded = false;
       let res = await axios.all([
         getRadioBanner(),
+        getRadioCateList(),
         getPaidRadio({ limit: 4 }),
         getRecommendRadio(),
         getRecommendRadioCate(),
       ]);
       // 获取轮播图数据
       this.banners = res[0].data.map(item => item.pic);
+      // 获取电台分类数据
+      this.radioCateList = [res[1].categories.slice(0,8),res[1].categories.slice(8,16),res[1].categories.slice(16)];
+      this.radioCateList[2].length = 8
+
       // 获取付费精选电台
-      this.paidRadios = res[1].data.list;
+      this.paidRadios = res[2].data.list;
       // 获取电台个性推荐
-      this.recommendRadio = res[2].data;
+      this.recommendRadio = res[3].data;
       // 获取电台推荐分类
-      this.recommendRadioCate = res[3].data.slice(0, 6).map(item => ({
+      this.recommendRadioCate = res[4].data.slice(0, 6).map(item => ({
         categoryId: item.categoryId,
         categoryName: item.categoryName,
       }));
@@ -169,13 +179,10 @@ export default {
     color: var(--color-level2);
     font-size: 18px;
     font-weight: bold;
-
     > span {
       cursor: default;
-
       &.link {
         cursor: pointer;
-
         &:hover {
           color: var(--color-level1);
         }

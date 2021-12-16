@@ -69,6 +69,10 @@ const routes = [
         component: () => import('@/views/radio/index'),
       },
       {
+        path: '/radio-category',
+        component: () => import('@/views/radio-category/index'),
+      },
+      {
         path: '/singer',
         component: () => import('@/views/singer/index'),
       },

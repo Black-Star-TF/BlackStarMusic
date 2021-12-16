@@ -1,5 +1,5 @@
 <template>
-  <div class="view-friend">
+  <div class="view-radio-category">
     <developing/>
   </div>
 </template>
@@ -11,17 +11,24 @@ export default {
     Developing
   },
   data () {
-    return {}
+    return {
+      title: '',
+      id: null
+    }
   },
   computed: {},
   methods: {},
   filters: {},
-  created () {}
+  created () {
+    const { id, name } = this.$route.query
+    this.title = name
+    this.id = id
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.view-friend{
+.view-radio-category{
   height: 100%;
   padding: 30px 0;
   box-sizing: border-box;

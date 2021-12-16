@@ -1,14 +1,15 @@
 <template>
-  <div class="privatefm">
-    私人FM
+  <div class="view-privatefm">
+    <developing/>
   </div>
 </template>
 
 <script>
+import Developing from '@/components/common/developing'
 export default {
-  name: '',
-  mixins: [],
-  components: {},
+  components: {
+    Developing
+  },
   data () {
     return {}
   },
@@ -20,5 +21,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.view-privatefm{
+  height: 100%;
+  padding: 30px 0;
+  box-sizing: border-box;
+  overflow: overlay;
+}
 </style>

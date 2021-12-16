@@ -5,54 +5,62 @@
 </template>
 
 <script>
-import BetterScroll from '@better-scroll/core'
-import MouseWhell from '@better-scroll/mouse-wheel'
-import ScrollBar from '@better-scroll/scroll-bar'
-BetterScroll.use(MouseWhell)
-BetterScroll.use(ScrollBar)
+import BetterScroll from "@better-scroll/core";
+import MouseWheel from "@better-scroll/mouse-wheel";
+import ScrollBar from "@better-scroll/scroll-bar";
+import Slide from '@better-scroll/slide'
+BetterScroll.use(MouseWheel);
+BetterScroll.use(ScrollBar);
+BetterScroll.use(Slide);
 export default {
-  data () {
+  data() {
     return {
       defaultOptions: {
-        mouseWheel: true,
-        scrollY: true,
-        scrollbar: true,
-        probeType: 3
-      }
-    }
+        scrollX: false,
+        scrollY: false,
+        disableMouse: true,
+        bounce: false,
+        probeType: 3,
+      },
+    };
   },
-  props:{
-    options:{
-      default: () => ({})
-    }
+  props: {
+    options: {
+      default: () => ({}),
+    },
   },
   computed: {},
-  mounted(){
-    this.scroller = new BetterScroll(this.$refs.scroll,Object.assign(this.defaultOptions, this.options))
-    this.$emit('init', this.scroller)
+  mounted() {
+    this.scroller = new BetterScroll(
+      this.$refs.scroll,
+      Object.assign(this.defaultOptions, this.options)
+    );
+    this.scroller.on("mousewheelStart", () => {
+      this.$emit("mousewheelStart");
+    });
+    this.scroller.on("mousewheelEnd", () => {
+      this.$emit("mousewheelEnd");
+    });
+    
+    this.scroller.refresh();
+    this.$emit("init", this.scroller);
   },
   methods: {
     getScroller() {
-      return this.scroller
+      return this.scroller;
     },
     refresh() {
-      this.scroller.refresh()
-    }
+      this.scroller.refresh();
+    },
   },
   filters: {},
-  created () {}
-}
+  created() {},
+};
 </script>
 
 <style lang="scss" scoped>
-::v-deep.scroll{
-  height: 100%;
+::v-deep.scroll {
   position: relative;
   overflow: hidden;
-  border-right: 1px solid var(--color-level5);
-  .bscroll-indicator{
-    border: none!important;
-    background-color: var(--scroll-bar-bg-color)!important;
-  }
 }
 </style>

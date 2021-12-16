@@ -27,13 +27,14 @@
           </div>
           <scroller
             v-if="lyric"
-            class="song-lyric"
+            class="lyric-wrapper"
             :options="lyricScrollOptions"
-            @init="initScroller"
+            @init="handleScrollerInit"
             ref="scroller"
+            @mousewheelStart="handleScrollStart"
+            @mousewheelEnd="handleScrollEnd"
           >
             <div class="lyric-content">
-              <!-- <div class="top"></div> -->
               <div
                 class="lyric-item"
                 v-for="(item, index) in lyric"
@@ -45,7 +46,6 @@
                   {{ item }}
                 </p>
               </div>
-              <!-- <div class="botton"></div> -->
             </div>
           </scroller>
         </div>
@@ -90,7 +90,7 @@ import { parseLyrics } from "@/utils/lyric";
 import SimiPlaylistItem from "@/components/item/simi-playlist-item";
 import SimiSongItem from "@/components/item/simi-song-item";
 import Scroller from "@/components/common/scroller";
-import Comment from '@/views/resource-comment/components/comment.vue'
+import Comment from "@/views/resource-comment/components/comment.vue";
 import RESOURCE_TYPE from "@/utils/resource-type";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -107,9 +107,12 @@ export default {
       simiPlaylists: [],
       simiSongList: [],
       lyric: null,
+      scroller: null,
+      autoScroll: true,
       lyricScrollOptions: {
-        disableTouch: true,
-        bounce: false,
+        scrollY: true,
+        scrollbar: true,
+        mouseWheel: true,
         scrollerBar: {
           fadeOutTime: 500,
         },
@@ -143,42 +146,51 @@ export default {
     ...mapMutations(["updateApp"]),
     toAlbumDetail,
     toArtistDetail,
+    handleScrollStart() {
+      this.autoScroll = false;
+    },
+    handleScrollEnd() {
+      setTimeout(() => {
+        this.autoScroll = true;
+        if (this.player.playing) {
+          this.scroller.refresh();
+          this.scrollToActiveLyric();
+        }
+      }, 500);
+    },
     scrollToActiveLyric() {
-      const { scroller, lyric } = this.$refs;
-      if (scroller) {
+      const { lyric } = this.$refs;
+      if (this.scroller) {
         try {
-          scroller
-            .getScroller()
-            .scrollToElement(lyric[this.activeIndex], 200, 0, true);
+          this.scroller.scrollToElement(lyric[this.activeIndex], 200, 0, true);
         } catch (err) {}
-        this.$nextTick(() => {
-          scroller.refresh();
-        });
       }
     },
     getActiveClass(index) {
       return this.activeIndex == index ? "active" : "";
     },
-    initScroller(scroller) {
-      // this.scrollToActiveLyric();
+    handleScrollerInit(scroller) {
+      this.scroller = scroller;
+      this.scroller.refresh();
+      this.scrollToActiveLyric();
     },
     async init() {
       this.lyric = null;
       this.song = null;
       this.simiPlaylists = [];
+      this.scroller = null;
       // 获取歌曲详情
-      const {songs} = await getSongsDetail({ids: this.songId});
+      const { songs } = await getSongsDetail({ ids: this.songId });
       this.song = songs[0];
       // 获取歌词
-      this.lyric = parseLyrics(await getSongLyric({id: this.songId}));
-      this.$nextTick(()=>{
-        this.scrollToActiveLyric();
-      })
+      this.lyric = parseLyrics(await getSongLyric({ id: this.songId }));
+      // TODO: 歌曲无歌词时
+
       // 获取相似歌单
-      const {playlists} = await getSimiPlaylists(this.songId);
+      const { playlists } = await getSimiPlaylists({ id: this.songId });
       this.simiPlaylists = playlists;
       // 获取相似歌曲
-      const {songs:songList} = await getSimiSongs(this.songId);
+      const { songs: songList } = await getSimiSongs({ id: this.songId });
       this.simiSongList = songList;
     },
   },
@@ -190,8 +202,16 @@ export default {
       this.init();
     },
     activeIndex(oldVal, newVal) {
-      if (oldVal !== newVal && this.lyric && this.activeIndex !== -1 && this.activeIndex !== 0) {
-        this.scrollToActiveLyric();
+      if (
+        oldVal !== newVal &&
+        this.lyric &&
+        this.activeIndex !== -1 &&
+        this.autoScroll
+      ) {
+        if (this.scroller) {
+          this.scroller.refresh();
+          this.scrollToActiveLyric();
+        }
       }
     },
     $route() {
@@ -307,11 +327,13 @@ export default {
           }
         }
 
-        .song-lyric {
+        .lyric-wrapper {
           margin-top: 20px;
-          height: calc(100% - 110px);
+          height: 390px;
           overflow: hidden;
           color: var(--color-level3);
+          position: relative;
+          border-right: 1px solid var(--color-level5);
           mask-image: linear-gradient(
             180deg,
             hsla(0, 0%, 100%, 0) 0,
@@ -321,6 +343,10 @@ export default {
             hsla(0, 0%, 100%, 0.6) 85%,
             hsla(0, 0%, 100%, 0)
           );
+          ::v-deep .bscroll-indicator {
+            border: none !important;
+            background-color: var(--scroll-bar-bg-color) !important;
+          }
           .lyric-content {
             font-size: 15px;
             line-height: 30px;
@@ -328,13 +354,18 @@ export default {
               margin-top: 10px;
               &.active {
                 color: var(--color-level1);
+                font-size: 17px;
               }
             }
-            .top {
-              height: 40px;
+            &::before {
+              content: "";
+              display: block;
+              height: 50px;
             }
-            .bottom {
-              height: 200px;
+            &::after {
+              content: "";
+              display: block;
+              height: 150px;
             }
           }
         }

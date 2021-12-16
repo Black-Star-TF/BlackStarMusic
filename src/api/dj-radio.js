@@ -16,3 +16,5 @@ export const getRadioDetail = params => request.get('/dj/detail', { params });
 export const getRadioPrograms = params => request.get('/dj/program', { params })
 // 电台订阅者
 export const getRadioSubscribers = params => request.get('/dj/subscriber', { params })
+// 电台分类
+export const getRadioCateList = () => request.get('/dj/catelist')

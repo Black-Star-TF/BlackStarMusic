@@ -1,4 +1,4 @@
-@import url("//at.alicdn.com/t/font_2882306_tpsh873cc2a.css");
+@import url("//at.alicdn.com/t/font_2882306_q60xf7au23h.css");
 
 :root {
   --min-width: 1000px;
@@ -9,7 +9,7 @@
   --app-aside-width: 200px;
   --app-player-height: 60px;
   --app-drawer-width: 400px;
-  --color-netease-red: #c2473a;
+  --color-netease-red: rgb(196, 71, 57);
   --playlist-tag-active-bg-color: rgba(255, 0, 0, 0.13);
   --panel-box-bg-color: #fff;
 
@@ -56,6 +56,10 @@
 
   // 操作按钮hover背景色
   --operation-btn-hover-bg-color: #f2f2f2;
+
+  // 抽屉中的条纹
+  --drawer-stripe-hover-color: #fafafa;
+  --drawer-stripe-color: #f5f5f5;
 }
 
 [data-theme="dark"] {
@@ -100,6 +104,9 @@
   --context-menu-bg-color: #292c2c;
   --context-menu-item-hover-bg-color: #2c57b7;
   --operation-btn-hover-bg-color: #303030;
+
+  --drawer-stripe-color: #3a3a3a;
+  --drawer-stripe-hover-color: #3e3e3e;
 }
 
 [data-theme="red"] {

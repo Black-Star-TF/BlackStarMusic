@@ -40,12 +40,10 @@
 
 <script>
 import Container from "@/components/common/container";
-// import NewSongTable from '@/components/table/new-song-table'
 import { getTopNewSong } from "@/api/music.js";
 import NewestSongItem from "./components/newest-song-item.vue";
 import Loading from "@/components/common/loading";
 export default {
-  name: "NewestSong",
   data() {
     return {
       songList: [],
@@ -61,7 +59,6 @@ export default {
   },
   components: {
     Container,
-    // NewSongTable,
     NewestSongItem,
     Loading,
   },
@@ -72,7 +69,7 @@ export default {
     },
     async getData() {
       this.songList = [];
-      let res = await getTopNewSong(this.currentType);
+      let res = await getTopNewSong({type: this.currentType});
       this.songList = res.data;
     },
     playAll() {

@@ -8,7 +8,7 @@ export default class Player {
     this._volume = 1; // 当前播放音量
     this._volumeBeforeMuted = 1; // 保存静音前的音量
     this._list = []; // 当前播放列表
-    this._currentIndex = 0; // 当前播放歌曲在播放列表中的索引
+    this._currentIndex = -1; // 当前播放歌曲在播放列表中的索引
     this._currentTrack = {}; // 当前播放的歌曲信息
     this._history = []; // 播放历史
 
@@ -165,8 +165,8 @@ export default class Player {
   // 获取歌曲详情和歌曲url
   readyToPlay(autoPlay = true) {
     this.progress = 0;
-    let id = this._list[this.currentIndex];
-    return axios.all([getSongsDetail({ ids: id }), getSongUrl(id)]).then(
+    let id = this.list[this.currentIndex];
+    return axios.all([getSongsDetail({ ids: id }), getSongUrl({ id })]).then(
       axios.spread((res1, res2) => {
         if (res2.data[0] && res2.data[0].url && !res2.data[0].freeTrialInfo) {
           this.progress = 0;
@@ -230,6 +230,7 @@ export default class Player {
       this.currentIndex = index;
     } else {
       this.list.splice(this.currentIndex + 1, 0, trackId);
+      this.currentIndex += 1;
     }
     this.readyToPlay();
   }
@@ -249,10 +250,11 @@ export default class Player {
   // 清空播放列表并停止播放
   clear() {
     this.list = [];
-    this.currentIndex = 0;
+    this.currentIndex = -1;
     this.currentTrack = {};
     Howler.unload();
     this._howler = null;
+    this._playing = false;
   }
   // 清空最近播放
   clearHistory() {
