@@ -1,47 +1,59 @@
 <template>
-	 <div class="exclusive-item" :style="style">
-		 <!-- 独家放送封面 -->
-			<div class="exclusive-cover" @click="playVideo(exclusiveItem.id)" :style="{'backgroundImage':`url(${coverUrl})`}" v-if="!loading">
-				<!-- 播放图标 -->
-				<div class="icon-play">
-					<span class="iconfont icon-pause"></span>
-				</div>
-			</div>
-			<!-- 独家放送名称 -->
-			<div class="exclusive-name" v-if="!loading" @click="playVideo(exclusiveItem.id)">{{exclusiveItem.name}}</div>
-	 </div>
+  <div class="exclusive-item" :style="style">
+    <!-- 独家放送封面 -->
+    <div
+      class="exclusive-cover"
+      @click="playVideo(exclusiveItem.id)"
+      :style="{ backgroundImage: `url(${coverUrl})` }"
+      v-if="!loading"
+    >
+      <!-- 播放图标 -->
+      <div class="icon-play">
+        <span class="iconfont icon-pause"></span>
+      </div>
+    </div>
+    <!-- 独家放送名称 -->
+    <div
+      class="exclusive-name"
+      v-if="!loading"
+      @click="playVideo(exclusiveItem.id)"
+    >
+      {{ exclusiveItem.name }}
+    </div>
+  </div>
 </template>
 
 <script>
-  import { playVideo } from '@/utils/methods'
-	import ItemPropsMixin from '@/mixins/item-props-mixin'
-  import {size_video_std} from '@/utils/img-size.js'
-	export default {
-		mixins: [ItemPropsMixin],
-		props: {
-			exclusiveItem:{
-				required: true
-			}
-		},
-		computed: {
-			loading(){
-				return typeof this.exclusiveItem == 'undefined'
-			},
-			coverUrl(){
-				return `${this.exclusiveItem.sPicUrl || this.exclusiveItem.cover}?param=${size_video_std}`
-			}
-		},
-    methods:{
-      playVideo
-    }
-	}
+import { playVideo } from "@/utils/methods";
+import ItemPropsMixin from "@/mixins/item-props-mixin";
+import { size_video_std } from "@/utils/img-size.js";
+export default {
+  mixins: [ItemPropsMixin],
+  props: {
+    exclusiveItem: {
+      required: true,
+    },
+  },
+  computed: {
+    loading() {
+      return typeof this.exclusiveItem == "undefined";
+    },
+    coverUrl() {
+      return `${this.exclusiveItem.sPicUrl ||
+        this.exclusiveItem.cover}?param=${size_video_std}`;
+    },
+  },
+  methods: {
+    playVideo,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.exclusive-item{
+.exclusive-item {
   margin-bottom: 20px;
-  .exclusive-cover{
+  .exclusive-cover {
     cursor: pointer;
     width: 100%;
     padding-bottom: 56%;
@@ -50,7 +62,7 @@
     border-radius: 10px;
     margin-bottom: 10px;
     position: relative;
-    .icon-play{
+    .icon-play {
       width: 20px;
       height: 20px;
       line-height: 20px;
@@ -59,9 +71,9 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      background-color: rgba($color: #000, $alpha: .3);
+      background-color: rgba($color: #000, $alpha: 0.3);
       box-shadow: 0 0 1px 1px #fff;
-      .iconfont{
+      .iconfont {
         line-height: 20px;
         position: relative;
         left: 1px;
@@ -71,16 +83,15 @@
       }
     }
   }
-  .exclusive-name{
+  .exclusive-name {
     font-size: 14px;
     line-height: 20px;
     color: var(--color-level2);
     cursor: pointer;
-    &:hover{
+    &:hover {
       color: var(--color-level1);
     }
     //todo 两行文字 超出使用省略号
   }
 }
-
 </style>

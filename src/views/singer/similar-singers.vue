@@ -2,7 +2,7 @@
   <div class="similar-singer-wrapper">
     <simi-singer-item
       v-for="(singer, index) in simiSingers"
-      :key="singer.id" 
+      :key="singer.id"
       :singer="singer"
       :index="index"
       :num="5"
@@ -11,37 +11,37 @@
 </template>
 
 <script>
-import { getSimiSingers } from '@/api/singer.js'
-import SimiSingerItem from './components/simi-singer-item.vue'
+import { getSimiSingers } from "@/api/singer.js";
+import SimiSingerItem from "./components/simi-singer-item.vue";
 export default {
   components: {
-    SimiSingerItem
+    SimiSingerItem,
   },
-  data () {
+  data() {
     return {
-      simiSingers: []
-    }
+      simiSingers: [],
+    };
   },
-  props:{
+  props: {
     id: {
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
-    async getData(){
-      const { artists } = await getSimiSingers({ id: this.id })
-      this.simiSingers = artists
+    async getData() {
+      const { artists } = await getSimiSingers({ id: this.id });
+      this.simiSingers = artists;
       console.log(111);
-    }
+    },
   },
-  created () {
-    this.getData()
-  }
-}
+  created() {
+    this.getData();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.similar-singer-wrapper{
+.similar-singer-wrapper {
   padding: 0 30px;
   padding-top: 20px;
   display: flex;

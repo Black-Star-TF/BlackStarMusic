@@ -19,9 +19,9 @@ import PageHeader from "@/components/common/page-header";
 export default {
   components: {
     CateNav,
-    PageHeader
+    PageHeader,
   },
-  data () {
+  data() {
     return {
       navList: [
         { path: "/favorites/album", name: "专辑" },
@@ -29,9 +29,9 @@ export default {
         { path: "/favorites/video", name: "视频" },
         { path: "/favorites/column", name: "专栏" },
       ],
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>

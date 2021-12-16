@@ -95,7 +95,7 @@ export default {
       }
     }
   }
-  .text{
+  .text {
     height: 20px;
     line-height: 20px;
     font-size: 12px;

@@ -1,5 +1,3 @@
-import saveToLocalStorage from './localStorage'
+import saveToLocalStorage from "./localStorage";
 
-export default [
-  saveToLocalStorage
-]
+export default [saveToLocalStorage];

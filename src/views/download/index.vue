@@ -4,9 +4,9 @@
       <cate-nav :navList="navList"></cate-nav>
     </page-header>
     <!-- 导航栏 -->
-    
+
     <div class="download-content">
-      <developing/>
+      <developing />
       <!-- <keep-alive>
         <router-view/>
       </keep-alive> -->
@@ -15,31 +15,29 @@
 </template>
 
 <script>
-import CateNav from '@/components/common/cate-nav'
-import PageHeader from '@/components/common/page-header'
-import Developing from '@/components/common/developing'
+import CateNav from "@/components/common/cate-nav";
+import PageHeader from "@/components/common/page-header";
+import Developing from "@/components/common/developing";
 export default {
   components: {
     CateNav,
     PageHeader,
-    Developing
+    Developing,
   },
-  data () {
+  data() {
     return {
       navList: [
-        { path: '/download/single', name: '已下载单曲'},
-        { path: '/download/program', name: '已下载节目'},
-        { path: '/download/downloading', name: '正在下载'},
-      ]
-    }
+        { path: "/download/single", name: "已下载单曲" },
+        { path: "/download/program", name: "已下载节目" },
+        { path: "/download/downloading", name: "正在下载" },
+      ],
+    };
   },
   computed: {},
   methods: {},
   filters: {},
-  created () {}
-}
+  created() {},
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

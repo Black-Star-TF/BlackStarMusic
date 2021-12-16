@@ -1,32 +1,32 @@
 <template>
   <div class="album-description">
     <div class="title">专辑介绍</div>
-    <div class="content">{{description}}</div>
+    <div class="content">{{ description }}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: '',
+  name: "",
   mixins: [],
   components: {},
-  props:{
-    description: String
+  props: {
+    description: String,
   },
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {},
   methods: {},
   filters: {},
-  created () {}
-}
+  created() {},
+};
 </script>
 
 <style lang="scss" scoped>
-.album-description{
+.album-description {
   padding: 0 30px;
-  .title{
+  .title {
     height: 20px;
     line-height: 20px;
     font-size: 15px;
@@ -34,12 +34,11 @@ export default {
     color: var(--color-level2);
     margin: 15px 0;
   }
-  .content{
+  .content {
     font-size: 13.5px;
     line-height: 24px;
     white-space: pre-wrap;
     color: var(--color-level3);
   }
 }
-
 </style>

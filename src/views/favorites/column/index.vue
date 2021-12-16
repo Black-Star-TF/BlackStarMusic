@@ -1,24 +1,20 @@
 <template>
-  <div class="favorite-column-wrapper">
-
-  </div>
+  <div class="favorite-column-wrapper"></div>
 </template>
 
 <script>
 export default {
-  name: '',
+  name: "",
   mixins: [],
   components: {},
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {},
   methods: {},
   filters: {},
-  created () {}
-}
+  created() {},
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

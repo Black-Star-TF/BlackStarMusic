@@ -1,6 +1,6 @@
 <template>
   <div class="radio-page">
-      <div class="page-box">
+    <div class="page-box">
       <template v-if="loaded">
         <!-- 轮播图 -->
         <slider :list="banners"></slider>
@@ -47,7 +47,9 @@
         <container v-for="cate in recommendRadioCate" :key="cate.categoryId">
           <template v-slot:left>
             <div class="container-title">
-              <span class="link" @click="toRadioCategory(cate)">{{ cate.categoryName }}</span>
+              <span class="link" @click="toRadioCategory(cate)">{{
+                cate.categoryName
+              }}</span>
             </div>
           </template>
           <template v-slot:content>
@@ -75,7 +77,7 @@ import Container from "@/components/common/container";
 import FreeRadioItem from "./components/free-radio";
 import PaidRadioItem from "./components/paid-radio";
 import Loading from "@/components/common/loading";
-import RadioCategory from './components/radio-category.vue'
+import RadioCategory from "./components/radio-category.vue";
 import { size_banner } from "@/utils/img-size.js";
 import {
   getRadioBanner,
@@ -114,7 +116,7 @@ export default {
     getBannerCover(url) {
       return `${url}?param=${size_banner}`;
     },
-    toRadioCategory(cate){
+    toRadioCategory(cate) {
       this.$router.push({
         path: "/radio-category",
         query: { category: cate.categoryName, id: cate.categoryId },
@@ -132,8 +134,12 @@ export default {
       // 获取轮播图数据
       this.banners = res[0].data.map(item => item.pic);
       // 获取电台分类数据
-      this.radioCateList = [res[1].categories.slice(0,8),res[1].categories.slice(8,16),res[1].categories.slice(16)];
-      this.radioCateList[2].length = 8
+      this.radioCateList = [
+        res[1].categories.slice(0, 8),
+        res[1].categories.slice(8, 16),
+        res[1].categories.slice(16),
+      ];
+      this.radioCateList[2].length = 8;
 
       // 获取付费精选电台
       this.paidRadios = res[2].data.list;

@@ -8,7 +8,7 @@
 import BetterScroll from "@better-scroll/core";
 import MouseWheel from "@better-scroll/mouse-wheel";
 import ScrollBar from "@better-scroll/scroll-bar";
-import Slide from '@better-scroll/slide'
+import Slide from "@better-scroll/slide";
 BetterScroll.use(MouseWheel);
 BetterScroll.use(ScrollBar);
 BetterScroll.use(Slide);
@@ -41,7 +41,7 @@ export default {
     this.scroller.on("mousewheelEnd", () => {
       this.$emit("mousewheelEnd");
     });
-    
+
     this.scroller.refresh();
     this.$emit("init", this.scroller);
   },

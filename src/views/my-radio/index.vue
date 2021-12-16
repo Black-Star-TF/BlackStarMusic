@@ -3,35 +3,35 @@
     <page-header>
       <div class="page-name">我的电台</div>
     </page-header>
-    <developing/>
+    <developing />
   </div>
 </template>
 
 <script>
-import PageHeader from '@/components/common/page-header'
-import Developing from '@/components/common/developing'
+import PageHeader from "@/components/common/page-header";
+import Developing from "@/components/common/developing";
 export default {
   components: {
     PageHeader,
-    Developing
+    Developing,
   },
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {},
   methods: {},
   filters: {},
-  created () {}
-}
+  created() {},
+};
 </script>
 
 <style lang="scss" scoped>
-.my-radio-wrapper{
+.my-radio-wrapper {
   height: 100%;
   overflow: overlay;
   padding: 0 20px;
   box-sizing: border-box;
-  .page-name{
+  .page-name {
     height: 100%;
     line-height: inherit;
     font-size: 15px;

@@ -1,52 +1,61 @@
 <template>
-	 <div class="mv-item" :style="style">
-		 <div class="mv-cover" @click="playVideo(mv.id)" :style="{'backgroundImage':`url(${coverUrl})`}">
-				<!-- 播放量 -->
-				<span class="mv-playcount"><span class="iconfont icon-pause"></span> {{mv.playCount | formatCount}}</span>
-			</div>
-			<div class="mv-name" @click="playVideo(mv.id)"><span>{{mv.name}}</span></div>
-	 </div>
+  <div class="mv-item" :style="style">
+    <div
+      class="mv-cover"
+      @click="playVideo(mv.id)"
+      :style="{ backgroundImage: `url(${coverUrl})` }"
+    >
+      <!-- 播放量 -->
+      <span class="mv-playcount"
+        ><span class="iconfont icon-pause"></span>
+        {{ mv.playCount | formatCount }}</span
+      >
+    </div>
+    <div class="mv-name" @click="playVideo(mv.id)">
+      <span>{{ mv.name }}</span>
+    </div>
+  </div>
 </template>
 
 <script>
-  import { playVideo } from '@/utils/methods'
-  import { formatCount } from '@/utils/filters'
-	import ItemPropsMixin from '@/mixins/item-props-mixin'
-  import { size_video_std } from '@/utils/img-size.js'
-	export default {
-		mixins: [ItemPropsMixin],
-		props: {
-			mv: {
-				type: Object,
-				required: true
-			}
-		},
-		computed: {
-			coverUrl(){
-				return `${this.mv.imgurl}?param=${size_video_std}` 
-			}
-		},
-    methods:{
-      playVideo,
+import { playVideo } from "@/utils/methods";
+import { formatCount } from "@/utils/filters";
+import ItemPropsMixin from "@/mixins/item-props-mixin";
+import { size_video_std } from "@/utils/img-size.js";
+export default {
+  mixins: [ItemPropsMixin],
+  props: {
+    mv: {
+      type: Object,
+      required: true,
     },
-    filters:{
-      formatCount
-    }
-	}
+  },
+  computed: {
+    coverUrl() {
+      return `${this.mv.imgurl}?param=${size_video_std}`;
+    },
+  },
+  methods: {
+    playVideo,
+  },
+  filters: {
+    formatCount,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.mv-item{
+.mv-item {
   cursor: default;
   margin-bottom: 20px;
-  div{
+  div {
     height: 20px;
     width: 100%;
     line-height: 20px;
     @include ellipsis;
   }
-  .mv-cover{
+  .mv-cover {
     width: 100%;
     height: 0;
     padding-bottom: 56%;
@@ -55,42 +64,42 @@
     margin-bottom: 5px;
     position: relative;
     border-radius: 5px;
-    .mv-playcount{
+    .mv-playcount {
       position: absolute;
       line-height: 10px;
       font-size: 12px;
       top: 7px;
       right: 7px;
       color: #fff;
-      .iconfont{
+      .iconfont {
         font-size: 12px;
         color: #fff;
       }
     }
   }
-  
-  .mv-name{
+
+  .mv-name {
     color: var(--color-level2);
     font-size: 14px;
-    span{
+    span {
       cursor: pointer;
-      &:hover{
+      &:hover {
         color: var(--color-level1);
       }
     }
   }
-  
-  .mv-artists{
+
+  .mv-artists {
     color: var(--color-level4);
     font-size: 12px;
-    .artist-item{
-      .name{
+    .artist-item {
+      .name {
         cursor: pointer;
-        &:hover{
+        &:hover {
           color: var(--color-level3);
         }
       }
-      .separator{
+      .separator {
         display: inline-block;
         margin: 0 5px;
       }

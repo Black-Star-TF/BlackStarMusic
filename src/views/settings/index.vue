@@ -1,88 +1,100 @@
 <template>
   <div class="settings">
-      <loading/>
+    <loading />
   </div>
 </template>
 
 <script>
-import Loading from '@/components/common/loading'
+import Loading from "@/components/common/loading";
 export default {
-  name: '',
+  name: "",
   mixins: [],
   components: {
-    Loading
+    Loading,
   },
-  data () {
+  data() {
     return {
       value: [],
       treeProps: {
-        children: 'children',
-        value: 'id',
-        label: 'label'
+        children: "children",
+        value: "id",
+        label: "label",
       },
-      treeData: [{
-                id: 0,
-                label: '一年级',
-                children: [{
-                    id: 10,
-                    label: '语文'
-                }, {
-                    id: 11,
-                    label: '数学'
-                }]
-            }, {
-                id: 1,
-                label: '二年级',
-                children: [{
-                    id: 20,
-                    label: '语文'
-                }, {
-                    id: 21,
-                    label: '数学'
-                }, {
-                    id: 22,
-                    label: '英语'
-                }]
-            }, {
-                id: 2,
-                label: '三年级',
-                children: [{
-                    id: 30,
-                    label: '语文'
-                }, {
-                    id: 31,
-                    label: '数学'
-                }, {
-                    id: 32,
-                    label: '英语'
-                }, {
-                    id: 33,
-                    label: '自然'
-                },
-                {
-                    id: 34,
-                    label: '自然'
-                },
-                {
-                    id: 35,
-                    label: '自然'
-                },
-                {
-                    id: 36,
-                    label: '自然'
-                }]
-            }]
-    }
+      treeData: [
+        {
+          id: 0,
+          label: "一年级",
+          children: [
+            {
+              id: 10,
+              label: "语文",
+            },
+            {
+              id: 11,
+              label: "数学",
+            },
+          ],
+        },
+        {
+          id: 1,
+          label: "二年级",
+          children: [
+            {
+              id: 20,
+              label: "语文",
+            },
+            {
+              id: 21,
+              label: "数学",
+            },
+            {
+              id: 22,
+              label: "英语",
+            },
+          ],
+        },
+        {
+          id: 2,
+          label: "三年级",
+          children: [
+            {
+              id: 30,
+              label: "语文",
+            },
+            {
+              id: 31,
+              label: "数学",
+            },
+            {
+              id: 32,
+              label: "英语",
+            },
+            {
+              id: 33,
+              label: "自然",
+            },
+            {
+              id: 34,
+              label: "自然",
+            },
+            {
+              id: 35,
+              label: "自然",
+            },
+            {
+              id: 36,
+              label: "自然",
+            },
+          ],
+        },
+      ],
+    };
   },
   computed: {},
-  methods: {
-      
-  },
+  methods: {},
   filters: {},
-  created () {}
-}
+  created() {},
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

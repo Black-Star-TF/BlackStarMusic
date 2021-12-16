@@ -1,40 +1,38 @@
 <template>
-  <div class="message-drawer" @click.stop>
-
-  </div>
+  <div class="message-drawer" @click.stop></div>
 </template>
 
 <script>
-import{ mapMutations } from 'vuex'
+import { mapMutations } from "vuex";
 export default {
-  name: '',
+  name: "",
   mixins: [],
   components: {},
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {},
   methods: {
-    ...mapMutations(['updateApp']),
-    close(){
-      this.updateApp({key: 'messageDrawerVisible', value: false})
-    }
+    ...mapMutations(["updateApp"]),
+    close() {
+      this.updateApp({ key: "messageDrawerVisible", value: false });
+    },
   },
   filters: {},
-  created () {},
-  mounted(){
-    const app = document.getElementById('app')
-    app.addEventListener('click', this.close)
+  created() {},
+  mounted() {
+    const app = document.getElementById("app");
+    app.addEventListener("click", this.close);
   },
-  beforeDestroy(){
-    const app = document.getElementById('app')
-    app.removeEventListener('click', this.close)
+  beforeDestroy() {
+    const app = document.getElementById("app");
+    app.removeEventListener("click", this.close);
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.message-drawer{
+.message-drawer {
   position: absolute;
   width: var(--app-drawer-width);
   top: var(--app-header-height);

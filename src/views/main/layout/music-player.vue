@@ -3,7 +3,7 @@
     <!-- 播放进度条 -->
     <div class="progress-slider-container">
       <vue-slider
-        class="progress-slider" 
+        class="progress-slider"
         v-model="value"
         :min="0"
         :max="player.currentTrackDuration"
@@ -19,29 +19,53 @@
       >
       </vue-slider>
     </div>
-    
 
     <div class="controls">
       <div class="song-info">
         <template v-if="currentSong.id">
-          <div class="song-avatar" :style="{'backgroundImage': `url(${coverUrl})`}">
-            <div class="mask"  @click="showSongDetail">
-              <span class="iconfont icon-zhankai" v-if="!app.songDetailVisible"></span>
+          <div
+            class="song-avatar"
+            :style="{ backgroundImage: `url(${coverUrl})` }"
+          >
+            <div class="mask" @click="showSongDetail">
+              <span
+                class="iconfont icon-zhankai"
+                v-if="!app.songDetailVisible"
+              ></span>
               <span class="iconfont icon-shouqi" v-else></span>
             </div>
           </div>
           <div class="info">
             <div class="song-name">
-              <span class="name">{{currentSong.name}}<span class="alias" v-if="currentSong.alia.length > 0">({{currentSong.alia[0]}})</span></span>
-              <span class="artists">- 
-                <span v-for="(artist,index) in currentSong.ar" :key="artist.id">
-                  <span class="artist-name" @click="toArtistDetail(artist.id)">{{artist.name}}</span>
-                  <span class="separator" v-if="index < currentSong.ar.length - 1"> / </span>
+              <span class="name"
+                >{{ currentSong.name
+                }}<span class="alias" v-if="currentSong.alia.length > 0"
+                  >({{ currentSong.alia[0] }})</span
+                ></span
+              >
+              <span class="artists"
+                >-
+                <span
+                  v-for="(artist, index) in currentSong.ar"
+                  :key="artist.id"
+                >
+                  <span
+                    class="artist-name"
+                    @click="toArtistDetail(artist.id)"
+                    >{{ artist.name }}</span
+                  >
+                  <span
+                    class="separator"
+                    v-if="index < currentSong.ar.length - 1"
+                  >
+                    /
+                  </span>
                 </span>
               </span>
             </div>
             <div class="song-duration">
-              {{value  | formatTrackTime}} / {{player.currentTrackDuration | formatTrackTime}}
+              {{ value | formatTrackTime }} /
+              {{ player.currentTrackDuration | formatTrackTime }}
             </div>
           </div>
         </template>
@@ -61,24 +85,38 @@
           <span class="iconfont icon-bofang" v-else></span>
         </span>
         <span class="control-item next">
-          <span class="iconfont icon-next" @click="player.playNextTrack()"></span>
+          <span
+            class="iconfont icon-next"
+            @click="player.playNextTrack()"
+          ></span>
         </span>
         <span class="control-item share">
           <span class="iconfont icon-fenxiang1"></span>
         </span>
       </div>
       <div class="play-settings">
-        <el-tooltip class="item" effect="dark" content="顺序播放" placement="top">
-          <span class="setting-item play-mode iconfont icon-shunxubofang"></span>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="顺序播放"
+          placement="top"
+        >
+          <span
+            class="setting-item play-mode iconfont icon-shunxubofang"
+          ></span>
         </el-tooltip>
-        <span 
-          class="setting-item current-playlist iconfont icon-bofangliebiao" 
-          title="播放列表" 
-          @click="showPlaylist" 
-          :class="{'active': app.playlistDrawerVisible}"
+        <span
+          class="setting-item current-playlist iconfont icon-bofangliebiao"
+          title="播放列表"
+          @click="showPlaylist"
+          :class="{ active: app.playlistDrawerVisible }"
         ></span>
 
-        <span class="setting-item sound iconfont" @click="handleMute" :class="volumeIcon">
+        <span
+          class="setting-item sound iconfont"
+          @click="handleMute"
+          :class="volumeIcon"
+        >
           <div class="volume-control" @click.stop>
             <vue-slider
               class="volume-slider"
@@ -104,102 +142,104 @@
 </template>
 
 <script>
-import {toArtistDetail} from '@/utils/methods'
-import {mapState, mapMutations} from 'vuex'
-import VueSlider from 'vue-slider-component'
-import {size_1v1_small} from '@/utils/img-size.js'
+import { toArtistDetail } from "@/utils/methods";
+import { mapState, mapMutations } from "vuex";
+import VueSlider from "vue-slider-component";
+import { size_1v1_small } from "@/utils/img-size.js";
 export default {
   mixins: [],
   components: {
     VueSlider,
   },
-  data () {
+  data() {
     return {
       value: 0.00001,
       onDrag: false,
       playing: false,
       liked: false,
       volume: 1,
-      isShowPlaylist: false
-    }
+      isShowPlaylist: false,
+    };
   },
   computed: {
-    ...mapState(['player', 'app']),
-    coverUrl(){
-      return `${this.currentSong.al&&this.currentSong.al.picUrl}?param=${size_1v1_small}`
+    ...mapState(["player", "app"]),
+    coverUrl() {
+      return `${this.currentSong.al &&
+        this.currentSong.al.picUrl}?param=${size_1v1_small}`;
     },
-    currentSong(){
-      return this.player.currentTrack
+    currentSong() {
+      return this.player.currentTrack;
     },
-    isLiked(){
-      return this.$store.state.data.likedSongList.includes(this.currentSong.id)
+    isLiked() {
+      return this.$store.state.data.likedSongList.includes(this.currentSong.id);
     },
-    volumeIcon(){
-      let icon = this.player.volume > 0 ? 'icon-yinliang': 'icon-jingyin'
-      return [icon]
-    }
+    volumeIcon() {
+      let icon = this.player.volume > 0 ? "icon-yinliang" : "icon-jingyin";
+      return [icon];
+    },
   },
   methods: {
-    ...mapMutations(['updateApp']),
-    showSongDetail(){
+    ...mapMutations(["updateApp"]),
+    showSongDetail() {
       this.updateApp({
-        key: 'songDetailVisible',
-        value: !this.app.songDetailVisible
-      })
+        key: "songDetailVisible",
+        value: !this.app.songDetailVisible,
+      });
     },
     toArtistDetail,
-    showPlaylist(){
-      this.updateApp({key: 'playlistDrawerVisible', value: !this.app.playlistDrawerVisible})
+    showPlaylist() {
+      this.updateApp({
+        key: "playlistDrawerVisible",
+        value: !this.app.playlistDrawerVisible,
+      });
     },
-    like(){
-      this.liked = !this.liked
+    like() {
+      this.liked = !this.liked;
     },
-    togglePlayStatus(){
-      this.player.togglePlayStatus()
+    togglePlayStatus() {
+      this.player.togglePlayStatus();
     },
-    handleDragStart(){
-      this.onDrag = true
+    handleDragStart() {
+      this.onDrag = true;
     },
-    handleDragEnd(){
-      this.onDrag = false
-      this.player.progress = this.value
+    handleDragEnd() {
+      this.onDrag = false;
+      this.player.progress = this.value;
     },
-    handleMute(){
-      this.player.mute()
-    }
+    handleMute() {
+      this.player.mute();
+    },
   },
   filters: {
     formatTrackTime(value) {
-      if(value == 0){
-        return `0:00`
+      if (value == 0) {
+        return `0:00`;
       }
-      if (!value) return '';
+      if (!value) return "";
       let min = ~~((value / 60) % 60);
-      if(min < 10){
-        min = '0'+ min
+      if (min < 10) {
+        min = "0" + min;
       }
-      let sec = (~~(value % 60)).toString().padStart(2, '0');
+      let sec = (~~(value % 60)).toString().padStart(2, "0");
       return `${min}:${sec}`;
     },
   },
-  watch:{
-    'player.progress':{
-      handler(val){
-         if(!this.onDrag){
-          this.value = this.player.progress
+  watch: {
+    "player.progress": {
+      handler(val) {
+        if (!this.onDrag) {
+          this.value = this.player.progress;
         }
-      }
-    }
+      },
+    },
   },
-  created () {
-    
-  }
-}
+  created() {},
+};
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.app-footer{
+.app-footer {
   height: var(--app-player-height);
   bottom: 0;
   left: 0;
@@ -209,23 +249,23 @@ export default {
   background-color: var(--footer-bg-color);
   z-index: 102;
   border-top: 2px solid var(--footer-bd-color);
-  .progress-slider-container{
+  .progress-slider-container {
     position: absolute;
     width: 100%;
     height: 2px;
   }
-  .controls{
+  .controls {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .song-info{
+    .song-info {
       width: 340px;
       height: 40px;
       margin-left: 10px;
-      .song-avatar{
+      .song-avatar {
         width: 40px;
         height: 40px;
         border-radius: 5px;
@@ -234,31 +274,31 @@ export default {
         margin-right: 10px;
         cursor: pointer;
         overflow: hidden;
-        &:hover{
-          .mask{
+        &:hover {
+          .mask {
             display: block;
           }
         }
-        .mask{
+        .mask {
           display: none;
           width: 100%;
           height: 100%;
           line-height: 40px;
           background-color: rgba($color: #000000, $alpha: 0.6);
           text-align: center;
-          span{
+          span {
             color: #fff;
           }
         }
       }
-      .info{
+      .info {
         float: left;
         width: 290px;
         height: 40px;
-        .song-name{
+        .song-name {
           font-size: 14px;
           line-height: 20px;
-          .name{
+          .name {
             display: inline-block;
             max-width: 150px;
             @include ellipsis;
@@ -266,21 +306,21 @@ export default {
             cursor: pointer;
             color: var(--color-level2);
           }
-          .artists{
+          .artists {
             display: inline-block;
             max-width: 120px;
             @include ellipsis;
             cursor: pointer;
             color: var(--color-level4);
-            .artist-name{
+            .artist-name {
               color: var(--color-level3);
-              &:hover{
+              &:hover {
                 color: var(--color-level2);
               }
             }
           }
         }
-        .song-duration{
+        .song-duration {
           line-height: 20px;
           max-width: 120px;
           @include ellipsis;
@@ -290,36 +330,37 @@ export default {
       }
     }
 
-    .play-controls{
+    .play-controls {
       width: 240px;
       height: 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       line-height: 40px;
-      .control-item{
+      .control-item {
         text-align: center;
         cursor: pointer;
         color: var(--color-netease-red);
-        &.play{
+        &.play {
           line-height: 40px;
           width: 40px;
           height: 40px;
           border-radius: 50%;
           color: #fff;
           background-color: var(--color-netease-red);
-          .iconfont{
+          .iconfont {
             position: relative;
             left: 1px;
           }
         }
-        &.share, &.like{
+        &.share,
+        &.like {
           color: var(--color-level2);
         }
       }
     }
 
-    .play-settings{
+    .play-settings {
       margin-right: 10px;
       width: 340px;
       height: 40px;
@@ -327,23 +368,23 @@ export default {
       justify-content: flex-end;
       align-items: center;
       position: relative;
-      .setting-item{
+      .setting-item {
         margin-right: 20px;
         font-size: 20px;
         color: var(--color-level2);
         position: relative;
         display: inline-block;
-        &:hover{
-          .volume-control{
+        &:hover {
+          .volume-control {
             display: flex;
           }
         }
-        &.current-playlist{
-          &.active{
+        &.current-playlist {
+          &.active {
             color: var(--color-netease-red);
           }
         }
-        .volume-control{
+        .volume-control {
           position: absolute;
           display: none;
           z-index: 10000;
@@ -356,9 +397,9 @@ export default {
           background-color: var(--panel-box-bg-color);
           box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
           border-radius: 3px;
-          &:before{
+          &:before {
             display: block;
-            content: '';
+            content: "";
             position: absolute;
             width: 0;
             height: 0;
@@ -367,16 +408,16 @@ export default {
             bottom: -12px;
             left: calc(50% - 6px);
           }
-          ::v-deep .volume-slider{
+          ::v-deep .volume-slider {
             padding: 0;
-            .vue-slider-rail{
+            .vue-slider-rail {
               background-color: var(--search-bg-color);
               border-radius: 2.5px;
-              .vue-slider-process{
+              .vue-slider-process {
                 border-radius: 2.5px;
                 background-color: var(--color-netease-red);
               }
-              .vue-slider-dot{
+              .vue-slider-dot {
                 width: 10px;
                 height: 10px;
                 border-radius: 50%;
@@ -395,12 +436,13 @@ export default {
   margin-bottom: -5px;
   // overflow: hidden;
   // box-sizing: border-box;
-  .vue-slider-rail{
-    .vue-slider-process{
+  .vue-slider-rail {
+    .vue-slider-process {
       background-color: var(--color-netease-red);
     }
-    &:hover,&:active{
-      .vue-slider-dot-handle{
+    &:hover,
+    &:active {
+      .vue-slider-dot-handle {
         width: 10px;
         height: 10px;
         border-radius: 50%;
@@ -413,4 +455,3 @@ export default {
   }
 }
 </style>
-

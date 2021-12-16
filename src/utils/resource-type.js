@@ -4,5 +4,5 @@ export default {
   PLAYLIST: 2,
   ALBUM: 3,
   RADIO: 4,
-  VIDEO: 5
-}
+  VIDEO: 5,
+};

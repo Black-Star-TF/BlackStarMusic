@@ -9,7 +9,7 @@
             >”相关的结果</span
           >
         </div>
-        
+
         <!-- 单曲 -->
         <div
           class="search-suggest-group"
@@ -56,7 +56,9 @@
           class="search-suggest-group"
           v-if="searchSuggestions && searchSuggestions.albums"
         >
-          <div class="group-name"><i class="iconfont icon-zhuanji"></i>专辑</div>
+          <div class="group-name">
+            <i class="iconfont icon-zhuanji"></i>专辑
+          </div>
           <div
             class="album-item item"
             v-for="album in searchSuggestions.albums"
@@ -150,7 +152,13 @@
 import { getHotSearch, getSearchSuggestions } from "@/api/search";
 import Container from "@/components/common/container";
 import { mapMutations, mapState } from "vuex";
-import { search, toAlbumDetail, toArtistDetail, toPlaylistDetail, debounce } from "@/utils/methods";
+import {
+  search,
+  toAlbumDetail,
+  toArtistDetail,
+  toPlaylistDetail,
+  debounce,
+} from "@/utils/methods";
 export default {
   components: {
     Container,
@@ -211,7 +219,7 @@ export default {
         this.searchSuggestions = res.result;
       });
     },
-    debouncedGetSuggestions: debounce('getSearchSuggestions', 500)
+    debouncedGetSuggestions: debounce("getSearchSuggestions", 500),
   },
   filters: {},
   mounted() {
@@ -242,9 +250,9 @@ export default {
         this.getHotSearchData();
       }
     },
-    $route(){
-      this.close()
-    }
+    $route() {
+      this.close();
+    },
   },
 };
 </script>
@@ -386,7 +394,7 @@ export default {
 
 .search-suggest {
   margin-top: 5px;
-  .header{
+  .header {
     height: 20px;
     line-height: 20px;
     font-size: 13px;
@@ -408,7 +416,7 @@ export default {
       color: var(--color-level3);
       margin: 5px 0;
       padding-left: 10px;
-      .iconfont{
+      .iconfont {
         margin-right: 5px;
         font-size: 15px;
       }

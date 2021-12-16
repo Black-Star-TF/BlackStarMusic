@@ -203,13 +203,14 @@ export default {
         left: 0;
         z-index: 17;
       }
-      &.next::after, &.prev::after{
+      &.next::after,
+      &.prev::after {
         content: "";
         display: block;
         position: absolute;
         width: 100%;
         height: 100%;
-        background-color: rgba(0,0,0, .1);
+        background-color: rgba(0, 0, 0, 0.1);
       }
     }
   }

@@ -16,7 +16,7 @@
     <div class="chart-abstract">
       <el-table
         v-loading="loading"
-        :data="list.slice(0,5)"
+        :data="list.slice(0, 5)"
         :show-header="false"
         height="100%"
         @row-dblclick="play"
@@ -77,7 +77,7 @@ import {
 } from "@/utils/methods";
 import { getPlaylistDetail } from "@/api/playlist.js";
 import { size_1v1_std } from "@/utils/img-size.js";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -98,17 +98,20 @@ export default {
     toArtistDetail,
     play(song) {
       // TODO: 播放音乐
-			this.player.playTrackFromPlaylist(song.id, this.list.map(song => song.id))
+      this.player.playTrackFromPlaylist(
+        song.id,
+        this.list.map(song => song.id)
+      );
     },
     async getTracksData() {
       const {
         playlist: { tracks },
       } = await getPlaylistDetail({ id: this.toplist.id });
-      this.list = tracks
+      this.list = tracks;
     },
   },
   computed: {
-		...mapState(['player']),
+    ...mapState(["player"]),
     loading() {
       return this.list.length <= 0;
     },
@@ -233,7 +236,7 @@ export default {
                 }
                 .artists {
                   color: var(--color-level4);
-									padding-right: 10px;
+                  padding-right: 10px;
                   @include ellipsis;
                   .artist-name {
                     cursor: pointer;

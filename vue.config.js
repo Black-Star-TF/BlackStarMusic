@@ -1,16 +1,16 @@
 module.exports = {
-  devServer:{
+  devServer: {
     disableHostCheck: true,
-    port: process.env.DEV_SERVER_PORT || 8080,  // 配置应用端口
+    port: process.env.DEV_SERVER_PORT || 8080, // 配置应用端口
     // proxy:{
-		// 	'^/api': {
+    // 	'^/api': {
     //     target: 'http://localhost:3000',
     //     changeOrigin: true,
     //     pathRewrite:{
     //       '^/api': ''
     //     }
-		// 	}
-		// }
+    // 	}
+    // }
   },
   // css:{
   //   loaderOptions:{
@@ -19,4 +19,4 @@ module.exports = {
   //     }
   //   }
   // }
-}
+};

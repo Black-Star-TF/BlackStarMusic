@@ -19,27 +19,27 @@
 </template>
 
 <script>
-import MusicPlayer from './layout/music-player.vue' 
-import MusicAside from './layout/music-aside.vue' 
+import MusicPlayer from "./layout/music-player.vue";
+import MusicAside from "./layout/music-aside.vue";
 export default {
   components: {
     MusicPlayer,
-    MusicAside
+    MusicAside,
   },
-  methods:{
-    getKey(){
-      if(this.$route.meta.hasKey){
-        return this.$route.fullPath
-      }else{
-        return ''
+  methods: {
+    getKey() {
+      if (this.$route.meta.hasKey) {
+        return this.$route.fullPath;
+      } else {
+        return "";
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.layout{
+.layout {
   position: absolute;
   left: 0;
   right: 0;
@@ -47,7 +47,7 @@ export default {
   bottom: 0;
   z-index: 100;
 }
-.main-wrapper{
+.main-wrapper {
   position: absolute;
   top: 0;
   bottom: var(--app-player-height);

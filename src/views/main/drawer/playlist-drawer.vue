@@ -12,7 +12,11 @@
       </div>
     </div>
 
-    <div class="playlist-drawer-content" v-if="songList.length > 0" ref="content">
+    <div
+      class="playlist-drawer-content"
+      v-if="songList.length > 0"
+      ref="content"
+    >
       <div
         class="song-item"
         v-for="(song, index) in songList"
@@ -92,11 +96,11 @@ export default {
       if (list.length > 0) {
         const { songs } = await getSongsDetail({ ids: list.join(",") });
         this.songList = songs;
-        if(!this.currentTrackId) return
+        if (!this.currentTrackId) return;
         this.$nextTick(() => {
           let node = this.$el.querySelector(`#song-${this.currentTrackId}`);
-          let content = this.$refs.content
-          content.scrollTop = node.offsetTop - (content.offsetHeight / 2)
+          let content = this.$refs.content;
+          content.scrollTop = node.offsetTop - content.offsetHeight / 2;
         });
       }
     },

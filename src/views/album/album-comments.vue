@@ -5,27 +5,27 @@
 </template>
 
 <script>
-import RESOURCE_TYPE from '@/utils/resource-type'
-import Comment from '@/views/resource-comment/components/comment.vue'
+import RESOURCE_TYPE from "@/utils/resource-type";
+import Comment from "@/views/resource-comment/components/comment.vue";
 export default {
   components: {
-    Comment
+    Comment,
   },
   props: {
     id: {
-      required: true
-    }
+      required: true,
+    },
   },
-  data () {
+  data() {
     return {
       type: RESOURCE_TYPE.ALBUM,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.album-comment-wrapper{
+.album-comment-wrapper {
   padding: 20px 30px;
 }
 </style>

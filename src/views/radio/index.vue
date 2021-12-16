@@ -1,17 +1,29 @@
 <template>
-  <div class="radio-detail"  v-if="radio">
+  <div class="radio-detail" v-if="radio">
     <div class="radio-detail-header">
-      <div class="radio-cover" :style="{'backgroundImage': `url(${radioCoverUrl})`}"></div>
+      <div
+        class="radio-cover"
+        :style="{ backgroundImage: `url(${radioCoverUrl})` }"
+      ></div>
       <div class="radio-info">
         <div class="radio-name">
           <div class="type">电台</div>
-          <div class="name">{{radio.name}}</div>
+          <div class="name">{{ radio.name }}</div>
         </div>
         <div class="radio-creator">
-          <span class="creator-cover" @click="toUserDetail(radio.dj.userId)" :style="{'backgroundImage': `url(${djCoverUrl})`}">
-            <span class="identityIcon" :style="{'backgroundImage': `url(${identityIconUrl})`}"></span>
+          <span
+            class="creator-cover"
+            @click="toUserDetail(radio.dj.userId)"
+            :style="{ backgroundImage: `url(${djCoverUrl})` }"
+          >
+            <span
+              class="identityIcon"
+              :style="{ backgroundImage: `url(${identityIconUrl})` }"
+            ></span>
           </span>
-          <span class="creator-name" @click="toUserDetail(radio.dj.userId)">{{radio.dj.nickname}}</span>
+          <span class="creator-name" @click="toUserDetail(radio.dj.userId)">{{
+            radio.dj.nickname
+          }}</span>
         </div>
         <div class="radio-operation">
           <span class="play-all operation-item">
@@ -22,12 +34,21 @@
               <span class="iconfont icon-jia"></span>
             </span>
           </span>
-          <span class="subscribe operation-item"><span class="iconfont icon-xingbiao"></span>  收藏({{radio.subCount | formatCount}})</span>
-          <span class="share operation-item"><span class="iconfont icon-fenxiang"></span> 分享({{radio.shareCount | formatCount}})</span>
+          <span class="subscribe operation-item"
+            ><span class="iconfont icon-xingbiao"></span> 收藏({{
+              radio.subCount | formatCount
+            }})</span
+          >
+          <span class="share operation-item"
+            ><span class="iconfont icon-fenxiang"></span> 分享({{
+              radio.shareCount | formatCount
+            }})</span
+          >
         </div>
 
         <div class="radio-desc">
-          <span class="category">{{radio.category}}</span>{{radio.desc}}
+          <span class="category">{{ radio.category }}</span
+          >{{ radio.desc }}
         </div>
       </div>
     </div>
@@ -35,15 +56,19 @@
     <div class="radio-detail-nav">
       <tab-nav>
         <template v-slot:left>
-          <div 
+          <div
             v-for="item in modeList"
             :key="item.name"
-            :class="{'active': mode == item.name}" 
+            :class="{ active: mode == item.name }"
             @click="mode = item.name"
           >
-            {{item.label}}
-            <span class="count" v-if="item.name == 'programs'">({{radio.programCount | formatCount}})</span>
-            <span class="count" v-if="item.name == 'subscribers'">({{radio.subCount | formatCount}})</span>
+            {{ item.label }}
+            <span class="count" v-if="item.name == 'programs'"
+              >({{ radio.programCount | formatCount }})</span
+            >
+            <span class="count" v-if="item.name == 'subscribers'"
+              >({{ radio.subCount | formatCount }})</span
+            >
           </div>
         </template>
       </tab-nav>
@@ -51,87 +76,86 @@
 
     <div class="radio-detail-content">
       <radio-programs v-if="mode == 'programs'" :rid="rid"></radio-programs>
-      <radio-subscribers v-if="mode == 'subscribers'" :rid="rid"></radio-subscribers>
+      <radio-subscribers
+        v-if="mode == 'subscribers'"
+        :rid="rid"
+      ></radio-subscribers>
     </div>
   </div>
 </template>
 
 <script>
-import TabNav from '@/components/common/tab-nav'
-import RadioPrograms from './radio-programs.vue'
-import RadioSubscribers from './radio-subscribers.vue'
-import { toUserDetail } from '@/utils/methods'
-import { getRadioDetail } from '@/api/dj-radio.js'
-import { formatCount } from '@/utils/filters'
-import {size_1v1_std, size_1v1_small} from '@/utils/img-size.js'
-import RESOURCE_TYPE from '@/utils/resource-type'
+import TabNav from "@/components/common/tab-nav";
+import RadioPrograms from "./radio-programs.vue";
+import RadioSubscribers from "./radio-subscribers.vue";
+import { toUserDetail } from "@/utils/methods";
+import { getRadioDetail } from "@/api/dj-radio.js";
+import { formatCount } from "@/utils/filters";
+import { size_1v1_std, size_1v1_small } from "@/utils/img-size.js";
+import RESOURCE_TYPE from "@/utils/resource-type";
 export default {
   components: {
     TabNav,
     RadioPrograms,
-    RadioSubscribers
+    RadioSubscribers,
   },
-  data () {
+  data() {
     return {
       rid: null,
       radio: null,
       type: RESOURCE_TYPE.RADIO,
-      mode: 'programs',
-      modeList:[
-        { name: 'programs', label: '节目' },
-        { name: 'subscribers', label: '订阅者'}
-      ]
-    }
+      mode: "programs",
+      modeList: [
+        { name: "programs", label: "节目" },
+        { name: "subscribers", label: "订阅者" },
+      ],
+    };
   },
   computed: {
-    radioCoverUrl(){
-      return `${this.radio.picUrl}?param=${size_1v1_std}`
+    radioCoverUrl() {
+      return `${this.radio.picUrl}?param=${size_1v1_std}`;
     },
-    djCoverUrl(){
-      return `${this.radio.dj.avatarUrl}?param=${size_1v1_small}`
+    djCoverUrl() {
+      return `${this.radio.dj.avatarUrl}?param=${size_1v1_small}`;
     },
-    identityIconUrl(){
-      return `${this.radio.dj.avatarDetail.identityIconUrl}`
-    }
+    identityIconUrl() {
+      return `${this.radio.dj.avatarDetail.identityIconUrl}`;
+    },
   },
   methods: {
     toUserDetail,
-    playAll(){
-
+    playAll() {},
+    addToPlayList() {},
+    async getDetail() {
+      const { data } = await getRadioDetail({ rid: this.rid });
+      this.radio = data;
     },
-    addToPlayList(){
-
-    },
-    async getDetail(){
-      const { data } = await getRadioDetail({ rid: this.rid })
-      this.radio = data
-    }
   },
   filters: {
-    formatCount
+    formatCount,
   },
-  created () {
-    this.rid = this.$route.query.rid
-    this.getDetail()
-  }
-}
+  created() {
+    this.rid = this.$route.query.rid;
+    this.getDetail();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.radio-detail{
+.radio-detail {
   width: 100%;
   height: 100%;
   padding-bottom: 30px;
   box-sizing: border-box;
   overflow: overlay;
-  .radio-detail-header{
+  .radio-detail-header {
     width: 100%;
     padding: 0 30px;
     padding-top: 10px;
     box-sizing: border-box;
     @include clearfix;
-    .radio-cover{
+    .radio-cover {
       float: left;
       width: 200px;
       height: 200px;
@@ -141,15 +165,15 @@ export default {
       border: 1px solid var(--main-border-color);
       box-sizing: border-box;
     }
-    .radio-info{
+    .radio-info {
       float: left;
       width: calc(100% - 230px);
-      .radio-name{
+      .radio-name {
         line-height: 30px;
         font-size: 24px;
         color: var(--color-level2);
         display: flex;
-        .type{
+        .type {
           margin-top: 5px;
           font-size: 14px;
           text-align: center;
@@ -162,16 +186,16 @@ export default {
           color: var(--color-netease-red);
           border-radius: 3px;
         }
-        .name{
+        .name {
           flex: 1;
         }
       }
-      .radio-creator{
+      .radio-creator {
         height: 35px;
         line-height: 35px;
         font-size: 13px;
         margin: 10px 0;
-        .creator-cover{
+        .creator-cover {
           float: left;
           width: 25px;
           height: 25px;
@@ -180,7 +204,7 @@ export default {
           @include background;
           cursor: pointer;
           position: relative;
-          .identityIcon{
+          .identityIcon {
             position: absolute;
             width: 12px;
             height: 12px;
@@ -190,18 +214,18 @@ export default {
             bottom: 0;
           }
         }
-        .creator-name{
+        .creator-name {
           cursor: pointer;
           color: var(--link-color);
           margin: 0 10px;
-          &:hover{
+          &:hover {
             color: var(--link-hover-color);
           }
         }
       }
-      .radio-operation{
+      .radio-operation {
         margin: 11px 0;
-        .operation-item{
+        .operation-item {
           display: inline-block;
           padding: 0 15px;
           height: 30px;
@@ -212,53 +236,53 @@ export default {
           cursor: pointer;
           margin-right: 10px;
           font-size: 14px;
-          &:hover{
+          &:hover {
             background-color: var(--color-level5);
           }
         }
-        .play-all{
+        .play-all {
           border-color: var(--color-netease-red);
           color: #fff;
           padding: 0;
           background-color: var(--color-netease-red);
-          &:hover{
+          &:hover {
             background-color: var(--color-netease-red);
           }
-          .play{
+          .play {
             display: inline-block;
             padding: 0 10px;
             line-height: 30px;
-            border-right: 1px solid rgba($color: #fff, $alpha: .3);
-            .iconfont{
+            border-right: 1px solid rgba($color: #fff, $alpha: 0.3);
+            .iconfont {
               display: inline-block;
               width: 25px;
               height: 25px;
               font-size: 12px;
               text-align: center;
               margin: 0 2px;
-              transform: scale(.7);
+              transform: scale(0.7);
               line-height: 25px;
               border-radius: 50%;
               border: 1px solid #fff;
-              &::before{
+              &::before {
                 position: relative;
                 left: 1px;
               }
             }
           }
-          .add{
+          .add {
             display: inline-block;
             padding: 0 10px;
             line-height: 30px;
           }
         }
       }
-      .radio-desc{
+      .radio-desc {
         font-size: 13px;
         line-height: 30px;
         margin-top: 20px;
         color: var(--color-level2);
-        .category{
+        .category {
           display: inline-block;
           font-size: 12px;
           padding: 0 2px;
@@ -273,14 +297,14 @@ export default {
       }
     }
   }
-  .radio-detail-nav{
+  .radio-detail-nav {
     padding: 0 30px;
     margin-top: 20px;
-    .count{
+    .count {
       font-size: 12px;
     }
   }
-  .radio-detail-content{
+  .radio-detail-content {
     margin-top: 1px;
   }
 }

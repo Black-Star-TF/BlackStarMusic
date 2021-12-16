@@ -6,21 +6,21 @@
 
 <script>
 export default {
-  name: '',
+  name: "",
   mixins: [],
   components: {},
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {},
   methods: {},
   filters: {},
-  created () {}
-}
+  created() {},
+};
 </script>
 
 <style lang="scss" scoped>
-h1{
+h1 {
   font-size: 30px;
 }
 </style>

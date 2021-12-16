@@ -152,7 +152,7 @@ export default {
     handleScrollEnd() {
       setTimeout(() => {
         this.autoScroll = true;
-        if (this.player.playing&&this.scroller) {
+        if (this.player.playing && this.scroller) {
           this.scroller.refresh();
           this.scrollToActiveLyric();
         }

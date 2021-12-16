@@ -69,7 +69,7 @@ export default {
     },
     async getData() {
       this.songList = [];
-      let res = await getTopNewSong({type: this.currentType});
+      let res = await getTopNewSong({ type: this.currentType });
       this.songList = res.data;
     },
     playAll() {
@@ -141,7 +141,7 @@ export default {
   }
 }
 
-.loading-wrapper{
-	margin-top: 30px;
+.loading-wrapper {
+  margin-top: 30px;
 }
 </style>

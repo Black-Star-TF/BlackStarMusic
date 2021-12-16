@@ -4,8 +4,11 @@
     <div class="user">
       <template v-if="loginStatus">
         <!-- 登录后显示 -->
-        <div class="avater" :style="{'backgroundImage': `url(${userProfile.avatarUrl})`}"  ></div>
-        <span class="username">{{userProfile.nickname}}</span>
+        <div
+          class="avater"
+          :style="{ backgroundImage: `url(${userProfile.avatarUrl})` }"
+        ></div>
+        <span class="username">{{ userProfile.nickname }}</span>
       </template>
       <template v-else>
         <!-- 未登录时显示 -->
@@ -18,33 +21,81 @@
 
     <div class="nav-wrapper">
       <!-- 菜单 -->
-      <router-link class="nav-item" to="/discovery" tag="div" active-class="active">
+      <router-link
+        class="nav-item"
+        to="/discovery"
+        tag="div"
+        active-class="active"
+      >
         <i class="iconfont icon-wangyiyunyinleclick"></i>发现音乐
       </router-link>
-      <router-link class="nav-item" to="/private-fm" tag="div" active-class="active">
+      <router-link
+        class="nav-item"
+        to="/private-fm"
+        tag="div"
+        active-class="active"
+      >
         <i class="iconfont icon-Sharingwuxianlanyagongxiang10"></i>私人FM
       </router-link>
-      <router-link class="nav-item" to="/shipin" tag="div" active-class="active">
+      <router-link
+        class="nav-item"
+        to="/shipin"
+        tag="div"
+        active-class="active"
+      >
         <i class="iconfont icon-video"></i>视频
       </router-link>
-      <router-link class="nav-item" to="/friend" tag="div" active-class="active">
+      <router-link
+        class="nav-item"
+        to="/friend"
+        tag="div"
+        active-class="active"
+      >
         <i class="iconfont icon-friend"></i>朋友
       </router-link>
-    <!-- 我的音乐 -->
+      <!-- 我的音乐 -->
       <div class="group-name">我的音乐</div>
-      <router-link class="nav-item" to="/download" tag="div" active-class="active">
+      <router-link
+        class="nav-item"
+        to="/download"
+        tag="div"
+        active-class="active"
+      >
         <i class="iconfont icon-xiazai"></i>下载管理
       </router-link>
-      <router-link class="nav-item" to="/recent" tag="div" active-class="active">
-        <i class="iconfont icon-bendi-zuijinbofang" ></i>最近播放
+      <router-link
+        class="nav-item"
+        to="/recent"
+        tag="div"
+        active-class="active"
+      >
+        <i class="iconfont icon-bendi-zuijinbofang"></i>最近播放
       </router-link>
-      <router-link class="nav-item" to="/clound" tag="div" active-class="active" v-if="data.loginStatus">
+      <router-link
+        class="nav-item"
+        to="/clound"
+        tag="div"
+        active-class="active"
+        v-if="data.loginStatus"
+      >
         <i class="iconfont icon-yun"></i>我的音乐云盘
       </router-link>
-      <router-link class="nav-item" to="/my-radio" tag="div" active-class="active" v-if="data.loginStatus">
+      <router-link
+        class="nav-item"
+        to="/my-radio"
+        tag="div"
+        active-class="active"
+        v-if="data.loginStatus"
+      >
         <i class="iconfont icon-dianziyinyuan"></i>我的电台
       </router-link>
-      <router-link class="nav-item" to="/favorites" tag="div" active-class="active" v-if="data.loginStatus">
+      <router-link
+        class="nav-item"
+        to="/favorites"
+        tag="div"
+        active-class="active"
+        v-if="data.loginStatus"
+      >
         <i class="iconfont icon-xingbiao"></i>我的收藏
       </router-link>
       <!-- 创建的歌单 -->
@@ -54,17 +105,17 @@
         创建的歌单
       </div>
       <div v-show="showCreated">
-        <router-link 
-          v-for="(playlist,index) in playlistsCreatedByMe"
+        <router-link
+          v-for="(playlist, index) in playlistsCreatedByMe"
           :key="playlist.id"
-          class="nav-item" 
-          :to="{path: '/playlist', query: { id: playlist.id } }" 
+          class="nav-item"
+          :to="{ path: '/playlist', query: { id: playlist.id } }"
           tag="div"
-          :class="{'active': isRouterActive(playlist.id)}"
+          :class="{ active: isRouterActive(playlist.id) }"
         >
           <i class="iconfont icon-xihuan-kon" v-if="index == 0"></i>
           <i class="iconfont icon-gedan" v-else></i>
-          {{index == 0 ? '我喜欢的音乐' :playlist.name}}
+          {{ index == 0 ? "我喜欢的音乐" : playlist.name }}
         </router-link>
       </div>
       <!-- 收藏的歌单 -->
@@ -74,15 +125,15 @@
         收藏的歌单
       </div>
       <div v-show="showSubscribed">
-        <router-link 
+        <router-link
           v-for="playlist in playlistsSubscribedByMe"
           :key="playlist.id"
-          class="nav-item" 
-          :to="{path: '/playlist', query: { id: playlist.id } }" 
-          tag="div" 
-          :class="{'active': isRouterActive(playlist.id)}"
+          class="nav-item"
+          :to="{ path: '/playlist', query: { id: playlist.id } }"
+          tag="div"
+          :class="{ active: isRouterActive(playlist.id) }"
         >
-          <i class="iconfont icon-gedan"></i>{{playlist.name}}
+          <i class="iconfont icon-gedan"></i>{{ playlist.name }}
         </router-link>
       </div>
     </div>
@@ -92,50 +143,53 @@
 </template>
 
 <script>
-import LoginDialog from '@/components/login/login-dialog'
-import {mapState} from 'vuex'
+import LoginDialog from "@/components/login/login-dialog";
+import { mapState } from "vuex";
 export default {
   components: {
-    LoginDialog
+    LoginDialog,
   },
-  data(){
+  data() {
     return {
       showCreated: false,
-      showSubscribed: false
-    }
+      showSubscribed: false,
+    };
   },
   computed: {
-    ...mapState(['data']),
-    loginStatus(){
-      return this.data.loginStatus
+    ...mapState(["data"]),
+    loginStatus() {
+      return this.data.loginStatus;
     },
-    userProfile(){
-      return this.data.userProfile
+    userProfile() {
+      return this.data.userProfile;
     },
-    playlistsCreatedByMe(){
-      return this.data.playlistsCreatedByMe
+    playlistsCreatedByMe() {
+      return this.data.playlistsCreatedByMe;
     },
-    playlistsSubscribedByMe(){
-      return this.data.playlistsSubscribedByMe
-    }
+    playlistsSubscribedByMe() {
+      return this.data.playlistsSubscribedByMe;
+    },
   },
   methods: {
-    isRouterActive(id){
-      return this.$route.fullPath.indexOf('/playlistdetail') !== -1 && this.$route.params.id == id
+    isRouterActive(id) {
+      return (
+        this.$route.fullPath.indexOf("/playlistdetail") !== -1 &&
+        this.$route.params.id == id
+      );
     },
-    handleLogin(){
-      this.$refs.loginDialog.visible = true
-    }
+    handleLogin() {
+      this.$refs.loginDialog.visible = true;
+    },
   },
-  created(){
+  created() {
     // console.log(this.data);
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
-.app-aside{
+.app-aside {
   position: absolute;
   top: 0;
   bottom: var(--app-player-height);
@@ -144,8 +198,8 @@ export default {
   background-color: var(--aside-bg-color);
   z-index: 100;
   overflow: hidden;
-  
-  .nav-wrapper{
+
+  .nav-wrapper {
     height: calc(100% - 60px);
     overflow: hidden;
     padding-right: 10px;
@@ -156,17 +210,17 @@ export default {
     // &:hover::-webkit-scrollbar{
     //   opacity: 1;
     // }
-    &:hover{
+    &:hover {
       overflow: overlay;
     }
   }
-  .user{
+  .user {
     height: 60px;
     line-height: 60px;
     display: flex;
     align-items: center;
     padding-left: 10px;
-    .avater{
+    .avater {
       cursor: pointer;
       width: 40px;
       height: 40px;
@@ -177,20 +231,20 @@ export default {
       margin-right: 10px;
       @include background;
       background-color: var(--avater-bg-color);
-      .iconfont{
+      .iconfont {
         font-size: 40px;
         color: var(--avater-color);
       }
     }
-    .weidenglu{
+    .weidenglu {
       font-size: 14px;
       color: var(--color-level2);
     }
-    .username{
+    .username {
       color: var(--color-level2);
     }
   }
-  .nav-item{
+  .nav-item {
     height: 36px;
     line-height: 36px;
     padding-left: 20px;
@@ -198,30 +252,30 @@ export default {
     color: var(--color-level2);
     cursor: pointer;
     @include ellipsis;
-    &:hover{
+    &:hover {
       background-color: var(--aside-active-link-bg-color);
     }
-    &.active{
+    &.active {
       background-color: var(--aside-active-link-bg-color);
       color: var(--color-netease-red);
     }
-    .iconfont{
+    .iconfont {
       margin-right: 10px;
     }
   }
-  .group-name{
+  .group-name {
     height: 30px;
     line-height: 30px;
     margin-top: 10px;
     font-size: 13px;
     padding-left: 20px;
     color: var(--color-level4);
-    &:hover{
-      .iconfont{
+    &:hover {
+      .iconfont {
         color: var(--color-level3);
       }
     }
-    .iconfont{
+    .iconfont {
       font-size: 12px;
     }
   }

@@ -80,8 +80,8 @@ import { checkLoginStatus } from "@/api/auth";
 import { changeTheme } from "@/utils/common";
 import { search } from "@/utils/methods";
 export default {
-  props:{
-    keywords: String
+  props: {
+    keywords: String,
   },
   computed: {
     ...mapState(["settings", "app", "data"]),
@@ -96,11 +96,11 @@ export default {
     ...mapActions(["getLikedSongList"]),
     ...mapMutations(["updateApp"]),
     search,
-    handleInput(value){
-      this.$emit('update:keywords', value)
+    handleInput(value) {
+      this.$emit("update:keywords", value);
     },
     showSearchDrawer() {
-      if(!this.app.searchDrawerVisible){
+      if (!this.app.searchDrawerVisible) {
         this.updateApp({ key: "searchDrawerVisible", value: true });
       }
     },
@@ -130,7 +130,7 @@ export default {
     },
     handleSearch() {
       if (this.keywords !== "") {
-        this.$emit('search', this.keywords)
+        this.$emit("search", this.keywords);
       }
     },
     toSettings() {

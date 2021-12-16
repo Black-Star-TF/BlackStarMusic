@@ -8,19 +8,15 @@
       </template>
       <template v-slot:right></template>
       <template v-slot:content>
-        <album-item 
-          v-for="album in albums"
-          :key="album.id"
-          :album="album"
-        />
+        <album-item v-for="album in albums" :key="album.id" :album="album" />
       </template>
     </container>
   </div>
 </template>
 
 <script>
-import { getFavoritesAlbum } from '@/api/auth'
-import AlbumItem from './components/album-item.vue'
+import { getFavoritesAlbum } from "@/api/auth";
+import AlbumItem from "./components/album-item.vue";
 import Container from "@/components/common/container";
 import Loading from "@/components/common/loading";
 export default {
@@ -28,53 +24,53 @@ export default {
     AlbumItem,
     Container,
     Container,
-    Loading
+    Loading,
   },
-  data () {
+  data() {
     return {
       albums: [],
       pageSize: 20,
       pageNo: 1,
       hasMore: false,
-      count: 0
-    }
+      count: 0,
+    };
   },
   computed: {
-    offset(){
-      return (this.pageNo - 1) * this.pageSize
-    }
+    offset() {
+      return (this.pageNo - 1) * this.pageSize;
+    },
   },
   methods: {
-    async getData(){
+    async getData() {
       const { data, count, hasMore } = await getFavoritesAlbum({
         limit: this.pageSize,
-        offset: this.offset
-      })
-      this.albums = this.albums.concat(data)
-      this.hasMore = hasMore
-      this.count = count
-    }
+        offset: this.offset,
+      });
+      this.albums = this.albums.concat(data);
+      this.hasMore = hasMore;
+      this.count = count;
+    },
   },
   filters: {},
-  created () {
-    this.getData()
-  }
-}
+  created() {
+    this.getData();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.favorite-album-wrapper{
+.favorite-album-wrapper {
   padding: 20px 30px;
   height: 100%;
   overflow: overlay;
-  .title{
+  .title {
     height: 30px;
     line-height: 30px;
     margin-bottom: 10px;
     font-size: 15px;
     color: var(--color-level2);
     font-weight: bold;
-    .count{
+    .count {
       font-size: 12px;
       color: var(--color-level3);
       font-weight: normal;

@@ -5,7 +5,7 @@
       <div class="playlist-name">{{ playlist.name }}</div>
       <div class="play-count">
         <span class="iconfont icon-pause"></span
-        >{{ playlist.playCount | formatCount}}
+        >{{ playlist.playCount | formatCount }}
       </div>
     </div>
   </div>
@@ -13,7 +13,7 @@
 
 <script>
 import { toPlaylistDetail } from "@/utils/methods";
-import { formatCount} from "@/utils/filters";
+import { formatCount } from "@/utils/filters";
 import { size_1v1_small } from "@/utils/img-size.js";
 export default {
   props: {

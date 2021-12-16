@@ -2,23 +2,24 @@ export default {
   props: {
     num: {
       type: Number,
-      default: 4
+      default: 4,
     },
     index: {
       type: Number,
-      required: true
+      required: true,
     },
-    margin: { 
+    margin: {
       type: Number,
-      default: 20
-    }
+      default: 20,
+    },
   },
-  computed:{
-    style(){
+  computed: {
+    style() {
       return {
-        'width': `calc((100% - ${(this.num - 1) * this.margin}px) / ${this.num})`,
-        'marginRight': (this.index + 1) % this.num == 0 ? '0' : `${this.margin}px`
-      }
-    }
-  }
-}
+        width: `calc((100% - ${(this.num - 1) * this.margin}px) / ${this.num})`,
+        marginRight:
+          (this.index + 1) % this.num == 0 ? "0" : `${this.margin}px`,
+      };
+    },
+  },
+};

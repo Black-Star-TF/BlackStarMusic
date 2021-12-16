@@ -1,14 +1,14 @@
-@mixin scroll-style{
+@mixin scroll-style {
   overflow: overlay;
 }
 
-@mixin ellipsis{
+@mixin ellipsis {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-@mixin ellipsis-2-line{
+@mixin ellipsis-2-line {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -16,16 +16,16 @@
   text-overflow: ellipsis;
 }
 
-@mixin background{
+@mixin background {
   background-repeat: no-repeat;
   background-size: 101% 101%;
   background-position: center;
   background-color: #fff;
 }
 
-@mixin clearfix{
-  &::after{
-    content: '';
+@mixin clearfix {
+  &::after {
+    content: "";
     display: block;
     clear: both;
   }

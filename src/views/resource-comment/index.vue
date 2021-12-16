@@ -1,26 +1,23 @@
 <template>
-  <div class="resource-comment-wrapper">
-
-  </div>
+  <div class="resource-comment-wrapper"></div>
 </template>
 
 <script>
 export default {
-  name: '',
+  name: "",
   mixins: [],
   components: {},
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {},
   methods: {},
   filters: {},
-  created () {}
-}
+  created() {},
+};
 </script>
 
 <style lang="scss" scoped>
-.resource-comment-wrapper{
-  
+.resource-comment-wrapper {
 }
 </style>

@@ -8,54 +8,113 @@
       <div class="header column song-album">专辑</div>
       <div class="header column song-duration">时长</div>
     </div>
-    <div class="table-row"
-      v-for="(song,index) in songList"
+    <div
+      class="table-row"
+      v-for="(song, index) in songList"
       :key="`${index}-${song.id}`"
       @dblclick="playSong(song)"
-      @contextmenu.prevent="showContextMenu(index,song,$event)"
+      @contextmenu.prevent="showContextMenu(index, song, $event)"
       :class="getActiveClass(index)"
       @click="setActive(index)"
     >
       <div class="row column index">
-        <span v-if="song.id == currentTrackId" class="iconfont icon-yinliang"></span>
-        <span v-else>{{formatIndex(index+1)}}</span>
+        <span
+          v-if="song.id == currentTrackId"
+          class="iconfont icon-yinliang"
+        ></span>
+        <span v-else>{{ formatIndex(index + 1) }}</span>
       </div>
       <div class="row column song-operation">
-        <span class="song-operation-item iconfont liked icon-xihuan-shi" v-if="isLiked(song.id)" @click="handleLikeSong(song.id, false)">
+        <span
+          class="song-operation-item iconfont liked icon-xihuan-shi"
+          v-if="isLiked(song.id)"
+          @click="handleLikeSong(song.id, false)"
+        >
         </span>
-        <span class="song-operation-item iconfont icon-xihuan-kon" v-else @click="handleLikeSong(song.id, true)">
+        <span
+          class="song-operation-item iconfont icon-xihuan-kon"
+          v-else
+          @click="handleLikeSong(song.id, true)"
+        >
         </span>
         <span class="song-operation-item iconfont icon-xiazai"></span>
       </div>
       <div class="row column song-name">
         <div class="song-name-content">
-          <span class="main-name" v-if="keyword" v-html="markKeywords(song.name)"></span>
-          <span class="main-name" :class="{'active': song.id == currentTrackId}" v-else>{{song.name}}</span>
-          <span class="alias-name" v-if="song.alia.length > 0"> ({{song.alia[0]}})</span>
+          <span
+            class="main-name"
+            v-if="keyword"
+            v-html="markKeywords(song.name)"
+          ></span>
+          <span
+            class="main-name"
+            :class="{ active: song.id == currentTrackId }"
+            v-else
+            >{{ song.name }}</span
+          >
+          <span class="alias-name" v-if="song.alia.length > 0">
+            ({{ song.alia[0] }})</span
+          >
         </div>
         <span class="song-tag-sq iconfont icon-sq" v-if="false"></span>
-        <span class="song-tag-vip iconfont icon-pc_vip" v-if="song.fee === 1"></span>
-        <span class="song-tag-mv iconfont icon-shipin" v-if="song.mv !== 0" @click="playVideo(song.mv)"></span>
+        <span
+          class="song-tag-vip iconfont icon-pc_vip"
+          v-if="song.fee === 1"
+        ></span>
+        <span
+          class="song-tag-mv iconfont icon-shipin"
+          v-if="song.mv !== 0"
+          @click="playVideo(song.mv)"
+        ></span>
       </div>
       <div class="row column song-artists">
         <span class="song-artists-content">
-          <span class="artist" v-for="(artist,index) in song.ar" :key="`${index}-${artist.id}`">
-            <span class="artist-name" v-if="keyword" @click="toArtistDetail(artist.id)" v-html="markKeywords(artist.name)"></span>
-            <span class="artist-name" v-else @click="toArtistDetail(artist.id)">{{artist.name}}</span>
-            <span class="separator" v-if="index < song.ar.length -1"> / </span>
+          <span
+            class="artist"
+            v-for="(artist, index) in song.ar"
+            :key="`${index}-${artist.id}`"
+          >
+            <span
+              class="artist-name"
+              v-if="keyword"
+              @click="toArtistDetail(artist.id)"
+              v-html="markKeywords(artist.name)"
+            ></span>
+            <span
+              class="artist-name"
+              v-else
+              @click="toArtistDetail(artist.id)"
+              >{{ artist.name }}</span
+            >
+            <span class="separator" v-if="index < song.ar.length - 1"> / </span>
           </span>
         </span>
       </div>
       <div class="row column song-album">
-        <span class="song-album-name" v-if="keyword" @click="toAlbumDetail(song.al.id)" v-html="markKeywords(song.al.name)"></span>
-        <span class="song-album-name" v-else @click="toAlbumDetail(song.al.id)">{{song.al.name}}</span>
+        <span
+          class="song-album-name"
+          v-if="keyword"
+          @click="toAlbumDetail(song.al.id)"
+          v-html="markKeywords(song.al.name)"
+        ></span>
+        <span
+          class="song-album-name"
+          v-else
+          @click="toAlbumDetail(song.al.id)"
+          >{{ song.al.name }}</span
+        >
       </div>
       <div class="row column song-duration">
-        <span>{{song.dt | formatDuration}}</span>
+        <span>{{ song.dt | formatDuration }}</span>
       </div>
     </div>
 
-    <context-menu :visible.sync="contextMenuVisible" :top="contextMenuTop" :left="contextMenuLeft" :offsetBottom="70">
+    <context-menu
+      :visible.sync="contextMenuVisible"
+      :top="contextMenuTop"
+      :left="contextMenuLeft"
+      :offsetBottom="70"
+    >
       <div class="song-menu" @click="contextMenuVisible = false">
         <div class="menu-item" @click="playSong(currentSong)">播放</div>
         <div class="menu-item">查看评论</div>
@@ -69,104 +128,109 @@
 </template>
 
 <script>
-  import ContextMenu from '@/components/common/context-menu'
-  import {likeSong} from '@/api/music'
-  import { toAlbumDetail,toArtistDetail,markKeywords, playVideo } from '@/utils/methods'
-  import { formatDuration } from '@/utils/filters'
-  export default {
-    components:{
-      ContextMenu
+import ContextMenu from "@/components/common/context-menu";
+import { likeSong } from "@/api/music";
+import {
+  toAlbumDetail,
+  toArtistDetail,
+  markKeywords,
+  playVideo,
+} from "@/utils/methods";
+import { formatDuration } from "@/utils/filters";
+export default {
+  components: {
+    ContextMenu,
+  },
+  data() {
+    return {
+      contextMenuTop: 0,
+      contextMenuLeft: 0,
+      contextMenuVisible: false,
+      activeIndex: -1,
+      currentSong: null,
+    };
+  },
+  props: {
+    songList: {
+      type: Array,
+      required: true,
     },
-    data(){
-      return {
-        contextMenuTop: 0,
-        contextMenuLeft: 0,
-        contextMenuVisible: false,
-        activeIndex: -1,
-        currentSong: null
+    keyword: {
+      type: String,
+    },
+    pageNum: {
+      type: Number,
+    },
+    limit: {
+      type: Number,
+    },
+  },
+  computed: {
+    likedSongList() {
+      return this.$store.state.data.likedSongList;
+    },
+    currentTrackId() {
+      return this.$store.state.player.currentTrack.id;
+    },
+  },
+  methods: {
+    playVideo,
+    toAlbumDetail,
+    toArtistDetail,
+    markKeywords,
+    async handleLikeSong(id, like) {
+      if (!this.$store.state.data.loginStatus) {
+        this.$message.error("请先登录");
+      }
+      await likeSong({ id, like });
+      // 重新获取喜欢的音乐
+      await this.$store.dispatch("getLikedSongList");
+      if (like) {
+        this.$message.success("收藏成功");
+      } else {
+        this.$message.success("取消收藏");
       }
     },
-    props:{
-      songList: {
-        type: Array,
-        required: true
-      },
-      keyword:{
-        type: String
-      },
-      pageNum:{
-        type: Number
-      },
-      limit:{
-        type: Number
+    setActive(index) {
+      this.activeIndex = index;
+    },
+    getActiveClass(index) {
+      return this.activeIndex == index ? "active" : "";
+    },
+    formatIndex(index) {
+      if (this.pageNum && this.limit) {
+        let num = (this.pageNum - 1) * this.limit + index;
+        return num > 9 ? num : "0" + num;
+      } else {
+        return index > 9 ? index : "0" + index;
       }
     },
-    computed:{
-      likedSongList(){
-        return this.$store.state.data.likedSongList
-      },
-      currentTrackId(){
-        return this.$store.state.player.currentTrack.id
-      }
+    isLiked(id) {
+      return this.likedSongList.includes(id);
     },
-    methods: {
-      playVideo,
-      toAlbumDetail,
-      toArtistDetail,
-      markKeywords,
-      async handleLikeSong(id, like){
-        if(!this.$store.state.data.loginStatus){
-          this.$message.error('请先登录')
-        }
-        await likeSong({id, like})
-        // 重新获取喜欢的音乐
-        await this.$store.dispatch('getLikedSongList')
-        if(like){
-          this.$message.success('收藏成功')
-        }else{
-          this.$message.success('取消收藏')
-        }
-      },
-      setActive(index){
-        this.activeIndex = index
-      },
-      getActiveClass(index){
-        return this.activeIndex == index ? 'active'  : ''
-      },
-      formatIndex(index){
-        if(this.pageNum && this.limit){
-          let num = (this.pageNum - 1) * this.limit + index
-          return num > 9 ? num : '0' + num
-        }else{
-          return index > 9 ? index : '0' + index
-        }
-      },
-      isLiked(id){
-        return this.likedSongList.includes(id)
-      },
-      playSong(song){
-        // TODO: 当开通vip时可以播放
-        if(song.fee === 1) return
-        this.$emit('play-song',song.id)
-      },
-      showContextMenu(index,song, e){
-        this.activeIndex = index
-        this.currentSong = song
-        this.contextMenuTop = e.clientY
-        this.contextMenuLeft = e.clientX
-        this.contextMenuVisible = true
-      }
+    playSong(song) {
+      // TODO: 当开通vip时可以播放
+      if (song.fee === 1) return;
+      this.$emit("play-song", song.id);
     },
-    filters:{
-      formatDuration
+    showContextMenu(index, song, e) {
+      this.activeIndex = index;
+      this.currentSong = song;
+      this.contextMenuTop = e.clientY;
+      this.contextMenuLeft = e.clientX;
+      this.contextMenuVisible = true;
     },
-  }
+  },
+  filters: {
+    formatDuration,
+  },
+};
 </script>
 
 <style lang="scss">
 @import "~@/styles/mixins.scss";
-.song-list-table{
-  .table-header{
+.song-list-table {
+  .table-header {
     height: 40px;
     line-height: 40px;
     display: flex;
@@ -174,139 +238,139 @@
     color: var(--color-level4);
     padding: 0 30px;
   }
-  .table-row{
+  .table-row {
     height: 40px;
     line-height: 40px;
     padding: 0 30px;
     display: flex;
     font-size: 13px;
-    &:nth-of-type(2n+1){
+    &:nth-of-type(2n + 1) {
       background-color: var(--table-stripe-color);
     }
-    &:hover{
+    &:hover {
       background-color: var(--table-hover-color);
     }
-    &.active{
+    &.active {
       background-color: var(--table-hover-color);
     }
-    .song-operation{
+    .song-operation {
       display: flex;
       justify-content: space-between;
-      .song-operation-item{
+      .song-operation-item {
         color: var(--color-level3);
         cursor: pointer;
-        &:hover{
+        &:hover {
           color: var(--color-level2);
         }
-        &.liked{
+        &.liked {
           color: var(--color-netease-red);
         }
       }
     }
-    .index{
+    .index {
       color: var(--color-level5);
-      .iconfont{
+      .iconfont {
         color: var(--color-netease-red);
       }
     }
-    .song-name{
+    .song-name {
       display: flex;
-      .song-name-content{
+      .song-name-content {
         @include ellipsis;
         color: var(--color-level2);
-        .main-name{
-          &:hover{
+        .main-name {
+          &:hover {
             color: var(--color-level1);
           }
-          &.active{
+          &.active {
             color: var(--color-netease-red);
           }
         }
-        .alias-name{
+        .alias-name {
           color: var(--color-level4);
         }
       }
-      .iconfont{
+      .iconfont {
         color: var(--color-netease-red);
         display: inline-block;
         margin-left: 5px;
-        &.song-tag-sq{
+        &.song-tag-sq {
           font-size: 22px;
         }
-        &.icon-pc_vip{
+        &.icon-pc_vip {
           font-size: 18px;
         }
-        &.song-tag-mv{
+        &.song-tag-mv {
           cursor: pointer;
           font-size: 16px;
         }
       }
     }
 
-    .song-artists{
+    .song-artists {
       @include ellipsis;
       color: var(--color-level3);
-      .artist-name{
+      .artist-name {
         cursor: pointer;
-        &:hover{
+        &:hover {
           color: var(--color-level2);
         }
       }
-      .separator{
+      .separator {
         color: var(--color-level4);
       }
     }
 
-    .song-album{
+    .song-album {
       @include ellipsis;
       color: var(--color-level3);
-      .song-album-name{
+      .song-album-name {
         cursor: pointer;
-        &:hover{
+        &:hover {
           color: var(--color-level2);
         }
       }
     }
-    .song-duration{
+    .song-duration {
       color: var(--color-level4);
     }
   }
 
-  .column{
+  .column {
     overflow: hidden;
     margin-right: 15px;
-    &:nth-last-of-type(1){
+    &:nth-last-of-type(1) {
       margin-right: 0;
     }
   }
 
-  .index{
+  .index {
     width: 30px;
   }
-  .song-operation{
+  .song-operation {
     width: 40px;
   }
-  .song-name{
+  .song-name {
     flex: 5;
   }
-  .song-artists{
+  .song-artists {
     flex: 2;
   }
-  .song-album{
+  .song-album {
     flex: 3;
   }
-  .song-duration{
+  .song-duration {
     width: 50px;
   }
 }
 
-.song-menu{
+.song-menu {
   width: 175px;
   padding: 5px;
   background-color: var(--context-menu-bg-color);
   border: 1px solid #666;
   border-radius: 10px;
-  .menu-item{
+  .menu-item {
     height: 30px;
     line-height: 30px;
     font-size: 13px;
@@ -315,7 +379,7 @@
     padding: 0 10px;
     color: var(--color-level1);
     border-radius: 5px;
-    &:hover{
+    &:hover {
       background-color: var(--context-menu-item-hover-bg-color);
     }
   }
