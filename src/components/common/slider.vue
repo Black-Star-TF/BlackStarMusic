@@ -15,10 +15,10 @@
       ></div>
       <!-- 切换按钮 -->
       <div class="slider-btn left" @click="prev()">
-        <span class="iconfont icon-changyong_fanhui"></span>
+        <span class="iconfont icon-shangyiye"></span>
       </div>
       <div class="slider-btn right" @click="next()">
-        <span class="iconfont icon-changyong_gengduo"></span>
+        <span class="iconfont icon-xiayiye"></span>
       </div>
     </div>
 

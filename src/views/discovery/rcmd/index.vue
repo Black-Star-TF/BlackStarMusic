@@ -8,7 +8,9 @@
         <container>
           <template v-slot:left>
             <div class="container-title">
-              <router-link to="playlist" tag="span">推荐歌单</router-link>
+              <span class="nav-item" @click="linkTo('playlist')"
+                >推荐歌单<i class="iconfont icon-xiayiye"></i
+              ></span>
             </div>
           </template>
           <template v-slot:content>
@@ -26,7 +28,9 @@
         <container>
           <template v-slot:left>
             <div class="container-title">
-              <router-link to="/exclusive" tag="span">独家放送</router-link>
+              <span class="nav-item" @click="linkTo('/exclusive')"
+                >独家放送<i class="iconfont icon-xiayiye"></i
+              ></span>
             </div>
           </template>
           <template v-slot:content>
@@ -44,7 +48,9 @@
         <container>
           <template v-slot:left>
             <div class="container-title">
-              <router-link to="newest" tag="span">最新音乐</router-link>
+              <span class="nav-item" @click="linkTo('newest')"
+                >最新音乐<i class="iconfont icon-xiayiye"></i
+              ></span>
             </div>
           </template>
           <template v-slot:content>
@@ -62,7 +68,9 @@
         <container>
           <template v-slot:left>
             <div class="container-title">
-              <router-link to="/shipin/mv" tag="span">推荐MV</router-link>
+              <span class="nav-item" @click="linkTo('/shipin/mv')"
+                >推荐MV<i class="iconfont icon-xiayiye"></i
+              ></span>
             </div>
           </template>
           <template v-slot:content>
@@ -115,6 +123,9 @@ export default {
     };
   },
   methods: {
+    linkTo(path) {
+      this.$router.push(path);
+    },
     getBannerCover(url) {
       return `${url}?param=${size_banner}`;
     },
@@ -158,10 +169,14 @@ export default {
     color: var(--color-level2);
     font-size: 18px;
     font-weight: bold;
-    span {
+    .nav-item {
       cursor: pointer;
       &:hover {
         color: var(--color-level1);
+      }
+      .iconfont{
+        font-size: 18px;
+        margin-left: 2px;
       }
     }
   }

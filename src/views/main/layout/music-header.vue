@@ -5,13 +5,13 @@
       <!-- <button @click="test">获取用户详情</button> -->
       <span
         v-show="!app.songDetailVisible"
-        class="iconfont icon-changyong_fanhui"
+        class="iconfont icon-shangyiye"
         title="后退"
         @click="$router.go(-1)"
       ></span>
       <span
         v-show="!app.songDetailVisible"
-        class="iconfont icon-changyong_gengduo"
+        class="iconfont icon-xiayiye"
         title="前进"
         @click="$router.go(1)"
       ></span>

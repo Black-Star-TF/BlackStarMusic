@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve--prod": "vue-cli-service serve --mode production",
     "build": "vue-cli-service build",
+    "build--prod": "vue-cli-service build --mode production",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",

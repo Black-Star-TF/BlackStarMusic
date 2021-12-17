@@ -25,11 +25,7 @@
       <template v-if="type === 1">
         <div class="songs-container">
           <multiple-match
-            v-if="
-              multipleMatchResult &&
-                multipleMatchResult.orders.length > 0 &&
-                pageNo === 1
-            "
+            v-if="multipleMatchResult && pageNo === 1"
             :result="multipleMatchResult"
           ></multiple-match>
           <song-list-table
@@ -150,6 +146,7 @@ export default {
       results: null,
       total: 0,
       resultStr: "",
+      loaded: false,
       multipleMatchResult: null,
       tabList: [
         { id: 1, name: "单曲" },
@@ -166,9 +163,6 @@ export default {
     ...mapState(["player"]),
     offset() {
       return (this.pageNo - 1) * this.pageSize;
-    },
-    loaded() {
-      return this.results;
     },
   },
   methods: {
@@ -225,9 +219,11 @@ export default {
           this.resultStr = `找到${this.total}位用户`;
           break;
       }
+      this.loaded = true
     },
     getSearchResultData() {
       this.results = null;
+      this.loaded = false
       let params = {
         keywords: this.keyword,
         type: this.type,
@@ -258,7 +254,13 @@ export default {
       this.pageSize = 100;
       // 获取多重匹配结果
       getMultiMatch({ keywords: this.keyword }).then(res => {
-        this.multipleMatchResult = res.result;
+        console.log(res);
+        const { artist = null, user = null, album = null } = res.result;
+        if(!artist&&!user&&!album){
+          this.multipleMatchResult = null
+        }else{
+          this.multipleMatchResult = { artist, user, album };
+        }
       });
     }
     // 请求数据
@@ -302,6 +304,7 @@ export default {
   }
 
   .video-container {
+    padding: 0 30px;
     display: flex;
     flex-wrap: wrap;
   }

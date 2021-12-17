@@ -2,7 +2,7 @@
   <div class="mv-detail-page">
     <div class="main">
       <div class="title">
-        <span><i class="iconfont icon-changyong_fanhui"></i>MV详情</span>
+        <span><i class="iconfont icon-shangyiye"></i>MV详情</span>
       </div>
       <video
         :src="videoUrl"
