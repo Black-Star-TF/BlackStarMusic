@@ -240,7 +240,7 @@ export default {
   left: 0;
   bottom: var(--app-player-height);
   background-color: var(--main-bg-color);
-  z-index: 100;
+  z-index: 90;
   overflow: overlay;
   .main {
     width: var(--min-width);

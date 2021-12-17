@@ -1,20 +1,22 @@
 <template>
-  <div class="layout">
-    <!-- aside -->
-    <music-aside></music-aside>
-    <!-- player -->
-    <music-player></music-player>
-    <!-- main -->
-    <div class="main-wrapper" id="main">
-      <template v-if="!$route.meta.keepAlive">
-        <router-view :key="getKey()"></router-view>
-      </template>
-      <template v-else>
-        <keep-alive>
+  <div class="layout-wrapper">
+    <div class="middle-wrapper">
+      <!-- 侧边栏 -->
+      <music-aside></music-aside>
+      <!-- 主要内容区 -->
+      <div class="main-wrapper" id="main">
+        <template v-if="!$route.meta.keepAlive">
           <router-view :key="getKey()"></router-view>
-        </keep-alive>
-      </template>
+        </template>
+        <template v-else>
+          <keep-alive>
+            <router-view :key="getKey()"></router-view>
+          </keep-alive>
+        </template>
+      </div>
     </div>
+    <!-- 播放器控件 -->
+    <music-player></music-player>
   </div>
 </template>
 
@@ -39,22 +41,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.layout {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--app-header-height);
-  bottom: 0;
-  z-index: 100;
-}
-.main-wrapper {
-  position: absolute;
-  top: 0;
-  bottom: var(--app-player-height);
-  left: var(--app-aside-width);
-  right: 0;
-  // z-index: 150;
+.layout-wrapper {
+  height: calc(100% - var(--app-header-height));
+  width: 100%;
   box-sizing: border-box;
-  background-color: var(--main-bg-color);
+}
+.middle-wrapper {
+  width: 100%;
+  height: calc(100% - var(--app-player-height));
+  box-sizing: border-box;
+  display: flex;
+  .main-wrapper {
+    width: calc(100% - var(--app-aside-width));
+    height: 100%;
+    background-color: var(--main-bg-color);
+    position: relative;
+  }
 }
 </style>

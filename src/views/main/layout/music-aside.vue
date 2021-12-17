@@ -5,14 +5,14 @@
       <template v-if="loginStatus">
         <!-- 登录后显示 -->
         <div
-          class="avater"
+          class="avatar"
           :style="{ backgroundImage: `url(${userProfile.avatarUrl})` }"
         ></div>
         <span class="username">{{ userProfile.nickname }}</span>
       </template>
       <template v-else>
         <!-- 未登录时显示 -->
-        <div class="avater" @click="handleLogin">
+        <div class="avatar" @click="handleLogin">
           <span class="iconfont icon-icon"></span>
         </div>
         <span class="weidenglu" @click="handleLogin">未登录</span>
@@ -188,26 +188,14 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/mixins.scss";
 .app-aside {
-  position: absolute;
-  top: 0;
-  bottom: var(--app-player-height);
-  left: 0;
   width: var(--app-aside-width);
   background-color: var(--aside-bg-color);
-  z-index: 100;
   overflow: hidden;
-
   .nav-wrapper {
     height: calc(100% - 60px);
     overflow: hidden;
     padding-right: 10px;
     // 鼠标移入时，显示滚动条，鼠标移出时隐藏滚动条
-    // &::-webkit-scrollbar{
-    //   opacity: 0;
-    // }
-    // &:hover::-webkit-scrollbar{
-    //   opacity: 1;
-    // }
     &:hover {
       overflow: overlay;
     }
@@ -218,7 +206,7 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 10px;
-    .avater {
+    .avatar {
       cursor: pointer;
       width: 40px;
       height: 40px;
@@ -228,10 +216,10 @@ export default {
       overflow: hidden;
       margin-right: 10px;
       @include background;
-      background-color: var(--avater-bg-color);
+      background-color: var(--avatar-bg-color);
       .iconfont {
         font-size: 40px;
-        color: var(--avater-color);
+        color: var(--avatar-color);
       }
     }
     .weidenglu {

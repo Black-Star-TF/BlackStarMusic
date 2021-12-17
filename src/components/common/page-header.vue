@@ -19,7 +19,6 @@ export default {
   position: absolute;
   left: 0;
   right: 300px;
-  background-color: var(--header-bg-color);
   height: var(--app-header-height);
   line-height: var(--app-header-height);
   top: calc(-1 * var(--app-header-height));

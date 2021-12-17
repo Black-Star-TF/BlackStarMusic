@@ -143,12 +143,8 @@ export default {
 <style lang="scss" scoped>
 .app-header {
   height: var(--app-header-height);
-  top: 0;
-  left: 0;
   width: 100%;
   background: var(--header-bg-color);
-  z-index: 100;
-  position: absolute;
   // 毛玻璃效果
   // backdrop-filter: saturate(180%) blur(20px);
   color: var(--header-color-level3);

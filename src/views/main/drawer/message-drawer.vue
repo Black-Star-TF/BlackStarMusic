@@ -39,7 +39,7 @@ export default {
   bottom: var(--app-player-height);
   right: 0;
   background-color: var(--panel-box-bg-color);
-  z-index: 200;
+  z-index: 100;
   box-shadow: -8px 0 10px -5px rgb(0 0 0 / 20%);
 }
 </style>

@@ -241,13 +241,9 @@ export default {
 @import "~@/styles/mixins.scss";
 .app-footer {
   height: var(--app-player-height);
-  bottom: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
+  width: 100%;
   box-sizing: border-box;
   background-color: var(--footer-bg-color);
-  z-index: 102;
   border-top: 2px solid var(--footer-bd-color);
   .progress-slider-container {
     position: absolute;
@@ -434,11 +430,12 @@ export default {
 ::v-deep .progress-slider {
   margin-top: -5px;
   margin-bottom: -5px;
-  // overflow: hidden;
-  // box-sizing: border-box;
   .vue-slider-rail {
     .vue-slider-process {
       background-color: var(--color-netease-red);
+    }
+    .vue-slider-dot{
+      z-index: 150;
     }
     &:hover,
     &:active {
