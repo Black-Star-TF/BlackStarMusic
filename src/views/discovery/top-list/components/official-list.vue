@@ -3,11 +3,11 @@
     <!-- 榜单封面 -->
     <div
       class="chart-cover"
-      @click="toPlaylistDetail(toplist.id)"
+      @click.self="toPlaylistDetail(toplist.id)"
       :style="{ backgroundImage: `url(${coverUrl})` }"
     >
       <!-- 播放按钮 -->
-      <div class="icon-play" @click.stop="playPlaylist(toplist.id)">
+      <div class="icon-play" @click="play">
         <span class="iconfont icon-bofang"></span>
       </div>
       <span class="update-time">{{ date }}更新</span>
@@ -93,9 +93,11 @@ export default {
   },
   methods: {
     playMusic,
-    playPlaylist,
     toPlaylistDetail,
     toArtistDetail,
+    play(){
+      playPlaylist({ id: this.toplist.id, name: this.toplist.name });
+    },
     play(song) {
       // TODO: 播放音乐
       this.player.playTrackFromPlaylist(

@@ -3,10 +3,10 @@
     <!-- 专辑封面 -->
     <div
       class="album-cover"
-      @click="toAlbumDetail(albumItem.id)"
+      @click.self="toAlbumDetail(albumItem.id)"
       :style="{ backgroundImage: `url(${coverUrl})` }"
     >
-      <div class="icon-play" @click.stop="play">
+      <div class="icon-play" @click="playAlbum(albumItem.id)">
         <span class="iconfont icon-bofang"></span>
       </div>
     </div>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { toAlbumDetail } from "@/utils/methods";
+import { toAlbumDetail, playAlbum } from "@/utils/methods";
 import ItemPropsMixin from "@/mixins/item-props-mixin";
 import { size_1v1_std } from "@/utils/img-size.js";
 export default {
@@ -45,9 +45,7 @@ export default {
   },
   methods: {
     toAlbumDetail,
-    play() {
-      console.log(111);
-    },
+    playAlbum,
   },
   filters: {},
   created() {},
@@ -97,10 +95,10 @@ export default {
   .album-name {
     font-size: 14px;
     line-height: 20px;
+    @include ellipsis-2-line;
+    color: var(--color-level2);
     .name {
-      @include ellipsis-2-line;
       display: inline;
-      color: var(--color-level2);
       cursor: pointer;
       .alias {
         color: var(--color-level5);

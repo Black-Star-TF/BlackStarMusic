@@ -164,8 +164,8 @@ export default {
   computed: {
     ...mapState(["player", "app"]),
     coverUrl() {
-      return `${this.currentSong.al &&
-        this.currentSong.al.picUrl}?param=${size_1v1_small}`;
+      return `${
+        this.currentSong.coverUrl}?param=${size_1v1_small}`;
     },
     currentSong() {
       return this.player.currentTrack;

@@ -3,10 +3,19 @@
     <div
       class="album-cover"
       :style="{ backgroundImage: `url(${coverUrl})` }"
-      @click="toAlbumDetail(album.id)"
-    ></div>
+      @click.self="toAlbumDetail(album.id)"
+    >
+      <div class="icon-play" @click="playAlbum(album.id)">
+        <span class="iconfont icon-bofang"></span>
+      </div>
+    </div>
     <div class="album-name">
-      <span>{{ album.name }}</span>
+      <span class="name">
+        {{ album.name }}
+        <span class="alias" v-if="album.alias.length > 0"
+          >({{ album.alias[0] }})</span
+        >
+      </span>
     </div>
     <div class="album-publish-date" @click="toAlbumDetail(album.id)">
       {{ album.publishTime | formatDate }}
@@ -15,7 +24,7 @@
 </template>
 
 <script>
-import { toAlbumDetail } from "@/utils/methods";
+import { toAlbumDetail, playAlbum } from "@/utils/methods";
 import { formatDate } from "@/utils/filters";
 import ItemPropsMixin from "@/mixins/item-props-mixin";
 import { size_1v1_std } from "@/utils/img-size.js";
@@ -33,6 +42,7 @@ export default {
     },
   },
   methods: {
+    playAlbum,
     toAlbumDetail,
   },
   filters: {
@@ -55,21 +65,50 @@ export default {
     position: relative;
     box-sizing: border-box;
     border: 0.5px solid var(--main-border-color);
+    .icon-play {
+      opacity: 0;
+      transition: opacity 0.2s linear;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      border-radius: 50%;
+      background-color: rgba($color: #fff, $alpha: 0.5);
+      position: absolute;
+      left: calc(50% - 20px);
+      top: calc(50% - 20px);
+      .iconfont {
+        position: relative;
+        left: 1px;
+        bottom: 1px;
+        font-size: 16px;
+        color: var(--color-netease-red);
+      }
+    }
+    &:hover {
+      .icon-play {
+        opacity: 1;
+      }
+    }
   }
   .album-name {
     font-size: 14px;
     line-height: 20px;
-    span {
-      @include ellipsis-2-line;
-      color: var(--color-level2);
+    @include ellipsis-2-line;
+    color: var(--color-level2);
+    .name {
+      display: inline;
       cursor: pointer;
+      .alias {
+        color: var(--color-level5);
+      }
       &:hover {
         color: var(--color-level1);
       }
     }
   }
   .album-publish-date {
-    font-size: 13px;
+    font-size: 12.5px;
     line-height: 20px;
     color: var(--color-level4);
   }

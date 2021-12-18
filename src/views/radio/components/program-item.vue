@@ -1,5 +1,5 @@
 <template>
-  <div class="radio-program-item">
+  <div class="radio-program-item" @dblclick="playProgram">
     <div class="program-num">{{ program.serialNum }}</div>
     <div class="program-cover" :style="{ backgroundImage: `url(${coverUrl})` }">
       <div class="icon-play">
@@ -37,7 +37,11 @@ export default {
       return `${this.program.coverUrl}?param=${size_1v1_small}`;
     },
   },
-  methods: {},
+  methods: {
+    playProgram(){
+      this.$emit('playProgram')
+    }
+  },
   filters: {
     formatCount,
     formatDate,

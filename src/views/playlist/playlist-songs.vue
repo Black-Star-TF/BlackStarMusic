@@ -17,6 +17,7 @@ import { getPlaylistSongs } from "@/api/playlist.js";
 import SongListTable from "@/components/table/song-list-table";
 import { mapState } from "vuex";
 import Loading from "@/components/common/loading";
+import { getTrackFormatInfo } from "@/utils/methods";
 export default {
   components: {
     SongListTable,
@@ -28,7 +29,8 @@ export default {
     };
   },
   props: {
-    id: {
+    playlist: {
+      type: Object,
       required: true,
     },
   },
@@ -39,14 +41,18 @@ export default {
     },
   },
   methods: {
-    handlePlaySong(trackId) {
-      this.player.playTrackFromPlaylist(
-        trackId,
-        this.songList.map(song => song.id)
-      );
+    handlePlaySong(index) {
+      const list = this.songList.map(song => getTrackFormatInfo(song, 'song', {
+        type: 'playlist',
+        info: {
+          id: this.playlist.id,
+          name: this.playlist.name
+        }
+      }));
+      this.player.playTrackFromPlaylist(index, list);
     },
     async getData() {
-      const { songs } = await getPlaylistSongs({ id: this.id, limit: 5000 });
+      const { songs } = await getPlaylistSongs({ id: this.playlist.id, limit: 5000 });
       this.songList = songs;
     },
   },

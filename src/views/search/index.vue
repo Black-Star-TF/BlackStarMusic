@@ -121,6 +121,7 @@ import VideoItem from "./components/video-item";
 import Loading from "@/components/common/loading";
 import Pagination from "@/components/common/pagination";
 import { getSearchResult, getMultiMatch } from "@/api/search.js";
+import { getTrackFormatInfo } from "@/utils/methods";
 import { mapState } from "vuex";
 export default {
   components: {
@@ -166,8 +167,16 @@ export default {
     },
   },
   methods: {
-    handlePlay(trackId) {
-      this.player.playTrack(trackId);
+    handlePlay(index) {
+      const track = getTrackFormatInfo(this.results[index], "song", {
+        type: "search",
+        info: {
+          id: "#",
+          name: "搜索页",
+          keywords: this.keyword,
+        },
+      });
+      this.player.playTrack(track);
     },
     handleCurrentPageChange() {
       this.getSearchResultData();
@@ -219,11 +228,11 @@ export default {
           this.resultStr = `找到${this.total}位用户`;
           break;
       }
-      this.loaded = true
+      this.loaded = true;
     },
     getSearchResultData() {
       this.results = null;
-      this.loaded = false
+      this.loaded = false;
       let params = {
         keywords: this.keyword,
         type: this.type,
@@ -245,7 +254,6 @@ export default {
       }
     },
   },
-  filters: {},
   created() {
     this.setNum(window.innerWidth);
     this.type = Number(this.$route.query.type);
@@ -254,11 +262,10 @@ export default {
       this.pageSize = 100;
       // 获取多重匹配结果
       getMultiMatch({ keywords: this.keyword }).then(res => {
-        console.log(res);
         const { artist = null, user = null, album = null } = res.result;
-        if(!artist&&!user&&!album){
-          this.multipleMatchResult = null
-        }else{
+        if (!artist && !user && !album) {
+          this.multipleMatchResult = null;
+        } else {
           this.multipleMatchResult = { artist, user, album };
         }
       });

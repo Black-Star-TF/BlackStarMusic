@@ -62,16 +62,14 @@ import { toArtistDetail, playVideo } from "@/utils/methods";
 import { formatDuration } from "@/utils/filters";
 import { getSongsDetail } from "@/api/music.js";
 export default {
-  data() {
-    return {
-      songList: [],
-    };
-  },
   computed: {
     ...mapState(["player"]),
     currentTrackId() {
       return this.player.currentTrack.id;
     },
+    songList(){
+      return this.player.list
+    }
   },
   methods: {
     ...mapMutations(["updateApp"]),
@@ -82,27 +80,12 @@ export default {
     },
     clearList() {
       this.player.clear();
-      this.songList = [];
     },
     playSong(id) {
       this.player.playTrack(id);
     },
     handleClose(value) {
       this.$emit("update:visible", value);
-    },
-    async getSongList() {
-      this.songList = [];
-      let list = this.player.list;
-      if (list.length > 0) {
-        const { songs } = await getSongsDetail({ ids: list.join(",") });
-        this.songList = songs;
-        if (!this.currentTrackId) return;
-        this.$nextTick(() => {
-          let node = this.$el.querySelector(`#song-${this.currentTrackId}`);
-          let content = this.$refs.content;
-          content.scrollTop = node.offsetTop - content.offsetHeight / 2;
-        });
-      }
     },
   },
   filters: {
@@ -119,9 +102,6 @@ export default {
     const main = document.getElementById("main");
     header.removeEventListener("click", this.close);
     main.removeEventListener("click", this.close);
-  },
-  created() {
-    this.getSongList();
   },
 };
 </script>

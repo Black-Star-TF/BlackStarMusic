@@ -31,7 +31,7 @@
             <span class="play" @click="playAll()">
               <span class="iconfont icon-bofang"></span>播放全部
             </span>
-            <span class="add" @click="addToPlaylist()">
+            <span class="add" @click="addToPlaylist">
               <span class="iconfont icon-jia"></span>
             </span>
           </span>
@@ -110,7 +110,10 @@
     </div>
 
     <div class="playlist-detail-content">
-      <playlist-songs v-if="mode == 'songlist'" :id="id"></playlist-songs>
+      <playlist-songs
+        v-if="mode == 'songlist'"
+        :playlist="{ id: playlist.id, name: playlist.name }"
+      ></playlist-songs>
       <playlist-comments v-if="mode == 'comment'" :id="id"></playlist-comments>
       <playlist-subscribers
         v-if="mode == 'subscriber'"
@@ -121,7 +124,11 @@
 </template>
 
 <script>
-import { toUserDetail } from "@/utils/methods";
+import {
+  toUserDetail,
+  playPlaylist,
+  getSongsOfPlaylist,
+} from "@/utils/methods";
 import { formatCount, formatDate } from "@/utils/filters";
 import TabNav from "@/components/common/tab-nav";
 import { getPlaylistDetail, subscribePlaylist } from "@/api/playlist";
@@ -144,8 +151,6 @@ export default {
       type: RESOURCE_TYPE.PLAYLIST,
       playlist: null,
       showDesc: false,
-      songList: [],
-      trackIds: [],
       mode: "songlist",
       modeList: [
         { name: "songlist", label: "歌曲列表" },
@@ -176,16 +181,20 @@ export default {
       this.getData(new Date().getTime());
       this.getUserPlaylist();
     },
-    addToPlaylist() {
-      if (this.trackIds.length > 0) {
-        this.$store.state.player.addTracksToPlaylist(this.trackIds);
+    async addToPlaylist() {
+      if (this.playlist && this.playlist.trackCount > 0) {
+        const list = await getSongsOfPlaylist({
+          id: this.playlist.id,
+          name: this.playlist.name,
+        });
+        this.$store.state.player.addTracksToPlaylist(list);
         this.$message.success("添加成功");
       }
     },
     async playAll() {
       // 播放当前歌单
-      if (this.trackIds.length > 0) {
-        this.player.playTrackFromPlaylist(this.trackIds[0], this.trackIds);
+      if (this.playlist && this.playlist.trackCount > 0) {
+        playPlaylist({ id: this.playlist.id, name: this.playlist.name });
       }
     },
     changeDesc() {
@@ -203,14 +212,11 @@ export default {
     },
     init() {
       this.id = this.$route.query.id;
-      this.songList = [];
       this.playlist = null;
-      this.trackIds = [];
     },
     async getData(timestamp = null) {
       let { playlist } = await getPlaylistDetail({ id: this.id, timestamp });
       this.playlist = playlist;
-      this.trackIds = playlist.trackIds.map(track => track.id);
     },
   },
   filters: {

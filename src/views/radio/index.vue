@@ -75,7 +75,7 @@
     </div>
 
     <div class="radio-detail-content">
-      <radio-programs v-if="mode == 'programs'" :rid="rid"></radio-programs>
+      <radio-programs v-if="mode == 'programs'" :radio="{id: radio.id, name: radio.name}"></radio-programs>
       <radio-subscribers
         v-if="mode == 'subscribers'"
         :rid="rid"

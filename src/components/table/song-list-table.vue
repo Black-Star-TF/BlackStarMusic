@@ -12,7 +12,7 @@
       class="table-row"
       v-for="(song, index) in songList"
       :key="`${index}-${song.id}`"
-      @dblclick="playSong(song)"
+      @dblclick="playSong(song,index)"
       @contextmenu.prevent="showContextMenu(index, song, $event)"
       :class="getActiveClass(index)"
       @click="setActive(index)"
@@ -208,10 +208,10 @@ export default {
     isLiked(id) {
       return this.likedSongList.includes(id);
     },
-    playSong(song) {
+    playSong(song,index) {
       // TODO: 当开通vip时可以播放
       if (song.fee === 1) return;
-      this.$emit("play-song", song.id);
+      this.$emit("play-song", index);
     },
     showContextMenu(index, song, e) {
       this.activeIndex = index;

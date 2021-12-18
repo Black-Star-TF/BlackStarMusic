@@ -3,7 +3,7 @@
     <!-- 歌单封面 -->
     <div
       class="playlist-cover"
-      @click="toPlaylistDetail(playlistItem.id)"
+      @click.self="toPlaylistDetail(playlistItem.id)"
       :style="{ backgroundImage: `url(${coverUrl})` }"
     >
       <!-- 播放数量 -->
@@ -12,7 +12,7 @@
         {{ playlistItem.playCount | formatCount }}</span
       >
       <!-- 播放按钮 -->
-      <div class="icon-play" @click.stop="playPlaylist(playlistItem.id)">
+      <div class="icon-play" @click="play">
         <span class="iconfont icon-bofang"></span>
       </div>
     </div>
@@ -46,8 +46,10 @@ export default {
     },
   },
   methods: {
-    playPlaylist,
     toPlaylistDetail,
+    play(){
+      playPlaylist({ id: this.playlistItem.id, name: this.playlistItem.name });
+    },
   },
   filters: {
     formatCount,

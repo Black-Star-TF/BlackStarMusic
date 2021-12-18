@@ -2,7 +2,7 @@
   <div class="chart2-item" :style="style">
     <div
       class="toplist-cover"
-      @click="toPlaylistDetail(toplist.id)"
+      @click.self="toPlaylistDetail(toplist.id)"
       :style="{ backgroundImage: `url(${coverUrl})` }"
     >
       <!-- 播放数量 -->
@@ -11,7 +11,7 @@
         {{ toplist.playCount | formatCount }}</span
       >
       <!-- 播放按钮 -->
-      <div class="icon-play" @click.stop="playPlaylist(toplist.id)">
+      <div class="icon-play" @click="play">
         <span class="iconfont icon-bofang"></span>
       </div>
     </div>
@@ -40,7 +40,9 @@ export default {
     },
   },
   methods: {
-    playPlaylist,
+    play(){
+      playPlaylist({ id: this.toplist.id, name: this.toplist.name });
+    },
     toPlaylistDetail,
   },
   filters: {

@@ -1,4 +1,5 @@
-import { getPlaylistDetail } from "@/api/playlist";
+import { getPlaylistSongs } from "@/api/playlist";
+import { getAlbumDetail } from "@/api/album";
 import store from "@/store";
 // 播放歌曲有关方法
 
@@ -6,15 +7,38 @@ import store from "@/store";
 export function playMusic(id) {
   console.log("播放音乐", id);
 }
-// 播放全部
-export function playPlaylist(id) {
-  getPlaylistDetail(id).then(res => {
-    let tracks = res.playlist.trackIds.map(track => {
-      return track.id;
-    });
-    this.$store.state.player.playTrack(tracks[0], tracks);
-  });
+
+export async function getSongsOfPlaylist({ id, name }) {
+  const { songs } = await getPlaylistSongs({ id, limit: 5000 });
+  let songList = songs.map(song =>
+    getTrackFormatInfo(song, "song", {
+      type: "playlist",
+      info: {
+        id,
+        name,
+      },
+    })
+  );
+  return songList
 }
+// 播放全部
+export async function playPlaylist({ id, name }) {
+  const list = await getSongsOfPlaylist({ id, name });
+  store.state.player.playTrackFromPlaylist(0, list);
+}
+
+export async function playAlbum(id) {
+  const { album, songs } = await getAlbumDetail({ id });
+  const list = songs.map(song => getTrackFormatInfo(song, 'song', {
+    type: 'album',
+    info: {
+      id: album.id,
+      name: album.name
+    }
+  }));
+  store.state.player.playTrackFromPlaylist(0, list);
+}
+
 // 播放电台
 export function playRadio(id) {
   console.log("播放电台", id);
@@ -78,4 +102,39 @@ export function debounce(handler, delay) {
       this[handler]();
     }, delay);
   };
+}
+
+export function getTrackFormatInfo(track, type, source) {
+  const song = {};
+  song.type = type
+  song.id = track.id;
+  song.name = track.name;
+  if (type === "song") {
+    song.alia = track.alia;
+    song.ar = track.ar;
+    song.dt = track.dt;
+  } else if (type === "program") {
+    song.dt = track.duration;
+    song.mainSongId = track.mainSong.id
+    song.alia = []
+    song.ar = [
+      {
+        name: track.radio.name,
+        id: track.radio.id
+      }
+    ]
+  }
+  song.source = source;
+  return song;
+}
+
+export function findIndex(currentTrack, list){
+  return list.findIndex(track => {
+    return (
+      track.type === currentTrack.type &&
+      track.id === currentTrack.id &&
+      track.source.type === currentTrack.source.type &&
+      track.source.info.id === currentTrack.source.info.id
+    );
+  });
 }

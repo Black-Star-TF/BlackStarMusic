@@ -43,11 +43,18 @@ import Container from "@/components/common/container";
 import { getTopNewSong } from "@/api/music.js";
 import NewestSongItem from "./components/newest-song-item.vue";
 import Loading from "@/components/common/loading";
+import { mapState } from 'vuex'
 export default {
+  components: {
+    Container,
+    NewestSongItem,
+    Loading,
+  },
   data() {
     return {
       songList: [],
       currentType: "0",
+      loaded: false,
       type: [
         { id: "0", name: "全部" },
         { id: "7", name: "华语" },
@@ -57,10 +64,8 @@ export default {
       ],
     };
   },
-  components: {
-    Container,
-    NewestSongItem,
-    Loading,
+  computed: {
+    ...mapState(['player']),
   },
   methods: {
     handleChange(type) {
@@ -68,20 +73,18 @@ export default {
       this.getData();
     },
     async getData() {
+      this.loaded = false
       this.songList = [];
       let res = await getTopNewSong({ type: this.currentType });
       this.songList = res.data;
+      this.loaded = true
     },
     playAll() {
-      console.log("播放全部");
+      const trackIds = this.songList.map(song => song.id)
+      this.player.playTrackFromPlaylist(trackIds[0], trackIds)
     },
     likeAll() {
       console.log("收藏全部");
-    },
-  },
-  computed: {
-    loaded() {
-      return this.songList.length > 0;
     },
   },
   created() {

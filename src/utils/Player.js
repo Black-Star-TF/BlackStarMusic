@@ -1,5 +1,7 @@
 import { Howler, Howl } from "howler";
 import { getSongsDetail, getSongUrl } from "@/api/music";
+import { getRadioProgramDetail } from "@/api/dj-radio";
+import { findIndex } from "@/utils/methods";
 import axios from "axios";
 export default class Player {
   constructor() {
@@ -100,6 +102,10 @@ export default class Player {
     Howler.autoUnlock = false;
     Howler.volume(this._volume);
 
+    // this.clear()
+    // this.clearHistory()
+    // this.currentTrack = {}
+
     // 恢复歌曲播放
     if (this.list.length > 0) {
       this.readyToPlay(false).then(() => {
@@ -162,39 +168,52 @@ export default class Player {
     });
   }
 
-  // 获取歌曲详情和歌曲url
-  readyToPlay(autoPlay = true) {
-    this.progress = 0;
-    let id = this.list[this.currentIndex];
-    return axios.all([getSongsDetail({ ids: id }), getSongUrl({ id })]).then(
-      axios.spread((res1, res2) => {
-        if (res2.data[0] && res2.data[0].url && !res2.data[0].freeTrialInfo) {
-          this.progress = 0;
-          this.currentTrack = res1.songs[0];
-          this.playTrackOfSource(res2.data[0].url, autoPlay);
+  async getTrackUrl(id) {
+    const { data } = await getSongUrl({ id });
 
-          // 添加到播放历史
-          let index = this.history.findIndex(item => {
-            return this.currentTrack.id == item.id;
-          });
-          if (index >= 0) {
-            this.history.splice(index, 1);
-          }
-          this.history.unshift({
-            id: this.currentTrack.id,
-            playDate: new Date().getTime(),
-          });
-          if (this.history.length > 50) {
-            this.history.pop();
-          }
-          this.history = this.history;
-          return true;
-        } else {
-          // 歌曲收费时 跳过播放下一首
-          this.playNextTrack();
-        }
-      })
-    );
+    if (data[0] && data[0].url && !data[0].freeTrialInfo) {
+      // 可以播放
+      return data[0].url;
+    }
+    return false;
+  }
+
+  // 获取歌曲详情和歌曲url
+  async readyToPlay(autoPlay = true) {
+    this.progress = 0;
+    let track = this.list[this.currentIndex];
+    let id = track.type === "song" ? track.id : track.mainSongId;
+    const url = await this.getTrackUrl(id);
+    if (!url) {
+      // 当前歌曲无法播放，则播放下一首
+      // this.playNextTrack();
+      return false;
+    }
+    if (track.type === "song") {
+      // 获取歌曲详情
+      const { songs } = await getSongsDetail({ ids: track.id });
+      this.currentTrack = { ...track, coverUrl: songs[0].al.picUrl };
+    }
+    if (track.type === "program") {
+      // 获取节目详情
+      const { program } = await getRadioProgramDetail({ id: track.id });
+      this.currentTrack = { ...track, coverUrl: program.blurCoverUrl };
+    }
+    this.playTrackOfSource(url, autoPlay);
+    // 添加到播放历史
+    const index = findIndex(track, this.history);
+    if (index >= 0) {
+      this.history.splice(index, 1);
+    }
+    this.history.unshift({
+      ...track,
+      playDate: new Date().getTime(),
+    });
+    if (this.history.length > 50) {
+      this.history.pop();
+    }
+    this.history = this.history;
+    return true;
   }
 
   // 播放下一首
@@ -220,31 +239,37 @@ export default class Player {
   }
 
   // 添加歌曲到当前播放列表
-  addTrackToPlaylist(trackId) {
-    this.list = [...this.list, trackId];
+  addTrackToPlaylist(track) {
+    this.list = [...this.list, track];
   }
   // 播放歌曲，但不切换播放列表，将要播放的歌曲添加到当前播放列表
-  playTrack(trackId) {
-    const index = this.list.indexOf(trackId);
+  playTrack(currentTrack) {
+    const index = findIndex(currentTrack, this.list);
     if (index !== -1) {
       this.currentIndex = index;
     } else {
-      this.list.splice(this.currentIndex + 1, 0, trackId);
+      this.list.splice(this.currentIndex + 1, 0, currentTrack);
       this.currentIndex += 1;
     }
     this.readyToPlay();
   }
 
   // 播放歌曲，并切换播放列表
-  playTrackFromPlaylist(trackId, playlist) {
+  playTrackFromPlaylist(index, playlist) {
     this.list = [...playlist];
-    this.currentIndex = this.list.indexOf(trackId);
+    this.currentIndex = index;
     this.readyToPlay();
   }
 
   // 将多首歌添加到当前播放列表
-  addTracksToPlaylist(trackIds) {
-    this.list = Array.from(new Set([...this.list, ...trackIds]));
+  addTracksToPlaylist(list) {
+    // TODO: 判断歌曲是否在列表中
+    const isFirst = this.list.length === 0;
+    this.list = [...this.list, ...list];
+    if (isFirst) {
+      this.currentIndex = 0;
+      this.readyToPlay(false);
+    }
   }
 
   // 清空播放列表并停止播放

@@ -58,7 +58,7 @@ export default {
 <style lang="scss" scoped>
 .newest-music {
   height: 100%;
-  padding: 10px 0;
+  padding: 20px 0 10px;
   box-sizing: border-box;
   overflow: overlay;
   .nav-container {

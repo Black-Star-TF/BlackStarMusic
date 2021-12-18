@@ -81,7 +81,7 @@
     </div>
 
     <div class="album-detail-content">
-      <album-songs v-if="mode == 'songlist'" :songList="songList"></album-songs>
+      <album-songs v-if="mode == 'songlist'" :songList="songList" @play="playAll"></album-songs></album-songs>
       <album-comments v-if="mode == 'comment'" :id="id"></album-comments>
       <album-desc
         v-if="mode == 'description'"
@@ -104,6 +104,7 @@ import AlbumSongs from "./album-songs.vue";
 import AlbumComments from "./album-comments.vue";
 import AlbumDesc from "./album-desc.vue";
 import { size_1v1_std } from "@/utils/img-size.js";
+import { getTrackFormatInfo } from "@/utils/methods";
 import axios from "axios";
 export default {
   components: {
@@ -115,7 +116,6 @@ export default {
   data() {
     return {
       id: null,
-      trackIds: [],
       songList: [],
       album: null,
       albumDynamicInfo: null,
@@ -145,25 +145,31 @@ export default {
       this.getDynamicInfo();
     },
     addToPlaylist() {
-      if (this.trackIds.length > 0) {
-        this.$store.state.player.addTracksToPlaylist(this.trackIds);
-        this.$message.success("添加成功");
+      if (this.songList.length > 0) {
+        const list = this.getList()
+        this.$store.state.player.addTracksToPlaylist(list);
       }
     },
-    playAll() {
+    getList(){
+      return this.songList.map(song => getTrackFormatInfo(song, 'song', {
+        type: 'album',
+        info: {
+          id: this.album.id,
+          name: this.album.name
+        }
+      }));
+    },
+    playAll(index = 0) {
       // 播放当前歌单
-      if (this.trackIds.length > 0) {
-        this.$store.state.player.playTrackFromPlaylist(
-          this.trackIds[0],
-          this.trackIds
-        );
+      if (this.songList.length > 0) {
+        const list = this.getList()
+        this.$store.state.player.playTrackFromPlaylist(index, list);
       }
     },
     init() {
       this.id = this.$route.query.id;
       this.songList = [];
       this.album = null;
-      this.trackIds = [];
     },
     async getDynamicInfo() {
       this.albumDynamicInfo = await getAlbumDynamicInfo({
@@ -179,7 +185,6 @@ export default {
       this.album = res[0].album;
       this.songList = res[0].songs;
       this.albumDynamicInfo = res[1];
-      this.trackIds = this.songList.map(song => song.id);
     },
   },
   filters: {

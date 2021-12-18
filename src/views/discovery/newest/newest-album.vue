@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      pageSize: 20,
+      pageSize: 40,
       currentPage: 1,
       currentType: "ALL",
       newestAlbumList: [],
@@ -100,7 +100,7 @@ export default {
   },
   beforeDestroy() {
     // 移除事件
-    this.$parent.$refs.page.removeEventListener("scroll", this.getMoreData);
+    // this.$parent.$refs.page.removeEventListener("scroll", this.getMoreData);
   },
   created() {
     this.getData();

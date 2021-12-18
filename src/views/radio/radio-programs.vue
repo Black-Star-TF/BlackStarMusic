@@ -17,9 +17,10 @@
       </div>
     </div>
     <program-item
-      v-for="program in programs"
+      v-for="(program, index) in programs"
       :key="program.id"
       :program="program"
+      @playProgram="playProgram(index)"
     ></program-item>
 
     <pagination
@@ -36,13 +37,15 @@
 import { getRadioPrograms } from "@/api/dj-radio.js";
 import ProgramItem from "./components/program-item.vue";
 import Pagination from "@/components/common/pagination";
+import { getTrackFormatInfo } from "@/utils/methods";
 export default {
   components: {
     ProgramItem,
     Pagination,
   },
   props: {
-    rid: {
+    radio: {
+      type: Object,
       required: true,
     },
   },
@@ -64,6 +67,17 @@ export default {
     },
   },
   methods: {
+    playProgram(index){
+      console.log(index);
+      const list = this.programs.map(program => getTrackFormatInfo(program, 'program', {
+        type: 'radio',
+        info: {
+          id: this.radio.id,
+          name: this.radio.name
+        }
+      }));
+      this.$store.state.player.playTrackFromPlaylist(index, list);
+    },
     handleCurrentChange() {
       this.getPrograms();
     },
@@ -77,7 +91,7 @@ export default {
     async getPrograms() {
       this.programs = [];
       const { programs, count } = await getRadioPrograms({
-        rid: this.rid,
+        rid: this.radio.id,
         limit: this.pageSize,
         offset: this.offset,
         asc: this.asc,

@@ -73,7 +73,6 @@
         </div>
       </div>
     </div>
-    <loading v-if="!loaded"></loading>
   </div>
 </template>
 
@@ -87,24 +86,20 @@ import {
 import { formatDate } from "@/utils/filters";
 import Loading from "@/components/common/loading";
 import PageHeader from "@/components/common/page-header";
-import { getSongsDetail } from "@/api/music.js";
 import { mapState } from "vuex";
 export default {
   components: {
     PageHeader,
     Loading,
   },
-  data() {
-    return {
-      songList: [],
-      loaded: false,
-    };
-  },
   computed: {
     ...mapState(["player"]),
     history() {
       return JSON.parse(JSON.stringify(this.player.history));
     },
+    songList(){
+      return this.player.history
+    }
   },
   methods: {
     toAlbumDetail,
@@ -148,24 +143,6 @@ export default {
         return this.formatDate(date);
       }
     },
-    init() {
-      let list = this.history.map(item => item.id);
-      getSongsDetail({ ids: list.join(",") }).then(res => {
-        outer: for (let item of this.history) {
-          for (let song of res.songs) {
-            if (song.id == item.id) {
-              this.songList.push(Object.assign(song, item));
-              continue outer;
-            }
-          }
-        }
-        this.loaded = true;
-      });
-    },
-  },
-  filters: {},
-  created() {
-    this.init();
   },
 };
 </script>
