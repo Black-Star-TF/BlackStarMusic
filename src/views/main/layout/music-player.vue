@@ -213,7 +213,7 @@ export default {
   filters: {
     formatTrackTime(value) {
       if (value == 0) {
-        return `0:00`;
+        return `00:00`;
       }
       if (!value) return "";
       let min = ~~((value / 60) % 60);

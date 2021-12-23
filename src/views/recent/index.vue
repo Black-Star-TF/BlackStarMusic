@@ -5,7 +5,7 @@
     </page-header>
 
     <div class="recent-header">
-      <div class="count">共{{ songList.length }}首</div>
+      <div class="count">共{{ trackList.length }}首</div>
       <div class="operation">
         <span class="play-all">
           <span class="play" @click="playAll">
@@ -15,61 +15,69 @@
             <span class="iconfont icon-jia"></span>
           </span>
         </span>
-        <span class="clear" @click="clearHistory()">清空列表</span>
+        <span class="clear" @click="clearHistory">清空列表</span>
       </div>
     </div>
 
-    <div class="recent-songs-table">
+    <div class="recent-tracks-table">
       <div class="table-header">
         <div class="header column index"></div>
-        <div class="header column song-name">音乐标题</div>
-        <div class="header column song-artists">歌手</div>
-        <div class="header column song-play-date">播放时间</div>
+        <div class="header column track-name">音乐标题</div>
+        <div class="header column track-artists">歌手</div>
+        <div class="header column track-play-date">播放时间</div>
       </div>
 
       <div
         class="table-row"
-        v-for="(song, index) in songList"
-        :key="`${index}-${song.id}`"
-        @dblclick="playSong(song.id)"
+        v-for="(track, index) in trackList"
+        :key="`${index}-${track.id}`"
+        @dblclick="playTrack(track)"
       >
         <div class="row column index">
           <span>{{ formatIndex(index + 1) }}</span>
         </div>
 
-        <div class="row column song-name">
-          <div class="song-name-content">
-            <span class="main-name">{{ song.name }}</span>
-            <span class="alias-name" v-if="song.alia.length > 0">
-              ({{ song.alia[0] }})</span
+        <div class="row column track-name">
+          <div class="track-name-content">
+            <span class="main-name">{{ track.name }}</span>
+            <span class="alias-name" v-if="track.alia.length > 0">
+              ({{ track.alia[0] }})</span
             >
           </div>
-          <span class="song-tag-sq iconfont icon-sq" v-if="false"></span>
+          <span class="track-tag-sq iconfont icon-sq" v-if="false"></span>
           <span
-            class="song-tag-mv iconfont icon-shipin"
-            v-if="song.mv !== 0"
-            @click="playVideo(song.mv)"
+            class="track-tag-mv iconfont icon-shipin"
+            v-if="track.mv !== 0"
+            @click="playVideo(track.mv)"
           ></span>
         </div>
 
-        <div class="row column song-artists">
-          <span class="song-artists-content">
+        <div class="row column track-artists">
+          <span class="track-artists-content" v-if="track.type==='song'">
             <span
               class="artist"
-              v-for="(artist, index) in song.ar"
+              v-for="(artist, index) in track.ar"
               :key="`${index}-${artist.id}`"
             >
               <span class="artist-name" @click="toArtistDetail(artist.id)">{{
                 artist.name
               }}</span>
-              <span class="separator" v-if="index < song.ar.length - 1">
+              <span class="separator" v-if="index < track.ar.length - 1">
                 /
               </span>
             </span>
           </span>
+
+          <span class="track-artists-content" v-else>
+            <span class="artist">
+              <span class="artist-name" @click="toRadioDetail(track.ar[0].id)">
+                {{ track.ar[0].name }}
+              </span>
+            </span>
+          </span>
         </div>
-        <div class="row column song-play-date">
-          <span>{{ setDate(song.playDate) }}</span>
+        <div class="row column track-play-date">
+          <span>{{ setDate(track.playDate) }}</span>
         </div>
       </div>
     </div>
@@ -82,6 +90,7 @@ import {
   toArtistDetail,
   markKeyword,
   playVideo,
+  toRadioDetail
 } from "@/utils/methods";
 import { formatDate } from "@/utils/filters";
 import Loading from "@/components/common/loading";
@@ -97,21 +106,21 @@ export default {
     history() {
       return JSON.parse(JSON.stringify(this.player.history));
     },
-    songList(){
-      return this.player.history
-    }
+    trackList() {
+      return this.player.history;
+    },
   },
   methods: {
     toAlbumDetail,
     toArtistDetail,
     playVideo,
     formatDate,
+    toRadioDetail,
     addToPlaylist() {
       this.player.addTracksToPlaylist(this.history.map(item => item.id));
     },
     clearHistory() {
       this.player.clearHistory();
-      this.songList = [];
     },
     playAll() {
       let list = this.history.map(item => item.id);
@@ -119,8 +128,8 @@ export default {
         this.player.playTrackFromPlaylist(list[0], list);
       }
     },
-    playSong(id) {
-      this.player.playTrack(id)
+    playTrack(track) {
+      this.player.playTrack(track);
     },
     formatIndex(index) {
       if (this.pageNum && this.limit) {
@@ -259,9 +268,9 @@ export default {
     }
   }
 
-  .song-name {
+  .track-name {
     display: flex;
-    .song-name-content {
+    .track-name-content {
       @include ellipsis;
       color: var(--color-level2);
       .main-name {
@@ -280,17 +289,17 @@ export default {
       color: var(--color-netease-red);
       display: inline-block;
       margin-left: 5px;
-      &.song-tag-sq {
+      &.track-tag-sq {
         font-size: 22px;
       }
-      &.song-tag-mv {
+      &.track-tag-mv {
         cursor: pointer;
         font-size: 16px;
       }
     }
   }
 
-  .song-artists {
+  .track-artists {
     @include ellipsis;
     color: var(--color-level3);
     .artist-name {
@@ -304,7 +313,7 @@ export default {
     }
   }
 
-  .song-play-date {
+  .track-play-date {
     color: var(--color-level4);
   }
 }
@@ -320,13 +329,13 @@ export default {
 .index {
   width: 30px;
 }
-.song-name {
+.track-name {
   flex: 4;
 }
-.song-artists {
+.track-artists {
   flex: 3;
 }
-.song-play-date {
+.track-play-date {
   flex: 2;
 }
 </style>

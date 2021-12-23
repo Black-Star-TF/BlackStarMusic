@@ -4,6 +4,7 @@
       v-if="loaded"
       :songList="songList"
       @play-song="handlePlaySong"
+      @showContextMenu="handleShowContextMenu"
     >
     </song-list-table>
     <div class="loading-wrapper">
@@ -17,7 +18,7 @@ import { getPlaylistSongs } from "@/api/playlist.js";
 import SongListTable from "@/components/table/song-list-table";
 import { mapState } from "vuex";
 import Loading from "@/components/common/loading";
-import { getTrackFormatInfo } from "@/utils/methods";
+import { getTrackFormatInfo, openContextMenu } from "@/utils/methods";
 export default {
   components: {
     SongListTable,
@@ -39,17 +40,23 @@ export default {
     loaded() {
       return this.songList;
     },
-  },
-  methods: {
-    handlePlaySong(index) {
-      const list = this.songList.map(song => getTrackFormatInfo(song, 'song', {
+    list(){
+      return this.songList.map(song => getTrackFormatInfo(song, 'song', {
         type: 'playlist',
         info: {
           id: this.playlist.id,
           name: this.playlist.name
         }
       }));
-      this.player.playTrackFromPlaylist(index, list);
+    }
+  },
+  methods: {
+    openContextMenu,
+    handlePlaySong(index) {
+      this.player.playTrackFromPlaylist(index, this.list);
+    },
+    handleShowContextMenu({index, e}){
+      this.openContextMenu(e, 'songMenu', { index, list: this.list, song: this.songList[index]})
     },
     async getData() {
       const { songs } = await getPlaylistSongs({ id: this.playlist.id, limit: 5000 });

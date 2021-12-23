@@ -31,6 +31,8 @@
       ></search-drawer>
     </transition>
 
+    <context-menu v-if="app.contextMenuVisible"></context-menu>
+
     <!-- 播放列表 -->
   </div>
 </template>
@@ -41,6 +43,7 @@ import SongDetail from "@/views/main/drawer/song-detail.vue";
 import PlaylistDrawer from "@/views/main/drawer/playlist-drawer";
 import MessageDrawer from "@/views/main/drawer/message-drawer";
 import SearchDrawer from "@/views/main/drawer/search-drawer";
+import ContextMenu from '@/components/common/context-menu'
 import { mapState, mapMutations } from "vuex";
 import { search } from "@/utils/methods";
 export default {
@@ -51,6 +54,7 @@ export default {
     PlaylistDrawer,
     MessageDrawer,
     SearchDrawer,
+    ContextMenu
   },
   data() {
     return {

@@ -5,6 +5,7 @@
       class="playlist-cover"
       @click.self="toPlaylistDetail(playlistItem.id)"
       :style="{ backgroundImage: `url(${coverUrl})` }"
+      @contextmenu.prevent="showContextMenu"
     >
       <!-- 播放数量 -->
       <span class="play-count"
@@ -26,7 +27,11 @@
 </template>
 
 <script>
-import { playPlaylist, toPlaylistDetail } from "@/utils/methods";
+import {
+  playPlaylist,
+  toPlaylistDetail,
+  openContextMenu,
+} from "@/utils/methods";
 import { formatCount } from "@/utils/filters";
 import ItemPropsMixin from "@/mixins/item-props-mixin";
 import { size_1v1_std } from "@/utils/img-size.js";
@@ -45,10 +50,14 @@ export default {
     },
   },
   methods: {
-    play(){
+    play() {
       playPlaylist({ id: this.playlistItem.id, name: this.playlistItem.name });
     },
     toPlaylistDetail,
+    openContextMenu,
+    showContextMenu(e) {
+      this.openContextMenu(e, "PlaylistMenu", { ...this.playlistItem });
+    },
   },
   filters: {
     formatCount,

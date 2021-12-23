@@ -3,7 +3,7 @@
     <div class="playlist-drawer-header">
       <div class="title">当前播放</div>
       <div class="info">
-        <span class="total">共{{ songList.length }}首</span>
+        <span class="total">共{{ trackList.length }}首</span>
         <span class="clear" @click="clearList()">清空列表</span>
         <span class="subscribe-all">
           <i class="iconfont icon-shoucang"></i>
@@ -14,43 +14,52 @@
 
     <div
       class="playlist-drawer-content"
-      v-if="songList.length > 0"
+      v-if="trackList.length > 0"
       ref="content"
     >
       <div
-        class="song-item"
-        v-for="(song, index) in songList"
-        :key="`${index}-${song.id}`"
-        @dblclick="playSong(song.id)"
-        :class="{ active: song.id == currentTrackId }"
-        :id="`song-${song.id}`"
+        class="track-item"
+        v-for="(track, index) in trackList"
+        :key="`${index}-${track.id}`"
+        @dblclick="playTrack(track)"
+        :class="{ active: track.id == currentTrackId }"
+        :id="`track-${track.id}`"
       >
-        <div class="song-name">
-          <div class="song-name-container">
-            <span class="main-name">{{ song.name }}</span>
-            <span class="alias-name" v-if="song.alia.length > 0">
-              ({{ song.alia[0] }})</span
+        <div class="track-name">
+          <div class="track-name-container">
+            <span class="main-name">{{ track.name }}</span>
+            <span class="alias-name" v-if="track.alia.length > 0">
+              ({{ track.alia[0] }})</span
             >
           </div>
           <span
-            class="song-tag-mv iconfont icon-shipin"
-            v-if="song.mv !== 0"
-            @click="playVideo(song.mv)"
+            class="track-tag-mv iconfont icon-shipin"
+            v-if="track.mv !== 0"
+            @click="playVideo(track.mv)"
           ></span>
         </div>
 
-        <div class="song-artists">
-          <span
-            v-for="(artist, index) in song.ar"
-            :key="`${index}-${artist.id}`"
-          >
-            <span class="artist-name" @click="toArtistDetail(artist.id)">{{
-              artist.name
+        <div class="track-artists">
+          <template v-if="track.type === 'song'">
+            <span
+              v-for="(artist, index) in track.ar"
+              :key="`${index}-${artist.id}`"
+            >
+              <span class="artist-name" @click="toArtistDetail(artist.id)">{{
+                artist.name
+              }}</span>
+              <span class="separator" v-if="index < track.ar.length - 1">
+                /
+              </span>
+            </span>
+          </template>
+          <template v-else>
+            <span class="artist-name" @click="toRadioDetail(track.ar[0].id)">{{
+              track.ar[0].name
             }}</span>
-            <span class="separator" v-if="index < song.ar.length - 1"> / </span>
-          </span>
+          </template>
         </div>
-        <div class="song-duration">{{ song.dt | formatDuration }}</div>
+        <div class="track-duration">{{ track.dt | formatDuration }}</div>
       </div>
     </div>
   </div>
@@ -58,31 +67,31 @@
 
 <script>
 import { mapMutations, mapState } from "vuex";
-import { toArtistDetail, playVideo } from "@/utils/methods";
+import { toArtistDetail, toRadioDetail, playVideo } from "@/utils/methods";
 import { formatDuration } from "@/utils/filters";
-import { getSongsDetail } from "@/api/music.js";
 export default {
   computed: {
     ...mapState(["player"]),
     currentTrackId() {
       return this.player.currentTrack.id;
     },
-    songList(){
-      return this.player.list
-    }
+    trackList() {
+      return this.player.list;
+    },
   },
   methods: {
     ...mapMutations(["updateApp"]),
     toArtistDetail,
     playVideo,
+    toRadioDetail,
     close() {
       this.updateApp({ key: "playlistDrawerVisible", value: false });
     },
     clearList() {
       this.player.clear();
     },
-    playSong(id) {
-      this.player.playTrack(id);
+    playTrack(track) {
+      this.player.playTrack(track);
     },
     handleClose(value) {
       this.$emit("update:visible", value);
@@ -162,7 +171,7 @@ export default {
   .playlist-drawer-content {
     height: calc(100% - 90px);
     overflow: overlay;
-    .song-item {
+    .track-item {
       display: flex;
       height: 30px;
       line-height: 30px;
@@ -176,12 +185,12 @@ export default {
         background-color: var(--drawer-stripe-hover-color);
       }
       &:hover {
-        .song-name {
-          .song-name-container {
+        .track-name {
+          .track-name-container {
             color: var(--color-level1);
           }
         }
-        .song-artists {
+        .track-artists {
           color: var(--color-level1);
           .artist-name {
             &:hover {
@@ -189,27 +198,27 @@ export default {
             }
           }
         }
-        .song-duration {
+        .track-duration {
           color: var(--color-level1);
         }
       }
       &.active {
-        .song-name {
-          .song-name-container {
+        .track-name {
+          .track-name-container {
             color: var(--color-netease-red);
           }
         }
-        .song-artists {
+        .track-artists {
           color: var(--color-netease-red);
         }
       }
-      .song-name {
+      .track-name {
         overflow: hidden;
         flex: 2;
         display: flex;
         box-sizing: border-box;
         margin-right: 10px;
-        .song-name-container {
+        .track-name-container {
           @include ellipsis;
           color: var(--color-level2);
           .alias-name {
@@ -220,16 +229,16 @@ export default {
           color: var(--color-netease-red);
           display: inline-block;
           margin-left: 5px;
-          &.song-tag-sq {
+          &.track-tag-sq {
             font-size: 22px;
           }
-          &.song-tag-mv {
+          &.track-tag-mv {
             cursor: pointer;
             font-size: 16px;
           }
         }
       }
-      .song-artists {
+      .track-artists {
         overflow: hidden;
         flex: 1;
         height: 100%;
@@ -247,7 +256,7 @@ export default {
           color: var(--color-level4);
         }
       }
-      .song-duration {
+      .track-duration {
         overflow: hidden;
         width: 50px;
         height: 100%;

@@ -19,7 +19,7 @@ export async function getSongsOfPlaylist({ id, name }) {
       },
     })
   );
-  return songList
+  return songList;
 }
 // 播放全部
 export async function playPlaylist({ id, name }) {
@@ -29,13 +29,15 @@ export async function playPlaylist({ id, name }) {
 
 export async function playAlbum(id) {
   const { album, songs } = await getAlbumDetail({ id });
-  const list = songs.map(song => getTrackFormatInfo(song, 'song', {
-    type: 'album',
-    info: {
-      id: album.id,
-      name: album.name
-    }
-  }));
+  const list = songs.map(song =>
+    getTrackFormatInfo(song, "song", {
+      type: "album",
+      info: {
+        id: album.id,
+        name: album.name,
+      },
+    })
+  );
   store.state.player.playTrackFromPlaylist(0, list);
 }
 
@@ -103,32 +105,51 @@ export function debounce(handler, delay) {
     }, delay);
   };
 }
-
-export function getTrackFormatInfo(track, type, source) {
-  const song = {};
-  song.type = type
-  song.id = track.id;
-  song.name = track.name;
-  if (type === "song") {
-    song.alia = track.alia;
-    song.ar = track.ar;
-    song.dt = track.dt;
-  } else if (type === "program") {
-    song.dt = track.duration;
-    song.mainSongId = track.mainSong.id
-    song.alia = []
-    song.ar = [
-      {
-        name: track.radio.name,
-        id: track.radio.id
-      }
-    ]
-  }
-  song.source = source;
-  return song;
+// 打开右键菜单
+export function openContextMenu(e, cpnName, data) {
+  store.commit("updateApp", { key: "contextMenuVisible", value: false });
+  this.$nextTick(() => {
+    store.commit("updateApp", { key: "contextMenuVisible", value: true });
+    store.commit("updateApp", {
+      key: "contextMenuOptions",
+      value: {
+        x: e.clientX,
+        y: e.clientY,
+        cpnName: cpnName,
+        data: { ...data },
+      },
+    });
+  });
 }
 
-export function findIndex(currentTrack, list){
+// 格式化歌曲信息
+export function getTrackFormatInfo(currentTrack, type, source) {
+  const track = {};
+  track.type = type;
+  track.id = currentTrack.id;
+  track.name = currentTrack.name;
+  if (type === "song") {
+    track.alia = currentTrack.alia;
+    track.ar = currentTrack.ar;
+    track.dt = currentTrack.dt;
+    track.mv = currentTrack.mv;
+  } else if (type === "program") {
+    track.dt = currentTrack.duration;
+    track.mainSongId = currentTrack.mainSong.id;
+    track.alia = [];
+    track.mv = 0;
+    track.ar = [
+      {
+        name: currentTrack.radio.name,
+        id: currentTrack.radio.id,
+      },
+    ];
+  }
+  track.source = source;
+  return track;
+}
+
+export function findIndex(currentTrack, list) {
   return list.findIndex(track => {
     return (
       track.type === currentTrack.type &&

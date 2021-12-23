@@ -17,5 +17,7 @@ export default {
     playlistDrawerVisible: false,
     messageDrawerVisible: false,
     searchDrawerVisible: false,
+    contextMenuVisible: false,
+    contextMenuOptions: {},
   },
 };

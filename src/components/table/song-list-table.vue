@@ -12,8 +12,8 @@
       class="table-row"
       v-for="(song, index) in songList"
       :key="`${index}-${song.id}`"
-      @dblclick="playSong(song,index)"
-      @contextmenu.prevent="showContextMenu(index, song, $event)"
+      @dblclick="playSong(song, index)"
+      @contextmenu.prevent="showContextMenu(index, $event)"
       :class="getActiveClass(index)"
       @click="setActive(index)"
     >
@@ -108,39 +108,21 @@
         <span>{{ song.dt | formatDuration }}</span>
       </div>
     </div>
-
-    <context-menu
-      :visible.sync="contextMenuVisible"
-      :top="contextMenuTop"
-      :left="contextMenuLeft"
-      :offsetBottom="70"
-    >
-      <div class="song-menu" @click="contextMenuVisible = false">
-        <div class="menu-item" @click="playSong(currentSong)">播放</div>
-        <div class="menu-item">查看评论</div>
-        <div class="menu-item">下一首播放</div>
-        <div class="menu-item">收藏</div>
-        <div class="menu-item">分享</div>
-        <div class="menu-item">下载</div>
-      </div>
-    </context-menu>
   </div>
 </template>
 
 <script>
-import ContextMenu from "@/components/common/context-menu";
 import { likeSong } from "@/api/music";
 import {
   toAlbumDetail,
   toArtistDetail,
   markKeywords,
   playVideo,
+  openContextMenu,
 } from "@/utils/methods";
 import { formatDuration } from "@/utils/filters";
+import { mapMutations } from "vuex";
 export default {
-  components: {
-    ContextMenu,
-  },
   data() {
     return {
       contextMenuTop: 0,
@@ -178,6 +160,7 @@ export default {
     toAlbumDetail,
     toArtistDetail,
     markKeywords,
+    ...mapMutations(["updateApp"]),
     async handleLikeSong(id, like) {
       if (!this.$store.state.data.loginStatus) {
         this.$message.error("请先登录");
@@ -208,17 +191,13 @@ export default {
     isLiked(id) {
       return this.likedSongList.includes(id);
     },
-    playSong(song,index) {
+    playSong(song, index) {
       // TODO: 当开通vip时可以播放
       if (song.fee === 1) return;
       this.$emit("play-song", index);
     },
-    showContextMenu(index, song, e) {
-      this.activeIndex = index;
-      this.currentSong = song;
-      this.contextMenuTop = e.clientY;
-      this.contextMenuLeft = e.clientX;
-      this.contextMenuVisible = true;
+    showContextMenu(index, e) {
+      this.$emit('showContextMenu', {index, e})
     },
   },
   filters: {
@@ -361,27 +340,6 @@ export default {
   }
   .song-duration {
     width: 50px;
-  }
-}
-
-.song-menu {
-  width: 175px;
-  padding: 5px;
-  background-color: var(--context-menu-bg-color);
-  border: 1px solid #666;
-  border-radius: 10px;
-  .menu-item {
-    height: 30px;
-    line-height: 30px;
-    font-size: 13px;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 0 10px;
-    color: var(--color-level1);
-    border-radius: 5px;
-    &:hover {
-      background-color: var(--context-menu-item-hover-bg-color);
-    }
   }
 }
 </style>
