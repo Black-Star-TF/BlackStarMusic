@@ -105,6 +105,7 @@ import AlbumComments from "./album-comments.vue";
 import AlbumDesc from "./album-desc.vue";
 import { size_1v1_std } from "@/utils/img-size.js";
 import { getTrackFormatInfo } from "@/utils/methods";
+import RESOURCE_TYPE from "@/utils/resource-type";
 import axios from "axios";
 export default {
   components: {
@@ -151,7 +152,7 @@ export default {
       }
     },
     getList(){
-      return this.songList.map(song => getTrackFormatInfo(song, 'song', {
+      return this.songList.map(song => getTrackFormatInfo(song, RESOURCE_TYPE.SONG , {
         type: 'album',
         info: {
           id: this.album.id,

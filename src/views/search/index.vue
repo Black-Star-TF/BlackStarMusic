@@ -122,6 +122,7 @@ import Loading from "@/components/common/loading";
 import Pagination from "@/components/common/pagination";
 import { getSearchResult, getMultiMatch } from "@/api/search.js";
 import { getTrackFormatInfo } from "@/utils/methods";
+import RESOURCE_TYPE from "@/utils/resource-type";
 import { mapState } from "vuex";
 export default {
   components: {
@@ -168,7 +169,7 @@ export default {
   },
   methods: {
     handlePlay(index) {
-      const track = getTrackFormatInfo(this.results[index], "song", {
+      const track = getTrackFormatInfo(this.results[index], RESOURCE_TYPE.SONG, {
         type: "search",
         info: {
           id: "#",

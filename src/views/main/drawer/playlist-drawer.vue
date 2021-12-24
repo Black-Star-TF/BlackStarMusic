@@ -40,7 +40,7 @@
         </div>
 
         <div class="track-artists">
-          <template v-if="track.type === 'song'">
+          <template v-if="track.type === RESOURCE_TYPE.SONG">
             <span
               v-for="(artist, index) in track.ar"
               :key="`${index}-${artist.id}`"
@@ -69,7 +69,13 @@
 import { mapMutations, mapState } from "vuex";
 import { toArtistDetail, toRadioDetail, playVideo } from "@/utils/methods";
 import { formatDuration } from "@/utils/filters";
+import RESOURCE_TYPE from "@/utils/resource-type";
 export default {
+  data(){
+    return {
+      RESOURCE_TYPE
+    }
+  },
   computed: {
     ...mapState(["player"]),
     currentTrackId() {

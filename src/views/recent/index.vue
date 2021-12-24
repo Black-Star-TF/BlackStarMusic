@@ -32,6 +32,7 @@
         v-for="(track, index) in trackList"
         :key="`${index}-${track.id}`"
         @dblclick="playTrack(track)"
+        @contextmenu.prevent="showContextMenu"
       >
         <div class="row column index">
           <span>{{ formatIndex(index + 1) }}</span>
@@ -53,7 +54,7 @@
         </div>
 
         <div class="row column track-artists">
-          <span class="track-artists-content" v-if="track.type==='song'">
+          <span class="track-artists-content" v-if="track.type===RESOURCE_TYPE.SONG">
             <span
               class="artist"
               v-for="(artist, index) in track.ar"
@@ -95,11 +96,17 @@ import {
 import { formatDate } from "@/utils/filters";
 import Loading from "@/components/common/loading";
 import PageHeader from "@/components/common/page-header";
+import RESOURCE_TYPE from "@/utils/resource-type";
 import { mapState } from "vuex";
 export default {
   components: {
     PageHeader,
     Loading,
+  },
+  data(){
+    return {
+      RESOURCE_TYPE
+    }
   },
   computed: {
     ...mapState(["player"]),
@@ -116,6 +123,9 @@ export default {
     playVideo,
     formatDate,
     toRadioDetail,
+    showContextMenu(){
+      // TODO: 右键菜单
+    },
     addToPlaylist() {
       this.player.addTracksToPlaylist(this.history.map(item => item.id));
     },

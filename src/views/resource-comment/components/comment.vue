@@ -9,6 +9,7 @@
         v-for="comment in hotComments"
         :key="comment.commentId"
         :comment="comment"
+        @router-change="$emit('router-change')"
       ></comment-item>
       <div class="more-hot-comment">
         <span v-if="moreHot" class="btn" @click="toHotComment(id, type)"
@@ -24,6 +25,7 @@
         v-for="comment in comments"
         :key="comment.commentId"
         :comment="comment"
+        @router-change="$emit('router-change')"
       ></comment-item>
       <pagination
         v-if="loaded"
@@ -41,6 +43,7 @@ import { getPlaylistComments } from "@/api/playlist";
 import { getAlbumComments } from "@/api/album";
 import { getVideoComments, getMVComments } from "@/api/video";
 import { getSongComments } from "@/api/music";
+import { getProgramComments } from "@/api/dj-radio";
 import { toHotComment } from "@/utils/methods";
 import CommentItem from "./comment-item.vue";
 import Pagination from "@/components/common/pagination";
@@ -90,6 +93,8 @@ export default {
           return getAlbumComments;
         case RESOURCE_TYPE.VIDEO: //视频
           return getVideoComments;
+        case RESOURCE_TYPE.RADIO: // 电台节目
+          return getProgramComments;
       }
     },
   },

@@ -38,6 +38,7 @@ import { getRadioPrograms } from "@/api/dj-radio.js";
 import ProgramItem from "./components/program-item.vue";
 import Pagination from "@/components/common/pagination";
 import { getTrackFormatInfo } from "@/utils/methods";
+import RESOURCE_TYPE from "@/utils/resource-type";
 export default {
   components: {
     ProgramItem,
@@ -68,8 +69,7 @@ export default {
   },
   methods: {
     playProgram(index){
-      console.log(index);
-      const list = this.programs.map(program => getTrackFormatInfo(program, 'program', {
+      const list = this.programs.map(program => getTrackFormatInfo(program, RESOURCE_TYPE.RADIO, {
         type: 'radio',
         info: {
           id: this.radio.id,

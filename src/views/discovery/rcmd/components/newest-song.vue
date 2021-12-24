@@ -1,5 +1,5 @@
 <template>
-  <div class="newest-song-item" @dblclick="playSong" :style="style">
+  <div class="newest-song-item" @dblclick="playSong" :style="style" @contextmenu.prevent="handleShowContextMenu">
     <!-- 歌曲封面 -->
     <div
       class="newest-song-cover"
@@ -42,9 +42,10 @@
 </template>
 
 <script>
-import { toArtistDetail } from "@/utils/methods";
+import { toArtistDetail, getTrackFormatInfo, openContextMenu } from "@/utils/methods";
 import ItemPropsMixin from "@/mixins/item-props-mixin";
 import { size_1v1_small } from "@/utils/img-size.js";
+import RESOURCE_TYPE from "@/utils/resource-type";
 export default {
   mixins: [ItemPropsMixin],
   props: {
@@ -59,11 +60,24 @@ export default {
     loading() {
       return typeof this.newestSongItem == "undefined";
     },
+    track(){
+      return getTrackFormatInfo(this.newestSongItem.song, RESOURCE_TYPE.SONG , {
+        type: 'discovery',
+        info: {
+          id: '&',
+          name: '发现页'
+        }
+      })
+    }
   },
   methods: {
     toArtistDetail,
+    openContextMenu,
     playSong() {
-      this.$store.state.player.playTrack(this.newestSongItem.id);
+      this.$store.state.player.playTrack(this.track);
+    },
+    handleShowContextMenu(e){
+      this.openContextMenu(e, 'songMenu', { song: this.track} )
     },
   },
   filters: {

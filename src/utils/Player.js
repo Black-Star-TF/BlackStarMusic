@@ -2,6 +2,7 @@ import { Howler, Howl } from "howler";
 import { getSongsDetail, getSongUrl } from "@/api/music";
 import { getRadioProgramDetail } from "@/api/dj-radio";
 import { findIndex } from "@/utils/methods";
+import RESOURCE_TYPE from "@/utils/resource-type";
 import axios from "axios";
 export default class Player {
   constructor() {
@@ -180,21 +181,23 @@ export default class Player {
 
   // 获取歌曲详情和歌曲url
   async readyToPlay(autoPlay = true) {
+    // 暂停播放歌曲
+
     this.progress = 0;
     let track = this.list[this.currentIndex];
-    let id = track.type === "song" ? track.id : track.mainSongId;
+    let id = track.type === RESOURCE_TYPE.SONG ? track.id : track.mainSongId;
     const url = await this.getTrackUrl(id);
     if (!url) {
       // 当前歌曲无法播放，则播放下一首
       // this.playNextTrack();
       return false;
     }
-    if (track.type === "song") {
+    if (track.type === RESOURCE_TYPE.SONG) {
       // 获取歌曲详情
       const { songs } = await getSongsDetail({ ids: track.id });
       this.currentTrack = { ...track, coverUrl: songs[0].al.picUrl };
     }
-    if (track.type === "program") {
+    if (track.type === RESOURCE_TYPE.RADIO) {
       // 获取节目详情
       const { program } = await getRadioProgramDetail({ id: track.id });
       this.currentTrack = { ...track, coverUrl: program.blurCoverUrl };
@@ -256,6 +259,11 @@ export default class Player {
 
   // 播放歌曲，并切换播放列表
   playTrackFromPlaylist(index, playlist) {
+    this.currentTrack = {};
+    Howler.unload();
+    this._howler = null;
+    this._playing = false;
+    
     this.list = [...playlist];
     this.currentIndex = index;
     this.readyToPlay();

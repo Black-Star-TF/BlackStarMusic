@@ -7,19 +7,9 @@
 
 <script>
 export default {
-  name: "",
-  mixins: [],
-  components: {},
   props: {
     description: String,
-  },
-  data() {
-    return {};
-  },
-  computed: {},
-  methods: {},
-  filters: {},
-  created() {},
+  }
 };
 </script>
 

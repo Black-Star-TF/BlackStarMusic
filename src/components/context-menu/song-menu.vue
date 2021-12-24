@@ -1,7 +1,7 @@
 <template>
   <div class="song-menu">
     <div class="menu-item" @click="playSong">播放</div>
-    <div class="menu-item">查看评论</div>
+    <div class="menu-item" @click="toComment">查看评论</div>
     <div class="menu-item">下一首播放</div>
     <div class="menu-item">收藏</div>
     <div class="menu-item">分享</div>
@@ -11,6 +11,7 @@
 
 <script>
 import { toResourceComment } from '@/utils/methods'
+import RESOURCE_TYPE from "@/utils/resource-type";
 export default {
   props: {
     data: {
@@ -21,12 +22,18 @@ export default {
   methods: {
     toResourceComment,
     playSong(){
-      this.$store.state.player.playTrackFromPlaylist(this.data.index, this.data.list);
+      if(!this.data.list){
+        this.$store.state.player.playTrack(this.data.song);
+      }else{
+        this.$store.state.player.playTrackFromPlaylist(this.data.index, this.data.list);
+      }
+    },
+    toComment(){
+      this.toResourceComment(this.data.song.id, RESOURCE_TYPE.SONG)
     }
   },
   mounted() {
     this.$emit("mounted");
-    console.log(this.data);
   },
   watch: {
     data() {

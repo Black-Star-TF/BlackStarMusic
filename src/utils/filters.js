@@ -9,7 +9,7 @@ export function formatDuration(duration) {
 
 export function formatCount(count) {
   if (count >= 10000) {
-    return `${Math.ceil(count / 10000)}万`;
+    return `${Math.floor(count / 10000)}万`;
   } else {
     return count;
   }

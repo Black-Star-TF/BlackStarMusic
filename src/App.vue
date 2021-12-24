@@ -9,20 +9,22 @@
 
     <!-- 歌曲详情 -->
     <transition name="move">
-      <song-detail
+      <track-detail
         v-if="app.songDetailVisible"
-        :songId="currentSong.id"
-      ></song-detail>
+      ></track-detail>
     </transition>
 
+    <!-- 播放列表 -->
     <transition name="drawer">
       <playlist-drawer v-if="app.playlistDrawerVisible"></playlist-drawer>
     </transition>
 
+    <!-- 消息 -->
     <transition name="drawer">
       <message-drawer v-if="app.messageDrawerVisible"></message-drawer>
     </transition>
 
+    <!-- 搜索联想 -->
     <transition name="drawer">
       <search-drawer
         v-if="app.searchDrawerVisible"
@@ -32,14 +34,12 @@
     </transition>
 
     <context-menu v-if="app.contextMenuVisible"></context-menu>
-
-    <!-- 播放列表 -->
   </div>
 </template>
 
 <script>
 import MusicHeader from "@/views/main/layout/music-header.vue";
-import SongDetail from "@/views/main/drawer/song-detail.vue";
+import TrackDetail from "@/views/main/drawer/track-detail.vue";
 import PlaylistDrawer from "@/views/main/drawer/playlist-drawer";
 import MessageDrawer from "@/views/main/drawer/message-drawer";
 import SearchDrawer from "@/views/main/drawer/search-drawer";
@@ -50,7 +50,7 @@ export default {
   name: "App",
   components: {
     MusicHeader,
-    SongDetail,
+    TrackDetail,
     PlaylistDrawer,
     MessageDrawer,
     SearchDrawer,
@@ -63,10 +63,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["player", "app", "data"]),
-    currentSong() {
-      return this.player.currentTrack;
-    },
+    ...mapState(["app", "data"]),
   },
   methods: {
     ...mapMutations(["updateApp", "updateData"]),

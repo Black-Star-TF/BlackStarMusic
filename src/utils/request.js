@@ -8,6 +8,13 @@ const instance = axios.create({
 // 添加拦截器
 instance.interceptors.request.use(
   config => {
+    if(config.params){
+      config.params.timestamp = new Date().getTime()
+    }else{
+      config.params = {
+        timestamp: new Date().getTime()
+      }
+    }
     return config;
     // TODO
   },

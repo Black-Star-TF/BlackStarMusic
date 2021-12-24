@@ -46,7 +46,6 @@ export default {
   methods: {
     toHotComment,
     async getData() {
-      console.log(111);
       const { hotComments, hasMore } = await getHotComments({
         id: this.id,
         type: this.type,

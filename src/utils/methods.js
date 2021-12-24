@@ -1,6 +1,7 @@
 import { getPlaylistSongs } from "@/api/playlist";
 import { getAlbumDetail } from "@/api/album";
 import store from "@/store";
+import RESOURCE_TYPE from "./resource-type";
 // 播放歌曲有关方法
 
 // 播放音乐并替换播放列表
@@ -11,7 +12,7 @@ export function playMusic(id) {
 export async function getSongsOfPlaylist({ id, name }) {
   const { songs } = await getPlaylistSongs({ id, limit: 5000 });
   let songList = songs.map(song =>
-    getTrackFormatInfo(song, "song", {
+    getTrackFormatInfo(song, RESOURCE_TYPE.SONG, {
       type: "playlist",
       info: {
         id,
@@ -30,7 +31,7 @@ export async function playPlaylist({ id, name }) {
 export async function playAlbum(id) {
   const { album, songs } = await getAlbumDetail({ id });
   const list = songs.map(song =>
-    getTrackFormatInfo(song, "song", {
+    getTrackFormatInfo(song, RESOURCE_TYPE.SONG, {
       type: "album",
       info: {
         id: album.id,
@@ -48,6 +49,7 @@ export function playRadio(id) {
 // 电台详情
 export function toRadioDetail(rid) {
   this.$router.push({ path: `/radio`, query: { rid } });
+  this.$emit('router-change')
 }
 // 播放视频
 export function playVideo(id) {
@@ -58,18 +60,22 @@ export function playVideo(id) {
 // 跳转到歌单详情页
 export function toPlaylistDetail(id) {
   this.$router.push({ path: `/playlist`, query: { id } });
+  this.$emit('router-change')
 }
 // 跳转到专辑详情页
 export function toAlbumDetail(id) {
   this.$router.push({ path: `/album`, query: { id } });
+  this.$emit('router-change')
 }
 // 跳转到歌手详情页
 export function toArtistDetail(id) {
   this.$router.push({ path: `/singer`, query: { id } });
+  this.$emit('router-change')
 }
 // 跳转到用户详情页
 export function toUserDetail(userId) {
   this.$router.push({ path: `/user`, query: { userId } });
+  this.$emit('router-change')
 }
 // 高亮显示关键词
 export function markKeywords(str) {
@@ -79,10 +85,12 @@ export function markKeywords(str) {
 // 跳转到资源评论页
 export function toResourceComment(id, type) {
   this.$router.push({ path: "/resource-comment", query: { id, type } });
+  this.$emit('router-change')
 }
 // 跳转到热门评论页
 export function toHotComment(id, type) {
   this.$router.push({ path: "/hot-comment", query: { id, type } });
+  this.$emit('router-change')
 }
 // 搜索
 export function search(keywords) {
@@ -93,6 +101,7 @@ export function search(keywords) {
       type: this.$route.query.type || 1,
     },
   });
+  this.$emit('router-change')
 }
 
 // 防抖函数
@@ -128,12 +137,12 @@ export function getTrackFormatInfo(currentTrack, type, source) {
   track.type = type;
   track.id = currentTrack.id;
   track.name = currentTrack.name;
-  if (type === "song") {
-    track.alia = currentTrack.alia;
-    track.ar = currentTrack.ar;
-    track.dt = currentTrack.dt;
-    track.mv = currentTrack.mv;
-  } else if (type === "program") {
+  if (type === RESOURCE_TYPE.SONG) {
+    track.alia = currentTrack.alia ?? currentTrack.alias;
+    track.ar = currentTrack.ar ?? currentTrack.artists ;
+    track.dt = currentTrack.dt ?? currentTrack.duration;
+    track.mv = currentTrack.mv ?? currentTrack.mvid;
+  } else if (type === RESOURCE_TYPE.RADIO) {
     track.dt = currentTrack.duration;
     track.mainSongId = currentTrack.mainSong.id;
     track.alia = [];

@@ -19,6 +19,7 @@ import SongListTable from "@/components/table/song-list-table";
 import { mapState } from "vuex";
 import Loading from "@/components/common/loading";
 import { getTrackFormatInfo, openContextMenu } from "@/utils/methods";
+import RESOURCE_TYPE from "@/utils/resource-type";
 export default {
   components: {
     SongListTable,
@@ -41,7 +42,7 @@ export default {
       return this.songList;
     },
     list(){
-      return this.songList.map(song => getTrackFormatInfo(song, 'song', {
+      return this.songList.map(song => getTrackFormatInfo(song, RESOURCE_TYPE.SONG , {
         type: 'playlist',
         info: {
           id: this.playlist.id,

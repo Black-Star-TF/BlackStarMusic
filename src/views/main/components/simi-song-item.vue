@@ -1,6 +1,11 @@
 <template>
   <div class="simi-song-item" @click="playSong">
-    <img :src="coverUrl" class="song-cover" />
+    <div class="song-cover" :style="{ backgroundImage: `url(${coverUrl})` }">
+      <!-- 播放图标 -->
+      <div class="icon-play">
+        <span class="iconfont icon-bofang"></span>
+      </div>
+    </div>
     <div class="song-info">
       <div class="song-name">{{ song.name }}</div>
       <div class="song-artist">
@@ -47,9 +52,26 @@ export default {
     width: 50px;
     height: 50px;
     border-radius: 5px;
-    display: inline-block;
-    background-color: #fff;
     margin-right: 10px;
+    @include background;
+    position: relative;
+    .icon-play {
+      text-align: center;
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      background-color: rgba($color: #fff, $alpha: 0.7);
+      top: calc(50% - 12px);
+      left: calc(50% - 12px);
+      .iconfont {
+        line-height: 24px;
+        font-size: 12px;
+        color: var(--color-netease-red);
+        position: relative;
+        left: 2px;
+      }
+    }
   }
   .song-info {
     flex: 1;

@@ -52,8 +52,6 @@ export default {
 .singer-desc-wrapper {
   padding: 0 30px;
   padding-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
   .info-item {
     .info-name {
       height: 40px;

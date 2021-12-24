@@ -1,6 +1,11 @@
 <template>
   <div class="view-friend">
-    <developing />
+    <!-- <developing /> -->
+    <el-select v-model="value">
+      <el-option v-for="item in list" :label="item.name" :value="item.value" :key="item.value">
+
+      </el-option>
+    </el-select>
   </div>
 </template>
 
@@ -11,7 +16,19 @@ export default {
     Developing,
   },
   data() {
-    return {};
+    return {
+      value: '',
+      list: [
+        {
+          name: 'aaa',
+          value: '123'
+        },
+        {
+          name: 'bbb',
+          value: '1234'
+        }
+      ]
+    };
   },
   computed: {},
   methods: {},
